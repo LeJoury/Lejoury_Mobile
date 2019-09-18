@@ -1,5 +1,6 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'LeJoury' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
@@ -33,14 +34,14 @@ target 'LeJoury' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
-  pod 'react-native-maps', path: rn_maps_path
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+  # pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
+  # pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  # pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+  # pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  # pod 'react-native-maps', path: rn_maps_path
+  # pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  # pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+  # pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
   # pod 'react-native-image-picker', :path => 'node_modules/react-native-image-picker'
 
@@ -49,14 +50,17 @@ target 'LeJoury' do
   #   # Pods for testing
   # end
 
-  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+  # pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
-  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  # pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
   target 'LeJouryTests' do
     inherit! :search_paths
     # Pods for testing
   end
+
+  use_native_modules!
+
 
 end
 
