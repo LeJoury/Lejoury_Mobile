@@ -1,7 +1,7 @@
 import { persistCombineReducers } from 'redux-persist';
 import createFilter from 'redux-persist-transform-filter';
 
-import storage from 'redux-persist/es/storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { reducer as NetInfoReducer } from './NetInfoRedux';
 import { reducer as AuthReducer } from './AuthRedux';
@@ -12,7 +12,7 @@ const saveSubsetFilter = createFilter('user', [ 'username', 'token' ]);
 
 const config = {
 	key: 'root',
-	storage,
+	storage: AsyncStorage,
 	blacklist: [
 		'netInfo',
 		'nav'

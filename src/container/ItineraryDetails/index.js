@@ -30,19 +30,6 @@ class ItineraryDetails extends Component {
 	}
 	_keyExtractor = (item) => item.id.toString();
 
-	componentWillMount() {
-		// const { itinerary } = this.props;
-		// this.setState({
-		// 	isLoading: true
-		// });
-		// Image.getSize(itinerary.coverPhoto, (width, height) => {
-		// 	this.setState({
-		// 		height: height * (this.state.width / width),
-		// 		isLoading: false
-		// 	});
-		// });
-	}
-
 	componentDidMount() {}
 
 	componentDidUpdate() {}
@@ -73,7 +60,6 @@ class ItineraryDetails extends Component {
 			}
 		}
 
-		console.log(images);
 		navigation.navigate('ViewImages', {
 			images: images
 		});

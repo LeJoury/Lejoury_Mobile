@@ -78,7 +78,7 @@ const EditProfile = (props) => {
 			cropperChooseText:  Languages.Done
 		}).then((image) => {
 			setIsDirty(true);
-			setProfilePhoto(image.path);
+			setProfilePhoto(image.sourceURL);
 		});
 	};
 

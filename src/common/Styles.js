@@ -255,7 +255,7 @@ Styles.Common = {
 		paddingRight: 12,
 		flexDirection: 'row'
 	},
-	floatCircle: {
+	FloatCircle: {
 		width: 38,
 		height: 38,
 		marginLeft: 12,

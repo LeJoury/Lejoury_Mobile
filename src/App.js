@@ -15,7 +15,7 @@ store = compose(applyMiddleware(...middleware))(createStore)(reducers);
 let persistor = persistStore(store);
 
 export default class App extends Component {
-	componentWillMount() {
+	componentDidMount() {
 		console.ignoredYellowBox = [ 'Warning: View.propTypes', 'Warning: BackAndroid' ];
 	}
 

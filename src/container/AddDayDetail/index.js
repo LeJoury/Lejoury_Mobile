@@ -25,7 +25,7 @@ class AddDayDetail extends Component {
 		this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		const { navigation } = this.props;
 		const { type } = navigation.state.params;
 
@@ -52,9 +52,7 @@ class AddDayDetail extends Component {
 			});
 		}
 		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-	}
 
-	componentDidMount() {
 		this.props.navigation.setParams({ handleGoToAddActivity: this.onNavigateToActivityDetail });
 	}
 
@@ -72,7 +70,6 @@ class AddDayDetail extends Component {
 
 	onSaveHandle = () => {
 		const { draftItinerary } = this.props.draft;
-		const { type } = this.props.navigation.state.params;
 		const { days, identifier, date, activities } = this.state;
 
 		let newDay = {
@@ -81,23 +78,12 @@ class AddDayDetail extends Component {
 			activities: activities
 		};
 
-		if (type === 'add') {
-			this.setState(
-				{
-					days: [ ...days, newDay ]
-				},
-				() => {
-					let newItinerary = {
-						...draftItinerary,
-						days: this.state.days
-					};
+		let hasDay = days.some((day) => {
+			return day.identifier === identifier;
+		});
 
-					this.props.updateItineraryByID(newItinerary);
-					this.props.addDayToItineraryRedux(this.state.days);
-					this.props.getItineraryDraft();
-				}
-			);
-		} else {
+
+		if (hasDay) {
 			this.setState(
 				(state) => {
 					const days = state.days.map((day) => {
@@ -120,6 +106,23 @@ class AddDayDetail extends Component {
 
 					this.props.updateItineraryByID(newItinerary);
 					this.props.addDayToItineraryRedux(this.state.days);
+					this.props.getItineraryDraft();
+				}
+			);
+		} else {
+			this.setState(
+				{
+					days: [ ...days, newDay ]
+				},
+				() => {
+					let newItinerary = {
+						...draftItinerary,
+						days: this.state.days
+					};
+
+					this.props.updateItineraryByID(newItinerary);
+					this.props.addDayToItineraryRedux(this.state.days);
+					this.props.getItineraryDraft();
 				}
 			);
 		}
@@ -162,6 +165,7 @@ class AddDayDetail extends Component {
 					activities: [ ...activities, newActivity ]
 				},
 				() => {
+					console.log(activities);
 					this.onSaveHandle();
 				}
 			);

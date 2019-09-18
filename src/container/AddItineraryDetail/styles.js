@@ -4,7 +4,7 @@ import { Color, Styles, Device } from '@common';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
-	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
+	backButton: { left: 0, position: 'absolute', zIndex: 99999 },
 	separatorWrapper: {
 		...Styles.Common.ColumnCenter,
 		marginTop: 18,

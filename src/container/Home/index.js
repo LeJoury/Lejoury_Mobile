@@ -678,6 +678,7 @@ class Home extends Component {
 						value={search}
 						lightTheme={true}
 						platform={Platform.OS}
+						showCancel={false}
 						containerStyle={styles.searchBarContainerStyle}
 						inputContainerStyle={styles.searchBarInputContainerStyle}
 						inputStyle={styles.searchBarInputStyle}

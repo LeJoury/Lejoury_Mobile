@@ -1,13 +1,9 @@
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import { Icon } from 'react-native-elements';
-import {
-	createStackNavigator,
-	createBottomTabNavigator,
-	createMaterialTopTabNavigator,
-	NavigationActions,
-	createAppContainer
-} from 'react-navigation';
+import { NavigationActions, createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
 import { Back, Title } from './IconNav';
 

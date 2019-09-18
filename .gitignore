@@ -74,6 +74,7 @@ RNTester/build
 /packages/react-native-codegen/**/*.xcodeproj
 
 # CocoaPods
+/ios/Pods/
 /template/ios/Pods/
 /template/ios/Podfile.lock
 /RNTester/Pods/

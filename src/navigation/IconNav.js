@@ -113,7 +113,7 @@ const AddBucket = (navigation, color = Color.white, onPress = undefined) => (
 
 const ViewImages = (navigation, color = Color.white, onPress = undefined) => (
 	<TouchableOpacity
-		style={[ Styles.Common.toolbarTitleStyle, { marginTop: 12 } ]}
+		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -131,7 +131,7 @@ const ViewImages = (navigation, color = Color.white, onPress = undefined) => (
 
 const CircleBack = (navigation, color = Color.white, onPress = undefined) => (
 	<TouchableOpacity
-		style={Styles.Common.toolbarTitleStyle}
+		style={Styles.Common.FloatCircle}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (

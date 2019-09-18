@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, Alert, Easing, Animated, Dimensions } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
@@ -134,7 +135,7 @@ const AddItineraryDetail = (props) => {
 		}).then((image) => {
 			let newItinerary = {
 				...draftItinerary,
-				coverPhoto: image.path
+				coverPhoto: image.sourceURL
 			};
 
 			props.addItineraryToRedux(newItinerary);
@@ -260,6 +261,7 @@ const AddItineraryDetail = (props) => {
 			let hasDayMatch = false;
 
 			if (draftItinerary.days != undefined) {
+
 				for (let day = 0; day < draftItinerary.days.length; day++) {
 					if (i + 1 === draftItinerary.days[day].identifier) {
 						hasDayMatch = true;
