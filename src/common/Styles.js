@@ -297,11 +297,11 @@ Styles.Common = {
 		justifyContent: 'center'
 	},
 	ShadowBox: {
-		shadowColor: Color.lightGrey4,
+		shadowColor: Color.lightGrey3,
 		shadowOpacity: 0.5,
-		elevation: 2,
-		shadowRadius: 4,
-		shadowOffset: { width: 0, height: 2 }
+		elevation: 6,
+		shadowRadius: 5,
+		shadowOffset: { width: 0, height: 5 }
 	}
 };
 

@@ -13,6 +13,6 @@ export default StyleSheet.create({
 		paddingBottom: 100
 	},
 	logo: {
-		width: width - 50
+		width: width / 1.5
 	}
 });

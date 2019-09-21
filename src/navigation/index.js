@@ -31,15 +31,14 @@ import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
 
 import LandingScreen from './LandingScreen';
+import ForgotPasswordScreen from './ForgotPasswordScreen';
 
 import TravellerListScreen from './TravellerListScreen';
 
 import TravellerProfileScreen from './TravellerProfileScreen';
+import ItineraryListScreen from './ItineraryListScreen';
 
 import SplashScreen from './SplashScreen';
-import Languages from '../common/Languages';
-
-const { width } = Dimensions.get('window');
 
 const uploadButtonStyle = {
 	...Styles.Common.ColumnCenter,
@@ -49,11 +48,7 @@ const uploadButtonStyle = {
 	paddingBottom: 4,
 	marginBottom: Device.isIphoneX ? 10 : 15,
 	backgroundColor: Color.primary,
-	shadowColor: Color.lightGrey3,
-	shadowOpacity: 1,
-	elevation: 2,
-	shadowRadius: 5,
-	shadowOffset: { width: 0, height: 2 }
+	...Styles.Common.ShadowBox
 };
 
 const FadeTransition = (index, position) => {
@@ -70,7 +65,7 @@ const FadeTransition = (index, position) => {
 };
 
 const AddActivityTransitionConfig = (sceneProps) => {
-	if (sceneProps.scene.route.routeName === 'AddActivityDetail') {
+	if (sceneProps.scene.route.routeName === 'AddActivityDetail' || sceneProps.scene.route.routeName === 'Landing') {
 		return {
 			screenInterpolator: (sceneProps) => {
 				const position = sceneProps.position;
@@ -93,6 +88,12 @@ const HomeStack = createStackNavigator({
 	},
 	TravellerProfile: {
 		screen: TravellerProfileScreen,
+		navigationOptions: {
+			headerStyle: Styles.Common.toolbar
+		}
+	},
+	ItineraryList: {
+		screen: ItineraryListScreen,
 		navigationOptions: {
 			headerStyle: Styles.Common.toolbar
 		}
@@ -288,10 +289,17 @@ const MainNavigator = createStackNavigator(
 			screen: LandingScreen,
 			navigationOptions: { header: null }
 		},
+		ForgotPassword: {
+			screen: ForgotPasswordScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
 		Main: { screen: AppNavigator, navigationOptions: { header: null } },
 		UploadItineraryStack: {
 			screen: UploadItineraryStack,
 			navigationOptions: {
+				mode: 'modal',
 				header: null,
 				tabBarIcon: ({ tintColor }) => <Icon name="plus-circle" type="feather" color={tintColor} />
 			}
@@ -315,7 +323,7 @@ const MainNavigator = createStackNavigator(
 	},
 	{
 		initialRouteName: 'Splash',
-		mode: 'modal',
+		transitionConfig: AddActivityTransitionConfig,
 		defaultNavigationOptions: {
 			gesturesEnabled: false,
 			headerStyle: Styles.Common.toolbar

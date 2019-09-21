@@ -629,31 +629,30 @@ class Home extends Component {
 		});
 	};
 
-	_onPressFeed = (feed) => {
+	_onPressFamous = (itinerary) => {
 		this.props.navigation.navigate('ItineraryDetails', {
-			itinerary: feed
+			itinerary: itinerary
 		});
 	};
 
-	_onPressPopular = (feed) => {
-		// this.props.navigation.navigate('ItineraryDetails', {
-		// 	itinerary: feed
-		// });
+	_onPressCountry = (country) => {
+		this.props.navigation.navigate('ItineraryList', {
+			countryID: country.countryID
+		});
 	};
 
 	_onPressTraveller = (user) => {
-		console.log(user);
 		this.props.navigation.navigate('TravellerProfile', {
 			user
 		});
 	};
 
 	_renderFamousPlaces = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this._onPressFeed(item)} type="main" />
+		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this._onPressFamous(item)} type="main" />
 	);
 
 	_renderPopular = ({ item }) => (
-		<CountryHolder country={item} key={item.countryID} onPress={() => this._onPressPopular(item)} type="main" />
+		<CountryHolder country={item} key={item.countryID} onPress={() => this._onPressCountry(item)} type="main" />
 	);
 
 	_renderTraveller = ({ item }) => (

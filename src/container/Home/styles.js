@@ -25,8 +25,8 @@ export default StyleSheet.create({
 		margin: 0,
 		paddingVertical: 6,
 		...Styles.Common.ShadowBox,
-		shadowColor: Color.grey1,
-		shadowOffset: { width: 0, height: 4 }
+		shadowRadius: 3,
+		shadowOffset: { width: 0, height: 1 }
 	},
 	searchBarInputStyle: {
 		fontSize: 15,

@@ -89,6 +89,8 @@ PODS:
     - React
   - react-native-maps (0.25.0):
     - React
+  - react-native-netinfo (4.2.1):
+    - React
   - React-RCTActionSheet (0.60.5):
     - React-Core (= 0.60.5)
   - React-RCTAnimation (0.60.5):
@@ -156,6 +158,7 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -214,6 +217,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -269,6 +274,7 @@ SPEC CHECKSUMS:
   react-native-geolocation: 8710b1bae31e734191273344d52141151b94bb3f
   react-native-image-picker: 02cc046cf072f1254fb6eba51990a3f25e138cb4
   react-native-maps: bb480348a3fe1e5a811fed1ba3387b329161c5cc
+  react-native-netinfo: a91b5cf92ed3ada997cfe2bf067633386eb19fd8
   React-RCTActionSheet: 08864c609d9f959abf3d51fdd93f8bc6e91f21eb
   React-RCTAnimation: a4547e9fac2627ded3df9d302f5558b475faf819
   React-RCTBlob: 62d5c263a2adb8f7a2cafd601beba18a2d99cbbb

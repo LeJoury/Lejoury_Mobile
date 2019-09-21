@@ -46,9 +46,6 @@ export const MemoryHolder = memoryHolder;
 import pictureHolder from './PictureHolder';
 export const PictureHolder = pictureHolder;
 
-import search from './Search';
-export const Search = search;
-
 import countryHolder from './CountryHolder';
 export const CountryHolder = countryHolder;
 
@@ -75,3 +72,6 @@ export const Timeline = timeline;
 
 import scaledImage from './ScaledImage';
 export const ScaledImage = scaledImage;
+
+import noInternetNotice from './NoInternetNotice';
+export const NoInternetNotice = noInternetNotice;

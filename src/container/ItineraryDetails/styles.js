@@ -37,17 +37,11 @@ export default StyleSheet.create({
 		paddingTop: 40,
 		flexShrink: 0,
 		minHeight: height,
-		shadowColor: Color.black,
-		shadowOpacity: 0.3,
-		shadowRadius: 2,
-		shadowOffset: { width: 0, height: -5 }
+		...Styles.Common.ShadowBox
 	},
 	travellerMainContainer: {
 		width: width - 32,
-		shadowColor: Color.lightGrey3,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	travellerContentContainer: {
 		height: 120,
@@ -61,11 +55,7 @@ export default StyleSheet.create({
 		paddingBottom: Device.isIphoneX ? 50 : 30
 	},
 	dayContainer: {
-		shadowColor: Color.black,
-		shadowOpacity: 0.3,
-		elevation: 3,
-		shadowRadius: 3,
-		shadowOffset: { width: 0, height: 3 }
+		...Styles.Common.ShadowBox
 	},
 	dayGradientContainer: {
 		width: '50%',

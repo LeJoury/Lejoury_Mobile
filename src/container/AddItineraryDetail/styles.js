@@ -37,7 +37,7 @@ export default StyleSheet.create({
 		marginHorizontal: 16,
 		flex: 1,
 		borderRadius: 8,
-		shadowColor: Color.lightGrey5
+		...Styles.Common.ShadowBox
 	},
 	inputStyle: {
 		flex: 1,
@@ -58,7 +58,7 @@ export default StyleSheet.create({
 		paddingBottom: 8,
 		flex: 1,
 		borderRadius: 8,
-		shadowColor: Color.lightGrey5
+		...Styles.Common.ShadowBox
 	},
 	datePickerStyle: {
 		width: '100%',
@@ -118,11 +118,7 @@ export default StyleSheet.create({
 	},
 	dayContainer: {
 		width: '35%',
-		shadowColor: Color.lightGrey4,
-		shadowOpacity: 0.4,
-		elevation: 2,
-		shadowRadius: 4,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	gradientDayContainer: {
 		width: '100%',

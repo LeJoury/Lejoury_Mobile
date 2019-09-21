@@ -91,6 +91,22 @@ const validatePassword = (password) => {
 
 }
 
+const createStaggerAnimationStyle = (animation) => {
+	const translateY = animation.interpolate({
+		inputRange: [ 0, 1 ],
+		outputRange: [ 15, 0 ]
+	});
+
+	return {
+		opacity: animation,
+		transform: [
+			{
+				translateY
+			}
+		]
+	};
+};
+
 export {
 	toCapitalized,
 	getCountry,
@@ -101,5 +117,6 @@ export {
 	getMonths,
 	showOkAlert,
 	validateEmail,
-	validatePassword
+	validatePassword,
+	createStaggerAnimationStyle
 };

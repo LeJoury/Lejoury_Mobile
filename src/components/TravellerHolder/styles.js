@@ -15,11 +15,7 @@ export default StyleSheet.create({
 		overflow: 'hidden',
 		padding: 8,
 		...Styles.Common.ColumnCenter,
-		shadowColor: Color.black,
-		shadowOpacity: 0.2,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	travellerImage: {
 		width: 80,

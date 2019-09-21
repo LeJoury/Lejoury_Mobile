@@ -18,10 +18,7 @@ export default StyleSheet.create({
 		paddingHorizontal: 12,
 		paddingVertical: 8,
 		backgroundColor: Color.white,
-		shadowOffset: { width: 0, height: 2 },
-		shadowColor: 'rgba(0,0,0, .3)',
-		elevation: 6,
-		shadowOpacity: 0.3
+		...Styles.Common.ShadowBox
 	},
 	draftActivityText: {
 		fontSize: 16,
@@ -72,10 +69,7 @@ export default StyleSheet.create({
 		aspectRatio: 1,
 		backgroundColor: Color.primary,
 		...Styles.Common.ColumnCenter,
-		shadowOffset: { width: 0, height: 2 },
-		shadowColor: 'rgba(0,0,0, .3)',
-		elevation: 6,
-		shadowOpacity: 0.3
+		...Styles.Common.ShadowBox
 	},
 	dayWrapper: {},
 	dayText: {

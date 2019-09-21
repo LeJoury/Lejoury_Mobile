@@ -17,22 +17,25 @@ export default StyleSheet.create({
 		backgroundColor: Color.transparent,
 		marginTop: 30
 	},
+	logo: {
+		width: 120,
+		height: 120
+	},
 	logoWrap: {
 		flex: 1,
 		flexDirection: 'column'
 	},
 	logoText: {
 		fontSize: 42,
-		color: Color.white,
-		letterSpacing: 3,
+		color: Color.primary,
+		letterSpacing: 1.5,
 		fontFamily: 'Quicksand-Bold'
 	},
 	welcomeText: {
-		fontSize: 24,
-		fontWeight: '200',
+		fontSize: 20,
 		marginTop: 6,
 		color: Color.placeHolderColor,
-		fontFamily: 'Quicksand-Light'
+		fontFamily: 'Quicksand-Regular'
 	},
 	innerContainer: {
 		flex: 1,
@@ -42,7 +45,7 @@ export default StyleSheet.create({
 	},
 	subContainer: {
 		flex: 1,
-		justifyContent: 'flex-end',
+		justifyContent: 'center'
 	},
 	landingContainer: {
 		flex: 1,
@@ -56,22 +59,14 @@ export default StyleSheet.create({
 	loginButton: {
 		marginTop: 20,
 		borderRadius: 5,
-		backgroundColor: Color.white,
-		shadowColor: Color.primaryLight,
-		shadowOpacity: 0.5,
-		elevation: 6,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 5 }
+		backgroundColor: Color.splashScreenBg5,
+		...Styles.Common.ShadowBox
 	},
 	registerButton: {
 		marginTop: 20,
-		backgroundColor: Color.primary,
 		borderRadius: 5,
-		shadowColor: Color.lightGrey2,
-		shadowOpacity: 0.3,
-		elevation: 6,
-		shadowRadius: 2,
-		shadowOffset: { width: 0, height: 2 }
+		backgroundColor: Color.white,
+		...Styles.Common.ShadowBox
 	},
 	separatorWrap: {
 		flexDirection: 'row',
@@ -80,35 +75,20 @@ export default StyleSheet.create({
 	separator: {
 		borderBottomWidth: 1,
 		flexGrow: 1,
-		borderColor: Color.lightGrey6
+		borderColor: Color.lightGrey4
 	},
 	separatorText: {
-		color: Color.lightGrey6,
+		color: Color.lightGrey4,
 		paddingHorizontal: 10
 	},
 	socialButtonsContainer: {
-		marginTop: 4
+		marginTop: 4,
+		...Styles.Common.RowCenterEvenly
 	},
-	socialButtonWrapper: {
-		...Styles.Common.RowCenterLeft,
-		borderRadius: 25,
-		marginTop: 12,
-		paddingLeft: 30
-	},
-	socialButtonText: {
-		color: Color.white,
-		textAlign: 'center',
-		paddingLeft: 30,
-		fontFamily: 'Quicksand-Regular'
-	},
-	transparentButton: {
-		width: 50,
+	socialButtonStyle: {
 		height: 50,
-		backgroundColor: Color.transparent,
-		shadowColor: Color.transparent,
-		shadowOpacity: 0,
-		elevation: 0,
-		shadowRadius: 0,
-		margin: 0
+		width: 50,
+		borderRadius: 25,
+		...Styles.Common.ShadowBox
 	}
 });

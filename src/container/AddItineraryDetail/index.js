@@ -65,7 +65,7 @@ const AddItineraryDetail = (props) => {
 		};
 	}, []);
 
-	setBackButtonHide = (hide) => {
+	const setBackButtonHide = (hide) => {
 		Animated.timing(top, {
 			duration: 50,
 			toValue: hide ? -100 : 20,
@@ -73,7 +73,7 @@ const AddItineraryDetail = (props) => {
 		}).start();
 	};
 
-	onAddDayHandle = (day) => {
+	const onAddDayHandle = (day) => {
 		let days = draftItinerary.days || [];
 
 		if (isDirty) {
@@ -99,7 +99,7 @@ const AddItineraryDetail = (props) => {
 		});
 	};
 
-	onNavigateToEditDayDetail = (selectedDay) => {
+	const onNavigateToEditDayDetail = (selectedDay) => {
 		let days = draftItinerary.days || [];
 
 		if (isDirty) {
@@ -125,11 +125,11 @@ const AddItineraryDetail = (props) => {
 		});
 	};
 
-	onPublishHandle = () => {
+	const onPublishHandle = () => {
 		console.log('publish');
 	};
 
-	onUploadCoverPhoto = () => {
+	const onUploadCoverPhoto = () => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
@@ -144,7 +144,7 @@ const AddItineraryDetail = (props) => {
 		});
 	};
 
-	onGoBack = () => {
+	const onGoBack = () => {
 		const { draft } = props;
 
 		if (draft.itineraries.length > 0) {
@@ -154,7 +154,7 @@ const AddItineraryDetail = (props) => {
 		}
 	};
 
-	onBackHandle = () => {
+	const onBackHandle = () => {
 		if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
@@ -185,7 +185,7 @@ const AddItineraryDetail = (props) => {
 		}
 	};
 
-	onScrollHandle = (event) => {
+	const onScrollHandle = (event) => {
 		var currentOffset = event.nativeEvent.contentOffset.y;
 		const dif = currentOffset - (this.offset || 0);
 
@@ -199,7 +199,7 @@ const AddItineraryDetail = (props) => {
 		this.offset = currentOffset;
 	};
 
-	renderPublishButton = () => {
+	const renderPublishButton = () => {
 		const dateFrom = new Date(startDate);
 		const dateTo = new Date(endDate);
 		const totalDays = calculateDays(dateFrom, dateTo);
@@ -216,7 +216,7 @@ const AddItineraryDetail = (props) => {
 
 		return (
 			<Animated.View style={[ styles.buttonWrapper, { height: height } ]}>
-				<Button
+				{/* <Button
 					text={Languages.Publish.toUpperCase()}
 					textStyle={styles.publishButtonTextStyle}
 					bottomColor={Color.primaryLight}
@@ -224,16 +224,16 @@ const AddItineraryDetail = (props) => {
 					type="gradient"
 					containerStyle={styles.publishButton}
 					onPress={onPublishHandle}
-				/>
+				/> */}
 			</Animated.View>
 		);
 	};
 
-	renderActivity = ({ item }) => (
+	const renderActivity = ({ item }) => (
 		<DayHolder type="draft" key={create_UUID()} activity={item} onPress={onNavigateToEditDayDetail} />
 	);
 
-	renderTotalDays = () => {
+	const renderTotalDays = () => {
 		const dateFrom = new Date(startDate);
 		const dateTo = new Date(endDate);
 
@@ -248,7 +248,7 @@ const AddItineraryDetail = (props) => {
 		);
 	};
 
-	renderDays = () => {
+	const renderDays = () => {
 		let renderDays = [];
 
 		const dateFrom = new Date(startDate);
@@ -261,7 +261,6 @@ const AddItineraryDetail = (props) => {
 			let hasDayMatch = false;
 
 			if (draftItinerary.days != undefined) {
-
 				for (let day = 0; day < draftItinerary.days.length; day++) {
 					if (i + 1 === draftItinerary.days[day].identifier) {
 						hasDayMatch = true;

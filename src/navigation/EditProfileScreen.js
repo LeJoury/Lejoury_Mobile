@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
 
 import { Title, Back, Save } from './IconNav';
 
@@ -20,7 +19,8 @@ class EditProfileScreen extends Component {
 	componentWillUnmount() {}
 
 	render() {
-		return <EditProfile navigation={this.props.navigation} />;
+		const { navigation } = this.props;
+		return <EditProfile navigation={navigation} />;
 	}
 }
 export default EditProfileScreen;

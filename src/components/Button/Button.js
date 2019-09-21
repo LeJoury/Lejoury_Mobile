@@ -17,12 +17,9 @@ import { Color } from '@common';
 const { width, height } = Dimensions.get('window');
 
 const Button = (props) => {
-	if (props.type === 'border') {
-		return <BorderButton {...props} />;
-	} else if (props.type === 'image') {
+	console.log(props);
+	if (props.type === 'image') {
 		return <ImageButton {...props} />;
-	} else if (props.type === 'text') {
-		return <TextButton {...props} />;
 	} else if (props.type === 'tab') {
 		return <TabButton {...props} />;
 	} else if (props.type === 'gradient') {
@@ -47,7 +44,7 @@ const GradientBorderButton = (props) => (
 		style={props.containerStyle}
 		start={{ x: 0.0, y: 1.0 }}
 		end={{ x: 1.0, y: 1.0 }}
-		colors={[ props.topColor, props.bottomColor ]}
+		colors={props.gradientColors}
 	>
 		<TouchableOpacity
 			disabled={props.disabled}
@@ -64,15 +61,15 @@ const GradientButton = (props) => (
 	<TouchableOpacity
 		disabled={props.disabled}
 		onPress={() => props.onPress()}
-		style={{ backgroundColor: Color.transparent }}
+		style={props.buttonContainerStyle}
 		activeOpacity={0.6}
 		underlayColor="#ccc"
 	>
 		<LinearGradient
 			style={props.containerStyle}
-			colors={[ props.topColor, props.bottomColor ]}
-			start={{ x: 0.0, y: 0.25 }}
-			end={{ x: 0.5, y: 1.0 }}
+			colors={props.gradientColors}
+			start={{ x: -0.15, y: 0.15 }}
+			end={{ x: 0.05, y: 1.0 }}
 		>
 			<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
 		</LinearGradient>

@@ -4,7 +4,7 @@ import { Color, Styles } from '@common';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
-	loginForm: { },
+	loginForm: {},
 	inputWrap: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -12,13 +12,12 @@ export default StyleSheet.create({
 		marginBottom: 10
 	},
 	input: {
-		borderColor: '#9B9B9B',
 		alignItems: 'stretch',
-		width:'100%',
+		width: '100%',
 		height: 40,
 		marginTop: 10,
 		paddingHorizontal: 6,
-		color: Color.white,
+		color: Color.primary,
 		fontFamily: 'Quicksand-Medium',
 		borderColor: Color.lightGrey6,
 		borderBottomWidth: 1
@@ -27,13 +26,19 @@ export default StyleSheet.create({
 		marginTop: 30,
 		paddingBottom: 50
 	},
+	forgotPasswordContainer: {
+		alignItems: 'flex-end',
+		justifyContent: 'flex-end',
+		paddingHorizontal: 6
+	},
+	forgotPasswordText: {
+		fontFamily: 'Quicksand-Regular',
+		color: Color.lightGrey3,
+		fontSize: 12
+	},
 	loginButton: {
 		borderRadius: 5,
 		backgroundColor: Color.white,
-		shadowColor: Color.primaryLight,
-		shadowOpacity: 0.5,
-		elevation: 6,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 5 }
+		...Styles.Common.ShadowBox
 	}
 });

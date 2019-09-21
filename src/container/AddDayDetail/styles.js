@@ -50,12 +50,9 @@ export default StyleSheet.create({
 		height: 40,
 		borderRadius: 20,
 		width: width / 2.3,
-		shadowOffset: { width: 0, height: 4 },
-		shadowColor: 'rgba(0,0,0, .3)',
-		elevation: 6,
-		shadowOpacity: 0.1,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		...Styles.Common.ShadowBox
 	},
 	addActivityButtonText: {
 		fontSize: 14,

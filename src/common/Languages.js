@@ -17,6 +17,7 @@ export default {
 	Sorry: 'Sorry',
 	Success: 'Success',
 	Save: 'Save',
+	Send: 'Send',
 	SomethingWentWrong: 'Something went wrong. Please try again.',
 	Welcome: 'Welcome to LeJoury.',
 	WelcomeBack: 'Welcome Back to LeJoury.',
@@ -66,7 +67,7 @@ export default {
 
 	//Product
 	ErrorMessageRequest: "Can't get data from server",
-	NoConnection: 'No internet connection',
+	NoConnection: 'No Internet Connection',
 
 	//Sidemenu
 	SignIn: 'LOGIN',
@@ -104,7 +105,6 @@ export default {
 	NotSelectedError: 'Please choose one',
 	Postcode: 'Postcode',
 	Country: 'Country',
-	Email: 'Email',
 	Phone: 'Phone Number',
 	Note: 'Note',
 
@@ -172,8 +172,11 @@ export default {
 	dob: 'Date of Birth',
 	contact: 'Mobile No.',
 	LoginFail: 'Login Failed',
-	Login: 'LOGIN',
-	Register: 'REGISTER',
+	ForgotPassword: 'Forgot Password',
+	ForgotPasswordMessage:
+		'Please enter your email address, you will received a link to create a new password via email.',
+	Login: 'Login',
+	Register: 'Register',
 	PersonalInfo: 'Personal Information',
 	AccountInfo: 'Account Information',
 	ContinueWithFacebook: 'Continue with Facebook',

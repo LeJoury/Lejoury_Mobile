@@ -6,7 +6,7 @@ export default {
 	primaryLight3: '#a0b1b8',
 
 	textSelectionColor: '#253C41',
-	
+
 	timelineLastLine: '#b3c5c9',
 	timelineLastCircle: '#b3c5c9',
 
@@ -14,6 +14,19 @@ export default {
 	top1: '#74b9ff',
 	bottom: '#34687A',
 	bottom1: '#7998a3',
+
+	splashScreenBg1: '#74b9ff',
+	splashScreenBg2: '#53bbf8',
+	splashScreenBg3: '#31bded',
+	splashScreenBg4: '#0cbddf',
+	splashScreenBg5: '#00bccf',
+	splashScreenBg6: '#09b0bd',
+	splashScreenBg7: '#13a4ac',
+	splashScreenBg8: '#19989b',
+	splashScreenBg9: '#218086',
+	splashScreenBg10: '#26686f',
+	splashScreenBg11: '#275258',
+	splashScreenBg12: '#253c41',
 
 	primary10T: 'rgba(98, 133, 250, 0.1)',
 	primary30T: 'rgba(98, 133, 250, 0.3)',
@@ -44,7 +57,6 @@ export default {
 	black50T: 'rgba(0, 0, 0, 0.5)',
 	black70T: 'rgba(0, 0, 0, 0.7)',
 	black90T: 'rgba(0, 0, 0, 0.9)',
-	white30T: 'rgba(255, 255, 255, 0.3)',
 	facebookLogo: '#3C5A99',
 	googleLogo: '#DB4437',
 

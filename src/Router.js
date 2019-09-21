@@ -1,5 +1,8 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { Animated, View } from 'react-native';
+
+import { NoInternetNotice } from '@components';
+
 import Navigation from './navigation';
 
 class Router extends React.PureComponent {
@@ -20,7 +23,12 @@ class Router extends React.PureComponent {
 	};
 
 	render() {
-		return <Navigation ref={'navigator'} />;
+		return (
+			<View style={{ flex: 1 }}>
+				<Navigation ref={'navigator'} />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 

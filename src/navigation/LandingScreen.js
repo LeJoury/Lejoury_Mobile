@@ -16,7 +16,7 @@ class LandingScreen extends Component {
 				<StatusBar
 					backgroundColor={Color.transparent1}
 					translucent={true}
-					barStyle="light-content"
+					barStyle="dark-content"
 					showHideTransition="fade"
 				/>
 				<Landing navigation={this.props.navigation} />

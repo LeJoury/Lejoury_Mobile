@@ -45,8 +45,7 @@ const UserProfileHeader = ({
 							textColor={Color.primaryLight}
 							textStyle={styles.followButtonText}
 							containerStyle={styles.followButton}
-							bottomColor={Color.primary}
-							topColor={Color.secondPrimary}
+							gradientColors={[ Color.secondPrimary, Color.primary ]}
 							type="gradientBorder"
 							onPress={onEditProfilePress}
 						/>
@@ -56,8 +55,7 @@ const UserProfileHeader = ({
 							textColor={Color.primaryLight}
 							textStyle={styles.followButtonText}
 							containerStyle={styles.followButton}
-							bottomColor={Color.primary}
-							topColor={Color.secondPrimary}
+							gradientColors={[ Color.secondPrimary, Color.primary ]}
 							type="gradientBorder"
 							onFunctionPress={onFunctionPress}
 						/>

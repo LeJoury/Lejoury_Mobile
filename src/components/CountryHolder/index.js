@@ -7,7 +7,7 @@ import styles from './styles';
 
 const CountryHolder = ({ country, onPress }) => (
 	<Card containerStyle={styles.container}>
-		<TouchableOpacity>
+		<TouchableOpacity onPress={onPress}>
 			<View style={styles.imageWrapper}>
 				<Image
 					source={{

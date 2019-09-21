@@ -64,9 +64,7 @@ const S = StyleSheet.create({
 		height: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
-		shadowOffset: { width: 0, height: 2 },
-		shadowColor: 'rgba(0,0,0, .3)',
-		shadowOpacity: 1,
+		...Styles.Common.ShadowBox
 	},
 	spotLightInner: {
 		width: 40,

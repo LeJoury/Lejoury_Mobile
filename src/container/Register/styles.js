@@ -14,20 +14,20 @@ export default StyleSheet.create({
 		width: '100%',
 		height: 40,
 		paddingHorizontal: 6,
-		color: Color.white,
+		color: Color.primary,
 		fontFamily: 'Quicksand-Medium',
 		borderColor: Color.lightGrey6,
 		borderBottomWidth: 1
 	},
 	error: {
 		color: Color.red1,
-		fontSize: 14,
+		fontSize: 12,
 		paddingTop: 6,
-		fontFamily: 'Quicksand-Medium'
+		paddingHorizontal: 6,
+		fontFamily: 'Quicksand-Regular'
 	},
 	sectionWrapper: {
 		...Styles.Common.ColumnCenterLeft,
-		marginTop: 24,
 		marginBottom: 12,
 		borderColor: Color.white,
 		borderLeftWidth: 3
@@ -44,10 +44,6 @@ export default StyleSheet.create({
 	registerButton: {
 		marginTop: 20,
 		borderRadius: 5,
-		shadowColor: Color.primaryLight,
-		shadowOpacity: 0.5,
-		elevation: 6,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 5 }
+		...Styles.Common.ShadowBox
 	}
 });

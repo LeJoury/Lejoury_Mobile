@@ -35,10 +35,7 @@ export default StyleSheet.create({
 		borderTopLeftRadius: 6,
 		height: height + 50,
 		paddingBottom: 30,
-		shadowColor: Color.black,
-		shadowOpacity: 0.3,
-		shadowRadius: 2,
-		shadowOffset: { width: 0, height: -5 }
+		...Styles.Common.ShadowBox
 	},
 	contentWrapper: {
 		...Styles.Common.ColumnCenterLeft,

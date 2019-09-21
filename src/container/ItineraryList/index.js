@@ -9,9 +9,9 @@ import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
 
-function wp (percentage) {
-    const value = (percentage * width) / 100;
-    return Math.round(value);
+function wp(percentage) {
+	const value = percentage * width / 100;
+	return Math.round(value);
 }
 
 const slideWidth = wp(75);
@@ -25,7 +25,7 @@ class ItineraryList extends Component {
 	//super (props)
 	//}
 
-	_keyExtractor = (item, index) => item.itineraryId;
+	_keyExtractor = (item, index) => item.itineraryID;
 
 	componentDidMount() {}
 
@@ -40,6 +40,12 @@ class ItineraryList extends Component {
 		});
 	};
 
+	onPressCountryItinerary = (itinerary) => {
+		this.props.navigation.navigate('ItineraryDetails', {
+			itinerary
+		});
+	};
+
 	renderEndofList() {
 		return (
 			<View style={styles.separatorWrap}>
@@ -50,11 +56,20 @@ class ItineraryList extends Component {
 		);
 	}
 
-	_renderItem = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressItinerary(item)} />
+	renderItem = ({ item }) => (
+		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this.onPressItinerary(item)} />
 	);
 
-	_renderEmpty = () => <Text>{Languages.Empty}</Text>;
+	renderItineraryBasedOnCountry = ({ item }) => (
+		<ItineraryHolder
+			itinerary={item}
+			key={item.itineraryID}
+			onPress={() => this.onPressCountryItinerary(item)}
+			type="main"
+		/>
+	);
+
+	renderEmpty = () => <Text>{Languages.Empty}</Text>;
 
 	render() {
 		const { itineraries, type } = this.props;
@@ -62,18 +77,16 @@ class ItineraryList extends Component {
 		return type === 'flatlist' ? (
 			<FlatList
 				data={itineraries}
-				horizontal={true}
-				showsHorizontalScrollIndicator={false}
 				keyExtractor={this._keyExtractor}
-				renderItem={this._renderItem}
-				ListEmptyComponent={this._renderEmpty}
+				renderItem={this.renderItineraryBasedOnCountry}
+				ListEmptyComponent={this.renderEmpty}
 			/>
 		) : (
 			<Carousel
 				data={itineraries}
 				layout={'default'}
 				keyExtractor={this._keyExtractor}
-				renderItem={this._renderItem}
+				renderItem={this.renderItem}
 				sliderWidth={sliderWidth}
 				itemWidth={itemWidth}
 				enableMomentum={true}

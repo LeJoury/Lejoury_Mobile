@@ -75,7 +75,7 @@ class Profile extends Component {
 
 	render() {
 		const { user, isMe, navigation } = this.props;
-		
+
 		const itineraries = [];
 
 		const name = this._getName(user);
@@ -106,7 +106,9 @@ class Profile extends Component {
 				) : (
 					<View style={styles.noItinerariesContainer}>
 						<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
-						<Text style={styles.noItinerariesText}>{name} {Languages.NoItineraries}</Text>
+						<Text style={styles.noItinerariesText}>
+							{name} {Languages.NoItineraries}
+						</Text>
 					</View>
 				)}
 			</ScrollView>

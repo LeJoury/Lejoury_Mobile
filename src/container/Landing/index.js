@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, Animated, TouchableOpacity, Platform, Alert, StyleSheet } from 'react-native';
+import { View, Text, Animated, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
 import { SocialIcon, Icon } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { Login, Register } from '@container';
-
-import { Cancel } from '../../navigation/IconNav';
 
 // import { connect } from 'react-redux';
 // import { login, dismissLoginDialog } from '@actions';
@@ -14,8 +12,8 @@ import { Cancel } from '../../navigation/IconNav';
 import { Images, Color, Languages, Styles, Constants, showOkAlert } from '@common';
 import { ButtonIndex, Spinner } from '@components';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
 
+const { width, height } = Dimensions.get('window');
 const { ASYNCKEY } = Constants.ASYNCKEY;
 
 class Landing extends Component {
@@ -83,7 +81,6 @@ class Landing extends Component {
 
 	onLoginPressHandle = () => {
 		//type = email, social
-		// this.props.navigation.navigate('Login');
 
 		this.setState(
 			{
@@ -121,11 +118,9 @@ class Landing extends Component {
 	};
 
 	onLoginWithEmail = async (username, password) => {
-		console.log(username);
-		console.log(password);
 		const { navigation } = this.props;
 
-		const fakeUsername = 'Testing123';
+		const fakeUsername = 'testing123';
 		const fakePassword = 'testing123';
 
 		//show loading
@@ -188,6 +183,11 @@ class Landing extends Component {
 		);
 	};
 
+	onNavigateToForgotPassword = () => {
+		this.props.navigation.navigate('ForgotPassword');
+	};
+
+
 	render() {
 		const { navigation } = this.props;
 		const { optionAnimations, backVisible, landingAnimation } = this.state;
@@ -199,12 +199,12 @@ class Landing extends Component {
 
 		const translateOptionYInterpolate = optionAnimations.interpolate({
 			inputRange: [ 0, 1 ],
-			outputRange: [ 500, 0 ]
+			outputRange: [ height, 0 ]
 		});
 
 		const translateLoginRegisterYInterpolate = landingAnimation.interpolate({
 			inputRange: [ 0, 1 ],
-			outputRange: [ 500, 0 ]
+			outputRange: [ height, 0 ]
 		});
 
 		const optionAnimationStyles = {
@@ -229,8 +229,7 @@ class Landing extends Component {
 		};
 
 		return (
-			<ImageBackground style={styles.landingBackground} source={Images.landingBackground} blurRadius={90}>
-				<View style={{ ...Styles.Common.OverlayBackground }} />
+			<View style={styles.landingBackground}>
 				<KeyboardAwareScrollView
 					contentContainerStyle={{ flexGrow: 1 }}
 					behavior="padding"
@@ -240,7 +239,9 @@ class Landing extends Component {
 					<View style={styles.container}>
 						<View style={styles.innerContainer}>
 							<View style={styles.logoWrap}>
-								<Text style={styles.logoText}>{Languages.AppName}</Text>
+								{/* <Text style={styles.logoText}>{Languages.AppName}</Text> */}
+								<Image style={styles.logo} source={Images.appLogoOutline} resizeMode={'contain'} />
+
 								<Text style={styles.welcomeText}>{Languages.Welcome}</Text>
 
 								<Animated.View style={[ backButtonStyles, styles.backButtonWrapper ]}>
@@ -249,7 +250,7 @@ class Landing extends Component {
 											name="chevron-left"
 											type="feather"
 											size={Styles.IconSize.xLarge}
-											color={Color.white}
+											color={Color.primary}
 										/>
 									</TouchableOpacity>
 								</Animated.View>
@@ -258,80 +259,61 @@ class Landing extends Component {
 							<View style={styles.subContainer}>
 								{this.state.optionVisible ? (
 									<Animated.View style={[ optionAnimationStyles, styles.landingContainer ]}>
-										{/* <Animated.View style={[ optionAnimationStyles ]}> */}
 										<View style={styles.buttonWrap}>
 											<ButtonIndex
 												text={Languages.Login}
-												textColor={Color.primary}
 												containerStyle={styles.loginButton}
 												onPress={() => this.onLoginPressHandle('normal')}
 											/>
 											<ButtonIndex
 												text={Languages.Register}
+												textColor={Color.primary}
 												containerStyle={styles.registerButton}
 												onPress={() => this.onRegisterPressHandle()}
 											/>
 										</View>
 										<View style={styles.separatorWrap}>
 											<View style={styles.separator} />
-											<Text style={styles.separatorText}>Or</Text>
+											<Text style={styles.separatorText}> Or </Text>
 											<View style={styles.separator} />
 										</View>
 										<View style={styles.socialButtonsContainer}>
-											<TouchableOpacity
+											<SocialIcon
+												button
+												type="facebook"
+												style={styles.socialButtonStyle}
+												underlayColor={Color.normalButtonHover}
 												onPress={() => this.onLoginPressHandle('fb')}
-												style={[
-													styles.socialButtonWrapper,
-													{ backgroundColor: Color.facebookLogo }
-												]}
-											>
-												<SocialIcon
-													button
-													type="facebook"
-													iconColor={Color.white}
-													style={styles.transparentButton}
-													underlayColor={Color.normalButtonHover}
-												/>
-												<Text style={styles.socialButtonText}>
-													{Languages.ContinueWithFacebook}
-												</Text>
-											</TouchableOpacity>
-											<TouchableOpacity
+											/>
+
+											<SocialIcon
+												button
+												light
+												type="google"
+												style={styles.socialButtonStyle}
+												underlayColor={Color.normalButtonHover}
 												onPress={() => this.onLoginPressHandle('gmail')}
-												style={[
-													styles.socialButtonWrapper,
-													{ backgroundColor: Color.googleLogo }
-												]}
-											>
-												<SocialIcon
-													button
-													type="google"
-													iconColor={Color.white}
-													style={styles.transparentButton}
-													underlayColor={Color.normalButtonHover}
-												/>
-												<Text style={styles.socialButtonText}>
-													{Languages.ContinueWithGoogle}
-												</Text>
-											</TouchableOpacity>
+											/>
 										</View>
 									</Animated.View>
 								) : (
 									<Animated.View style={[ loginAnimationStyles, styles.login_registerContainer ]}>
 										{this.state.isLogin ? (
-											<Login navigation={navigation} onLoginWithEmail={this.onLoginWithEmail} />
+											<Login
+												navigation={navigation}
+												onLoginWithEmail={this.onLoginWithEmail}
+												onNavigateToForgotPassword={this.onNavigateToForgotPassword}
+											/>
 										) : (
 											<Register navigation={navigation} />
 										)}
 									</Animated.View>
 								)}
-
-								{/* <Animated.View style={[ loginAnimationStyles ]}> */}
 							</View>
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
-			</ImageBackground>
+			</View>
 		);
 	}
 }

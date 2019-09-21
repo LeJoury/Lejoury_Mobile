@@ -1,92 +1,146 @@
-import React, { useState } from 'react';
-import { View, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, TouchableWithoutFeedback, Animated, Text } from 'react-native';
 
-import { Color, Styles, Languages } from '@common';
+import { Color, Languages, createStaggerAnimationStyle } from '@common';
 import { ButtonIndex } from '@components';
 
 import styles from './styles';
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const Login = (props) => {
-	const [ username, setUsername ] = useState('');
-	const [ isUsernameFocus, setUsernameFocus ] = useState(false);
+	const [ emailAddressBox ] = useState(new Animated.Value(0));
+	const [ passwordBox ] = useState(new Animated.Value(0));
+	const [ forgotPasswordBox ] = useState(new Animated.Value(0));
+	const [ loginButtonBox ] = useState(new Animated.Value(0));
+
+	const [ emailAddress, setEmailAddress ] = useState('');
+	const [ isEmailAddressFocus, setEmailAddressFocus ] = useState(false);
 
 	const [ password, setPassword ] = useState('');
 	const [ isPasswordFocus, setPasswordFocus ] = useState(false);
 
-	const onChangeUsername = (name) => {
-		setUsername(name);
+	const onChangeEmailAddress = (value) => {
+		setEmailAddress(value);
 	};
 
-	const onChangePassword = (password) => {
-		setPassword(password);
+	const onChangePassword = (value) => {
+		setPassword(value);
 	};
 
 	const shouldButtonDisabled = () => {
-		if (username && password) return false;
-		else return true;
+		if (emailAddress && password) {
+			return false;
+		} else {
+			return true;
+		}
 	};
 
-	const buttonTextColor = shouldButtonDisabled() ? Color.lightGrey1 : Color.primary;
+	useEffect(() => {
+		Animated.stagger(100, [
+			Animated.timing(emailAddressBox, {
+				toValue: 1,
+				duration: 200
+			}),
+			Animated.timing(passwordBox, {
+				toValue: 1,
+				duration: 200
+			}),
+			Animated.timing(forgotPasswordBox, {
+				toValue: 1,
+				duration: 200
+			}),
+			Animated.timing(loginButtonBox, {
+				toValue: 1,
+				duration: 200
+			})
+		]).start(() => {
+			this._emailAddress.getNode().focus();
+		});
+	}, []);
+
+	const buttonTextColor = shouldButtonDisabled() ? Color.lightGrey1 : Color.white;
 
 	const buttonStyle = shouldButtonDisabled()
-		? { backgroundColor: Color.lightGrey6 }
-		: { backgroundColor: Color.white };
+		? { backgroundColor: Color.lightGrey6, shadowOpacity: 0 }
+		: { backgroundColor: Color.splashScreenBg5, shadowOpacity: 0.5 };
+
+	const emailAddressBoxStyle = createStaggerAnimationStyle(emailAddressBox);
+	const passwordBoxStyle = createStaggerAnimationStyle(passwordBox);
+	const forgotPasswordBoxStyle = createStaggerAnimationStyle(forgotPasswordBox);
+	const loginButtonBoxStyle = createStaggerAnimationStyle(loginButtonBox);
 
 	return (
 		<View style={styles.loginForm}>
-			<View style={styles.inputWrap}>
-				<TextInput
-					{...commonInputProps}
+			<View style={[ styles.inputWrap, { marginTop: 0 } ]}>
+				<AnimatedTextInput
+					ref={(ref) => (this._emailAddress = ref)}
 					underlineColorAndroid={'transparent'}
-					placeholder={Languages.username}
+					placeholder={Languages.Email}
+					placeholderTextColor={Color.lightGrey3}
 					selectionColor={Color.textSelectionColor}
+					autoCapitalize={'none'}
 					keyboardType={'email-address'}
-					onChangeText={onChangeUsername}
-					onFocus={() => setUsernameFocus(true)}
+					onChangeText={onChangeEmailAddress}
+					onFocus={() => setEmailAddressFocus(true)}
 					onBlur={() => {
-						setUsernameFocus(false);
+						setEmailAddressFocus(false);
 					}}
+					onSubmitEditing={() => {
+						this._password.getNode().focus();
+					}}
+					blurOnSubmit={false}
 					returnKeyType={'next'}
-					value={username}
-					style={[ styles.input, { borderColor: isUsernameFocus ? Color.primary : Color.lightGrey6 } ]}
+					value={emailAddress}
+					style={[
+						emailAddressBoxStyle,
+						styles.input,
+						{ borderColor: isEmailAddressFocus ? Color.primary : Color.lightGrey6 }
+					]}
 				/>
 			</View>
 
 			<View style={styles.inputWrap}>
-				<TextInput
-					{...commonInputProps}
+				<AnimatedTextInput
+					ref={(ref) => (this._password = ref)}
 					underlineColorAndroid={'transparent'}
 					placeholder={Languages.password}
+					placeholderTextColor={Color.lightGrey3}
 					selectionColor={Color.textSelectionColor}
+					autoCapitalize={'none'}
 					secureTextEntry={true}
 					onChangeText={onChangePassword}
 					onFocus={() => setPasswordFocus(true)}
 					onBlur={() => {
 						setPasswordFocus(false);
 					}}
+					blurOnSubmit={true}
 					returnKeyType={'go'}
 					value={password}
-					style={[ styles.input, { borderColor: isPasswordFocus ? Color.primary : Color.lightGrey6 } ]}
+					style={[
+						passwordBoxStyle,
+						styles.input,
+						{ borderColor: isPasswordFocus ? Color.primary : Color.lightGrey6 }
+					]}
 				/>
 			</View>
 
-			<View style={styles.buttonWrap}>
+			<Animated.View style={[ styles.forgotPasswordContainer, forgotPasswordBoxStyle ]}>
+				<TouchableWithoutFeedback onPress={() => props.onNavigateToForgotPassword()}>
+					<Text style={styles.forgotPasswordText}>{Languages.ForgotPassword}</Text>
+				</TouchableWithoutFeedback>
+			</Animated.View>
+
+			<Animated.View style={[ styles.buttonWrap, loginButtonBoxStyle ]}>
 				<ButtonIndex
 					disabled={shouldButtonDisabled()}
 					text={Languages.Login}
 					textColor={buttonTextColor}
 					containerStyle={[ styles.loginButton, buttonStyle ]}
-					onPress={() => props.onLoginWithEmail(username, password)}
+					onPress={() => props.onLoginWithEmail(emailAddress, password)}
 				/>
-			</View>
+			</Animated.View>
 		</View>
 	);
-};
-
-const commonInputProps = {
-	style: styles.input,
-	underlineColorAndroid: 'transparent',
-	placeholderTextColor: Color.lightGrey3
 };
 
 export default Login;

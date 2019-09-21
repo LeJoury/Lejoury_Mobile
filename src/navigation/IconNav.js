@@ -5,7 +5,7 @@ import { Styles, Color, Device, Images, Languages } from '@common';
 
 const hitSlop = { top: 0, right: 15, bottom: 0, left: 15 };
 // Icons for HeaderBar
-const Logo = () => <Image source={Images.appLogo} style={Styles.Common.logo} />;
+const Logo = () => <Image source={Images.splashScreenLogo} style={Styles.Common.logo} />;
 
 const BlackBackView = (navigation, iconBack) => (
 	<TouchableOpacity
@@ -24,16 +24,6 @@ const BlackBackView = (navigation, iconBack) => (
 const EmptyView = () => <View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]} />;
 
 const Title = (title, color) => <Text style={[ Styles.Common.toolbarTitleStyle, { color: color } ]}>{title}</Text>;
-
-const HeaderRight = (navigation) => (
-	<View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]}>
-		<NavigationBarIcon icon={Images.IconSearch} size={17} onPress={() => navigation.navigate('Search')} />
-	</View>
-);
-
-const HeaderSearch = (updateSearch, search) => {
-	<SearchBar placeholder="Type Here..." onChangeText={updateSearch} value={search} lightTheme={true} />;
-};
 
 const Settings = (navigation, color = Color.black) => (
 	<View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]}>
@@ -189,7 +179,6 @@ export {
 	Cancel,
 	Settings,
 	TransparentHeader,
-	HeaderSearch,
 	Add,
 	AddBucket,
 	ViewImages,

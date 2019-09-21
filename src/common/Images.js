@@ -1,7 +1,12 @@
 const Images = {
 	defaultAvatar: require('@assets/default_avatar.png'),
-	appLogo: require('@assets/logo.jpeg'),
-	defaultDraftItineraryBackground: require('@assets/travel_bg.jpg'),
+	splashScreenLogo: require('@assets/splash_screen.png'),
+	appLogoWithColor : require('@assets/logo_color.png'),
+	appLogoOutline : require('@assets/logo_outline.png'),
+
+	// defaultDraftItineraryBackground: require('@assets/travel_bg.jpg'),
+	defaultDraftItineraryBackground: require('@assets/bg_add_itinerary.png'),
+
 	defaultLogo: require('@assets/default_logo.png'),
 
 	landingBackground: require('@assets/landingPage.jpg'),

@@ -31,9 +31,6 @@ export const Register = _Register;
 import _Notification from './Notification';
 export const Notification = _Notification;
 
-import _Search from './Search';
-export const Search = _Search;
-
 import _UploadItinerary from './UploadItinerary';
 export const UploadItinerary = _UploadItinerary;
 
@@ -63,3 +60,9 @@ export const EditProfile = _EditProfile;
 
 import _BucketList from './BucketList';
 export const BucketList = _BucketList;
+
+import _ForgotPassword from './ForgotPassword';
+export const ForgotPassword = _ForgotPassword;
+
+import _Search from './Search';
+export const Search = _Search;

@@ -9,11 +9,7 @@ export default StyleSheet.create({
 		borderRadius: 3,
 		borderWidth: 0,
 		width: width / 3,
-		shadowColor: Color.black,
-		shadowOpacity: 0.2,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	imageWrapper: {
 		overflow: 'hidden',

@@ -10,11 +10,7 @@ export default StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 0,
 		width: width / 1.3,
-		shadowColor: Color.black,
-		shadowOpacity: 0.5,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	profile_ImageBackground: {
 		width: undefined,
@@ -57,11 +53,7 @@ export default StyleSheet.create({
 		borderWidth: 1,
 		borderColor: Color.primary,
 		borderStyle: 'dashed',
-		shadowColor: Color.lightGrey3,
-		shadowOpacity: 0.5,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	draft_BgImageContainer: {
 		width: '100%',
@@ -130,11 +122,7 @@ export default StyleSheet.create({
 	main_Card: {
 		paddingBottom: 5,
 		margin: 12,
-		shadowColor: Color.lightGrey3,
-		shadowOpacity: 0.5,
-		elevation: 2,
-		shadowRadius: 5,
-		shadowOffset: { width: 0, height: 2 }
+		...Styles.Common.ShadowBox
 	},
 	main_Image: {
 		width: undefined,
