@@ -16,29 +16,32 @@ class DraftItinerary extends Component {
 	//}
 	_keyExtractor = (item, index) => item.itineraryID;
 
+	componentDidMount() {
+		this.props.onRef(this);
+	}
+
 	componentDidUpdate() {}
 
-	componentWillUnmount() {}
+	componentWillUnmount() {
+		this.props.onRef(null);
+	}
 
-	_onPressItinerary = (itinerary) => {
+	onPressItinerary = (itinerary) => {
 		// console.log(itinerary);
 
 		this.props.addItineraryToRedux(itinerary);
 		this.props.navigation.navigate('AddItineraryDetail');
 	};
 
-	_onPressAddNewItinerary = () => {
+	onPressAddNewItinerary = () => {
 		this.props.navigation.navigate('UploadNewItineraryScreen');
 	};
 
-	_onRemoveDraft = (itineraryID) => {
+	onRemoveDraft = (itineraryID) => {
 		this.props
 			.removeItineraryDraft(itineraryID)
 			.then((removedID) => {
 				console.log(removedID);
-				// dispatch({
-				// 	type: Types.REMOVE_ITINERARY_FROM_DRAFT
-				// });
 			})
 			.catch((error) => {
 				console.log(error);
@@ -56,22 +59,17 @@ class DraftItinerary extends Component {
 		);
 	}
 
-	_renderItem = ({ item }) => (
+	renderItem = ({ item }) => (
 		<ItineraryHolder
 			type="draft"
 			itinerary={item}
 			key={item.itineraryId}
-			onPress={() => this._onPressItinerary(item)}
-			onRemovePress={() => this._onRemoveDraft(item.itineraryID)}
+			onPress={() => this.onPressItinerary(item)}
+			onRemovePress={() => this.onRemoveDraft(item.itineraryID)}
 		/>
 	);
 
-	_renderEmpty = () => (
-		<ItineraryHolder
-			type="emptyDraft"
-			onPress={() => this._onPressAddNewItinerary()}
-		/>
-	);
+	renderEmpty = () => <ItineraryHolder type="emptyDraft" onPress={() => this.onPressAddNewItinerary()} />;
 
 	render() {
 		const { navigation } = this.props;
@@ -80,17 +78,18 @@ class DraftItinerary extends Component {
 		return (
 			<View style={{ flex: 1 }}>
 				<FlatList
+					style={{ paddingTop: 6 }}
 					data={itineraries}
 					keyExtractor={this._keyExtractor}
-					renderItem={this._renderItem}
-					ListEmptyComponent={this._renderEmpty}
+					renderItem={this.renderItem}
+					ListEmptyComponent={this.renderEmpty}
 				/>
-				<Button
+				{/* <Button
 					type="floating"
 					onPress={() => this._onPressAddNewItinerary()}
 					buttonColor={Color.primary}
 					icon={<Icon name="plus" type="feather" size={Styles.IconSize.Medium} color={Color.white} />}
-				/>
+				/> */}
 			</View>
 		);
 	}

@@ -11,10 +11,10 @@ const styles = StyleSheet.create({
 	labelText: {
 		fontSize: 14,
 		fontFamily: 'Quicksand-Medium',
-		paddingBottom: 10
+		paddingVertical: 12
 	},
 	tabbar: {
-		height: 40,
+		height: 46,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center'

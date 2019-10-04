@@ -38,12 +38,18 @@ export default StyleSheet.create({
 		paddingLeft: 8
 	},
 	buttonWrap: {
-		marginTop: 30,
-		paddingBottom: 30
+		marginTop: 20,
+		paddingBottom: 20
+	},
+	registerTextStyle: {
+		fontSize: 16,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold'
 	},
 	registerButton: {
-		marginTop: 20,
-		borderRadius: 5,
+		marginTop: 12,
+		backgroundColor: Color.splashScreenBg5,
+		...Styles.Button.Radius5,
 		...Styles.Common.ShadowBox
 	}
 });

@@ -102,7 +102,9 @@ export default StyleSheet.create({
 		position: 'absolute',
 		bottom: 0,
 		left: 0,
-		right: 0
+		right: 0,
+		height: Device.isIphoneX ? 60 : 50,
+		...Styles.Common.ShadowBox
 	},
 	publishButtonTextStyle: {
 		color: Color.white,
@@ -113,25 +115,23 @@ export default StyleSheet.create({
 	publishButton: {
 		width: width,
 		height: Device.isIphoneX ? 60 : 50,
-		backgroundColor: Color.primary,
+		backgroundColor: Color.splashScreenBg5,
 		justifyContent: 'center'
 	},
 	dayContainer: {
 		width: '35%',
-		...Styles.Common.ShadowBox
-	},
-	gradientDayContainer: {
-		width: '100%',
+		...Styles.Common.ShadowBox,
+		backgroundColor: Color.white,
 		paddingVertical: 12,
 		paddingHorizontal: 16,
 		borderTopRightRadius: 30,
 		borderBottomRightRadius: 30
 	},
 	noOfDayText: {
-		fontSize: 16,
+		fontSize: 15,
 		marginLeft: 6,
 		fontFamily: 'Quicksand-Medium',
-		color: Color.white
+		color: Color.black1
 	},
 	editDayContainer: {
 		flex: 1,

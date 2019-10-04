@@ -47,7 +47,7 @@ export default StyleSheet.create({
 		height: 120,
 		marginTop: -80,
 		paddingHorizontal: 8,
-		paddingTop: 8,
+		paddingTop: 12,
 		borderRadius: 6
 	},
 	timelineContainer: {
@@ -55,19 +55,14 @@ export default StyleSheet.create({
 		paddingBottom: Device.isIphoneX ? 50 : 30
 	},
 	dayContainer: {
-		...Styles.Common.ShadowBox
-	},
-	dayGradientContainer: {
 		width: '50%',
-		borderTopRightRadius: 30,
-		borderBottomRightRadius: 30,
-		paddingVertical: 2
+		marginTop: 8
 	},
 	dayTextStyle: {
-		paddingVertical: 6,
-		marginHorizontal: 16,
-		color: Color.white,
+		paddingVertical: 1,
+		marginHorizontal: 12,
+		color: Color.darkGrey2,
 		fontSize: 16,
-		fontFamily: 'Quicksand-Bold'
+		fontFamily: 'Quicksand-Medium'
 	}
 });

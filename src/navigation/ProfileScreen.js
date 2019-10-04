@@ -21,7 +21,7 @@ const user = {
 
 class ProfileScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(user.username, Color.blackTextPrimary),
+		headerTitle: Title(user.username, Color.headerTitleColor),
 		headerRight: Settings(navigation, Color.lightGrey3)
 	});
 

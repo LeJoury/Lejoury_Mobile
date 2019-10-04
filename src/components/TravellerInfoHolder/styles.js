@@ -11,7 +11,8 @@ export default StyleSheet.create({
 	main_UserProfilePicture: {
 		width: 20,
 		height: 20,
-		borderRadius: 10
+		borderRadius: 10,
+		overflow: 'hidden'
 	},
 	main_UserProfileName: {
 		paddingLeft: 12,

@@ -5,14 +5,21 @@ const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	container: {
+		flex: 1
+	},
+	logoWrapper: {
 		flex: 1,
-		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: 'white',
-		paddingTop: 50,
-		paddingBottom: 100
+		alignItems: 'center'
 	},
 	logo: {
-		width: width / 1.5
+		width: width / 1.3,
+		height: width / 1.3
+	},
+	appNameText: {
+		marginTop: 12,
+		color: Color.white,
+		fontSize: 24,
+		fontFamily: 'Quicksand-Medium'
 	}
 });

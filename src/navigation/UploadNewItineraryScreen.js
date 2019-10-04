@@ -7,7 +7,7 @@ import { Color, Languages } from '@common';
 class UploadNewItineraryScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
-		headerTitle: Title(Languages.Itinerary, Color.primary)
+		headerTitle: Title(Languages.Itinerary, Color.headerTitleColor)
 	});
 
 	componentDidMount() {

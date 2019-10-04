@@ -1,37 +1,27 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FlatList, Image, View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
+import FastImage from 'react-native-fast-image';
+import { createImageProgress } from 'react-native-image-progress';
 
-import { Color, Languages, Styles } from '@common';
-
-const { width, height } = Dimensions.get('window');
+import { Color } from '@common';
 
 import styles from './styles';
 
-// const ds = new FlatList.DataSource({
-// 	rowHasChanged: (r1, r2) => r1 !== r2,
-// 	sectionHeaderHasChanged: (s1, s2) => s1 !== s2
-// });
+const LoadImage = createImageProgress(FastImage);
 
-const defaultCircleSize = 18;
-const defaultCircleColor = Color.primaryLight;
+const defaultCircleSize = 16;
+const defaultCircleColor = Color.black;
 const defaultLineWidth = 1;
 const defaultLineColor = Color.primaryLight;
-const defaultDotColor = 'white';
+const defaultDotColor = Color.white;
 const defaultInnerCircle = 'none';
 
-export default class Timeline extends Component {
+export default class Timeline extends PureComponent {
 	constructor(props, context) {
 		super(props, context);
-
-		this.renderDetail = (this.props.renderDetail ? this.props.renderDetail : this._renderDetail).bind(this);
-		this.renderCircle = (this.props.renderCircle ? this.props.renderCircle : this._renderCircle).bind(this);
-
-		this._renderRow = this._renderRow.bind(this);
-		this.renderEvent = (this.props.renderEvent ? this.props.renderEvent : this._renderEvent).bind(this);
-		this.renderImage = this._renderImages.bind(this);
 
 		this.state = {
 			data: this.props.data,
@@ -41,13 +31,6 @@ export default class Timeline extends Component {
 		};
 	}
 
-	// componentWillReceiveProps(nextProps) {
-	// 	this.setState({
-	// 		data: nextProps.data,
-	// 		dataSource: ds.cloneWithRows(nextProps.data)
-	// 	});
-	// }
-
 	render() {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
@@ -55,7 +38,7 @@ export default class Timeline extends Component {
 					ref="listView"
 					style={[ styles.listview, this.props.listViewStyle ]}
 					data={this.state.dataSource}
-					renderItem={this._renderRow}
+					renderItem={this.renderRow}
 					automaticallyAdjustContentInsets={false}
 					{...this.props.options}
 					scrollEnabled={false}
@@ -64,7 +47,7 @@ export default class Timeline extends Component {
 		);
 	}
 
-	_renderRow({ item, index }) {
+	renderRow = ({ item, index }) => {
 		let content = null;
 
 		content = (
@@ -75,9 +58,9 @@ export default class Timeline extends Component {
 		);
 
 		return <View key={index}>{content}</View>;
-	}
+	};
 
-	_renderEvent(item) {
+	renderEvent = (item) => {
 		const lineWidth = this.props.lineWidth;
 
 		const isLast = this.state.data.slice(-1)[0] === item;
@@ -97,7 +80,7 @@ export default class Timeline extends Component {
 			<View
 				style={[ styles.details, opStyle ]}
 				onLayout={(evt) => {
-					if (!this.state.x && !this.state.width) {
+					if (this.state.x === 0 || !this.state.width === 0) {
 						const { x, width } = evt.nativeEvent.layout;
 						this.setState({ x, width });
 					}
@@ -115,12 +98,12 @@ export default class Timeline extends Component {
 					</View>
 				</TouchableOpacity>
 
-				{this._renderSeparator()}
+				{this.renderSeparator()}
 			</View>
 		);
-	}
+	};
 
-	_renderImages(item) {
+	renderImages = (item) => {
 		const { photos } = item;
 
 		return (
@@ -137,13 +120,13 @@ export default class Timeline extends Component {
 					>
 						{photos.map((uri, index) => {
 							return (
-								<Image
+								<LoadImage
 									source={{
 										uri: uri
 										// cache: 'only-if-cached'
 									}}
 									style={styles.image}
-									resizeMode="cover"
+									resizeMode={FastImage.resizeMode.cover}
 								/>
 							);
 						})}
@@ -151,18 +134,12 @@ export default class Timeline extends Component {
 				)}
 			</View>
 		);
-	}
+	};
 
-	//   : (
-	// 	<View style={styles.emptyImageContainer}>
-	// 		<Text style={styles.emptyImageDesc}>{Languages.ShareYourPhotos}</Text>
-	// 	</View>
-	// )
-
-	_renderDetail(item) {
+	renderDetail = (item) => {
 		return (
 			<View style={styles.container}>
-				{this.renderImage(item)}
+				{this.renderImages(item)}
 				<LinearGradient
 					colors={[
 						Color.black70T,
@@ -179,51 +156,40 @@ export default class Timeline extends Component {
 				</LinearGradient>
 			</View>
 		);
-	}
+	};
 
-	_renderCircle(item) {
+	renderCircle = (item) => {
 		var circleSize = this.props.circleSize ? this.props.circleSize : defaultCircleSize;
 		var circleColor = this.props.circleColor ? this.props.circleColor : defaultCircleColor;
 		var lineWidth = this.props.lineWidth ? this.props.lineWidth : defaultLineWidth;
+		const isLast = this.state.data.slice(-1)[0] === item;
+		console.log(this.state.x);
 
 		var circleStyle = null;
-
-		const isLast = this.state.data.slice(-1)[0] === item;
-
 		circleStyle = {
-			width: this.state.x ? circleSize : 0,
-			height: this.state.x ? circleSize : 0,
+			width: circleSize,
+			height: circleSize,
 			borderRadius: circleSize / 2,
 			backgroundColor: isLast ? Color.timelineLastCircle : circleColor,
-			left: this.state.x - circleSize / 2 + (lineWidth - 1) / 2
+			left: 20 - circleSize / 2 + (lineWidth - 1) / 2
 		};
 
 		var innerCircle = null;
-		switch (this.props.innerCircle) {
-			case 'icon':
-				let iconSource = this.props.icon;
-				let iconStyle = {
-					height: circleSize,
-					width: circleSize
-				};
-				innerCircle = <Image source={iconSource} style={[ iconStyle, this.props.iconStyle ]} />;
-				break;
-			case 'dot':
-				let dotStyle = {
-					height: circleSize / 2,
-					width: circleSize / 2,
-					borderRadius: circleSize / 4,
-					backgroundColor: this.props.dotColor ? this.props.dotColor : defaultDotColor
-				};
-				innerCircle = <View style={[ styles.dot, dotStyle ]} />;
-				break;
-		}
-		return <View style={[ styles.circle, circleStyle, this.props.circleStyle ]}>{innerCircle}</View>;
-	}
+		let dotStyle = {
+			height: circleSize / 1.2,
+			width: circleSize / 1.2,
+			borderRadius: circleSize / 2.4,
+			backgroundColor: this.props.dotColor ? this.props.dotColor : defaultDotColor
+		};
 
-	_renderSeparator() {
+		innerCircle = <View style={[ styles.dot, dotStyle ]} />;
+
+		return <View style={[ styles.circle, circleStyle, this.props.circleStyle ]}>{innerCircle}</View>;
+	};
+
+	renderSeparator = () => {
 		return <View style={styles.separator} />;
-	}
+	};
 }
 
 Timeline.defaultProps = {

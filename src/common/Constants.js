@@ -31,6 +31,10 @@ Constants.Actions = {
 Constants.URL = {
 	URL: {
 		MAIN: 'http://13.229.70.227:5002',
+		HERE_API: 'https://places.cit.api.here.com/places/v1/autosuggest?', //not using
+		HERE_PLACE_URL: 'http://autocomplete.geocoder.api.here.com/6.2/suggest.json?', //not using
+		GOOGLE_PLACE_URL: 'https://maps.googleapis.com/maps/api/place/autocomplete/json?',
+		GOOGLE_PLACE_DETAILS_URL: 'https://maps.googleapis.com/maps/api/place/details/json?',
 		URL_AUTH: 'auth',
 		URL_TOKEN: 'token',
 		URL_REFRESH_TOKEN: 'token-refresh',
@@ -39,6 +43,29 @@ Constants.URL = {
 		URL_RESET_PASSWORD: 'reset-password',
 		URL_MY_PROFILE: 'my-profile',
 		URL_PAYROLL: 'payroll'
+	}
+};
+
+Constants.STATUS = {
+	STATUS: {
+		OK: 'OK'
+	}
+};
+
+Constants.PARAMS = {
+	PARAMS: {
+		PLACE_ID: 'place_id',
+		API_KEY: 'key',
+		FIELDS: 'fields',
+		INPUT: 'input'
+	},
+	FIELDS_NAME: {
+		NAME: 'name',
+		COMPONENT: 'address_component',
+		ADDRESS: 'formatted_address',
+		GEOMETRY: 'geometry',
+		TYPE: 'type',
+		URL: 'url'
 	}
 };
 

@@ -5,13 +5,13 @@ export default {
 	primaryLight2: '#7998a3',
 	primaryLight3: '#a0b1b8',
 
-	textSelectionColor: '#253C41',
+	headerTitleColor: '#2c3e50',
+	textSelectionColor: '#26686f',
 
 	timelineLastLine: '#b3c5c9',
 	timelineLastCircle: '#b3c5c9',
 
 	top: '#253C41',
-	top1: '#74b9ff',
 	bottom: '#34687A',
 	bottom1: '#7998a3',
 
@@ -27,12 +27,6 @@ export default {
 	splashScreenBg10: '#26686f',
 	splashScreenBg11: '#275258',
 	splashScreenBg12: '#253c41',
-
-	primary10T: 'rgba(98, 133, 250, 0.1)',
-	primary30T: 'rgba(98, 133, 250, 0.3)',
-	primary50T: 'rgba(98, 133, 250, 0.5)',
-	primary70T: 'rgba(98, 133, 250, 0.7)',
-	primary90T: 'rgba(98, 133, 250, 0.9)',
 
 	blackTextPrimary: 'rgba(0,0,0,1)',
 	blackTextSecondary: 'rgba(0,0,0,0.5)',
@@ -67,7 +61,7 @@ export default {
 
 	// bottom tab bar
 	tabbar: 'rgba(255, 255, 255, 1)',
-	tabbarTint: '#253C41',
+	tabbarTint: '#2c3e50',
 	tabbarColor: '#ccc',
 	tabbarInActiveColor: '#d3d3d3',
 
@@ -86,6 +80,7 @@ export default {
 
 	//common color
 	white: '#fff',
+	white1: '#f5f5f5',
 	white10T: 'rgba(255, 255, 255, 0.1)',
 	white20T: 'rgba(255, 255, 255, 0.2)',
 	white30T: 'rgba(255, 255, 255, 0.3)',

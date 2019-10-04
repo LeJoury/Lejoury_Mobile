@@ -61,7 +61,8 @@ class ItineraryDetails extends Component {
 		}
 
 		navigation.navigate('ViewImages', {
-			images: images
+			images: images,
+			itineraryName: itinerary.itineraryName
 		});
 	};
 
@@ -75,17 +76,10 @@ class ItineraryDetails extends Component {
 					return (
 						<View key={index}>
 							<View style={styles.dayContainer}>
-								<LinearGradient
-									start={{ x: 0.25, y: 0.25 }}
-									end={{ x: 0.75, y: 1.0 }}
-									colors={[ Color.top, Color.primaryLight ]}
-									style={styles.dayGradientContainer}
-								>
-									<Text style={[ styles.dayTextStyle, { paddingBottom: 0 } ]}>{day.date}</Text>
-									<Text style={[ styles.dayTextStyle, { paddingTop: 0, marginTop: 2 } ]}>
-										{Languages.Day} {day.identifier}
-									</Text>
-								</LinearGradient>
+								<Text style={styles.dayTextStyle}>
+									{Languages.Day} {day.identifier}
+								</Text>
+								<Text style={styles.dayTextStyle}>{day.date}</Text>
 							</View>
 							<View style={{ marginTop: 4 }}>
 								<Timeline
@@ -111,7 +105,7 @@ class ItineraryDetails extends Component {
 			<View style={styles.imageWrapper}>
 				<Image
 					source={{
-						uri: itinerary.coverPhoto,
+						uri: itinerary.coverPhoto
 						// cache: 'only-if-cached'
 					}}
 					style={styles.image}
@@ -126,9 +120,9 @@ class ItineraryDetails extends Component {
 
 		return (
 			<View style={styles.navButtonWrapper}>
-				<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.primary)}</View>
+				<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
 				<View style={[ styles.imageButton, { top: backTop } ]}>
-					{ViewImages(navigation, Color.primary, this.onGoToViewImages)}
+					{ViewImages(navigation, Color.white, this.onGoToViewImages)}
 				</View>
 			</View>
 		);

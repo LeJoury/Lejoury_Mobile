@@ -26,8 +26,8 @@ class Settings extends Component {
 	_getListItem = () => {
 		const listItem = [
 			{
-				label: Languages.ChangeUsername,
-				routeName: 'ChangeUsername'
+				label: Languages.ChangePassword,
+				routeName: 'ChangePassword'
 			}
 		];
 		return listItem;
@@ -81,7 +81,6 @@ class Settings extends Component {
 			key: null,
 			actions: [ NavigationActions.navigate({ routeName: 'Landing' }) ]
 		});
-
 	};
 
 	render() {
@@ -95,7 +94,7 @@ class Settings extends Component {
 			<View style={styles.container}>
 				<ScrollView ref="scrollView">
 					<View style={styles.profileSection}>
-						<Text style={styles.headerSection}>{Languages.AccountInformations.toUpperCase()}</Text>
+						<Text style={styles.headerSection}>{Languages.AccountInformations}</Text>
 						{listItem.map((item, index) => {
 							return (
 								item && (
@@ -105,7 +104,7 @@ class Settings extends Component {
 						})}
 					</View>
 					<View style={styles.profileSection}>
-						<Text style={styles.headerSection}>{Languages.Settings.toUpperCase()}</Text>
+						<Text style={styles.headerSection}>{Languages.Settings}</Text>
 						{settingItems.map((item, index) => {
 							return <UserProfileItem key={index} onPress={() => this._handlePress(item)} {...item} />;
 						})}

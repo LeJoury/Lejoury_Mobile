@@ -37,24 +37,26 @@ const EditProfile = (props) => {
 		const { navigation } = props;
 
 		return () => {
-			ImagePicker.clean()
-				.then(() => {
-					console.log('removed all tmp images from tmp directory');
-				})
-				.catch((e) => {
-					alert(e);
-				});
+			// ImagePicker.clean()
+			// 	.then(() => {
+			// 		console.log('removed all tmp images from tmp directory');
+			// 	})
+			// 	.catch((e) => {
+			// 		alert(e);
+			// 	});
 		};
 	}, []);
 
-	showAlert = () => {
+	const onConfirmSave = () => {};
+
+	const showAlert = () => {
 		const { navigation } = props;
 
 		if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
 					text: Languages.SaveAsDraft,
-					onPress: onSaveActivity
+					onPress: onConfirmSave
 				},
 				{
 					text: Languages.Discard,
@@ -69,33 +71,37 @@ const EditProfile = (props) => {
 		}
 	};
 
-	onPressUploadProfilePhoto = () => {
+	const onPressUploadProfilePhoto = () => {
 		ImagePicker.openPicker({
 			cropping: true,
 			includeBase64: true,
 			cropperCircleOverlay: true,
 			cropperToolbarTitle: Languages.MoveScale,
-			cropperChooseText:  Languages.Done
+			cropperChooseText: Languages.Done
 		}).then((image) => {
+			// console.log(image);
 			setIsDirty(true);
-			setProfilePhoto(image.sourceURL);
+			// setProfilePhoto(image.sourceURL);
+			setProfilePhoto(image.path);
 		});
 	};
 
 	return (
-		<KeyboardAvoidingView style={styles.scrollViewContainer} behavior="padding" enabled>
+		<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 			<ScrollView
 				style={styles.scrollViewContainer}
-				contentContainerStyle={{
-					flexGrow: 1,
-					paddingBottom: 80
-				}}
+				contentContainerStyle={styles.scrollViewContainer}
 				backgroundColor={Color.white}
 			>
 				<View style={styles.subContain}>
 					<View style={styles.profileImageContainer}>
 						<Image
-							source={{ uri: profilePhoto === "" ? 'https://randomuser.me/api/portraits/women/47.jpg' : profilePhoto }}
+							source={{
+								uri:
+									profilePhoto === ''
+										? 'https://randomuser.me/api/portraits/women/47.jpg'
+										: profilePhoto
+							}}
 							style={styles.profileImage}
 						/>
 						<TouchableOpacity style={{ flex: 1 }} onPress={onPressUploadProfilePhoto}>
@@ -107,6 +113,7 @@ const EditProfile = (props) => {
 							<Text style={styles.titleStyle}>{Languages.Name}</Text>
 							<TextInput
 								underlineColorAndroid="transparent"
+								selectionColor={Color.textSelectionColor}
 								value={name}
 								onFocus={() => setNameFocus(true)}
 								onBlur={() => setNameFocus(false)}
@@ -126,6 +133,7 @@ const EditProfile = (props) => {
 							<Text style={styles.titleStyle}>{Languages.Username}</Text>
 							<TextInput
 								underlineColorAndroid="transparent"
+								selectionColor={Color.textSelectionColor}
 								value={username}
 								onFocus={() => setUsernameFocus(true)}
 								onBlur={() => setUsernameFocus(false)}
@@ -145,6 +153,7 @@ const EditProfile = (props) => {
 							<Text style={styles.titleStyle}>{Languages.Bio}</Text>
 							<TextInput
 								underlineColorAndroid="transparent"
+								selectionColor={Color.textSelectionColor}
 								value={bio}
 								multiline={true}
 								numberOfLines={4}

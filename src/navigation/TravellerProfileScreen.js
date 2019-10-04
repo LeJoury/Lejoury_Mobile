@@ -16,12 +16,13 @@ const user = {
 	followers: 100,
 	following: 50,
 	countries: 8,
-	itineraries: 8
+	itineraries: 8,
+	isFollow: true
 };
 
 class TravellerProfileScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(user.username, Color.blackTextPrimary),
+		headerTitle: Title(user.username, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary)
 	});
 

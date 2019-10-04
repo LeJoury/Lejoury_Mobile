@@ -10,7 +10,7 @@ import { Login, Register } from '@container';
 // import { login, dismissLoginDialog } from '@actions';
 
 import { Images, Color, Languages, Styles, Constants, showOkAlert } from '@common';
-import { ButtonIndex, Spinner } from '@components';
+import { Button, Spinner } from '@components';
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
@@ -117,18 +117,18 @@ class Landing extends Component {
 		);
 	};
 
-	onLoginWithEmail = async (username, password) => {
+	onLoginWithEmail = async (email, password) => {
 		const { navigation } = this.props;
 
-		const fakeUsername = 'testing123';
+		const fakeEmail = 'testing@test.com';
 		const fakePassword = 'testing123';
 
 		//show loading
-		if (!username || !password) {
+		if (!email || !password) {
 			showOkAlert(Languages.Empty, Languages.FillUpBothField);
 		}
 
-		if (username === fakeUsername && password === fakePassword) {
+		if (email === fakeEmail && password === fakePassword) {
 			try {
 				await AsyncStorage.setItem(ASYNCKEY.SESSION, '123');
 
@@ -187,7 +187,6 @@ class Landing extends Component {
 		this.props.navigation.navigate('ForgotPassword');
 	};
 
-
 	render() {
 		const { navigation } = this.props;
 		const { optionAnimations, backVisible, landingAnimation } = this.state;
@@ -238,11 +237,14 @@ class Landing extends Component {
 				>
 					<View style={styles.container}>
 						<View style={styles.innerContainer}>
-							<View style={styles.logoWrap}>
-								{/* <Text style={styles.logoText}>{Languages.AppName}</Text> */}
-								<Image style={styles.logo} source={Images.appLogoOutline} resizeMode={'contain'} />
+							<View style={styles.logoWrapper}>
+								<Image style={styles.logo} source={Images.appLogoOutline} />
 
-								<Text style={styles.welcomeText}>{Languages.Welcome}</Text>
+								<Text style={styles.logoText}>{Languages.HelloThere}</Text>
+								<Text style={styles.welcomeDescriptionText}>
+									{Languages.WelcomeDescription}
+									<Text style={styles.appNameText}>{Languages.AppName}</Text>
+								</Text>
 
 								<Animated.View style={[ backButtonStyles, styles.backButtonWrapper ]}>
 									<TouchableOpacity onPress={() => this.onBackToOptions()}>
@@ -260,14 +262,15 @@ class Landing extends Component {
 								{this.state.optionVisible ? (
 									<Animated.View style={[ optionAnimationStyles, styles.landingContainer ]}>
 										<View style={styles.buttonWrap}>
-											<ButtonIndex
+											<Button
 												text={Languages.Login}
+												textStyle={styles.loginTextStyle}
 												containerStyle={styles.loginButton}
 												onPress={() => this.onLoginPressHandle('normal')}
 											/>
-											<ButtonIndex
+											<Button
 												text={Languages.Register}
-												textColor={Color.primary}
+												textStyle={styles.registerTextStyle}
 												containerStyle={styles.registerButton}
 												onPress={() => this.onRegisterPressHandle()}
 											/>

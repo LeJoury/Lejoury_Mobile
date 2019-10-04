@@ -3,7 +3,7 @@ import { View, Text, Dimensions, FlatList } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import { ItineraryHolder } from '@components';
-import { Languages } from '@common';
+import { Languages, Color } from '@common';
 
 import styles from './styles';
 
@@ -65,9 +65,11 @@ class ItineraryList extends Component {
 			itinerary={item}
 			key={item.itineraryID}
 			onPress={() => this.onPressCountryItinerary(item)}
-			type="main"
+			type="country"
 		/>
 	);
+
+	renderSeparator = () => <View style={styles.separatorRow} />;
 
 	renderEmpty = () => <Text>{Languages.Empty}</Text>;
 
@@ -77,7 +79,9 @@ class ItineraryList extends Component {
 		return type === 'flatlist' ? (
 			<FlatList
 				data={itineraries}
+				style={{ paddingTop: 6 }}
 				keyExtractor={this._keyExtractor}
+				ItemSeparatorComponent={this.renderSeparator}
 				renderItem={this.renderItineraryBasedOnCountry}
 				ListEmptyComponent={this.renderEmpty}
 			/>

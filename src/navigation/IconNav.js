@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Platform, Image, TouchableOpacity, Text } from 'react-native';
-import { Icon, SearchBar } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { Styles, Color, Device, Images, Languages } from '@common';
 
 const hitSlop = { top: 0, right: 15, bottom: 0, left: 15 };
@@ -23,12 +23,16 @@ const BlackBackView = (navigation, iconBack) => (
 
 const EmptyView = () => <View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]} />;
 
-const Title = (title, color) => <Text style={[ Styles.Common.toolbarTitleStyle, { color: color } ]}>{title}</Text>;
+const Title = (title, color) => (
+	<Text ellipsizeMode={'tail'} numberOfLines={1} style={[ Styles.Common.toolbarTitleStyle, { color: color } ]}>
+		{title}
+	</Text>
+);
 
 const Settings = (navigation, color = Color.black) => (
 	<View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]}>
 		<TouchableOpacity style={{ padding: 15 }} hitSlop={hitSlop} onPress={() => navigation.navigate('Settings')}>
-			<Icon name="settings" type="feather" color={color} />
+			<Icon name="settings" type="feather" color={color} size={Styles.IconSize.ToolBar} />
 		</TouchableOpacity>
 	</View>
 );

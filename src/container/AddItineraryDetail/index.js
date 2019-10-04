@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, Alert, Easing, Animated, Dimensions } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-// import ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel from 'react-native-snap-carousel';
-import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
 
 import { StackActions } from 'react-navigation';
@@ -16,7 +14,7 @@ import { connect } from 'react-redux';
 import { getItineraryDraft, updateItineraryByID, addItineraryToRedux } from '@actions';
 
 import { Languages, Color, calculateDays, Images, Styles, create_UUID, Device } from '@common';
-import { ButtonIndex, Spinner, UploadImageBox, Button, DayHolder } from '@components';
+import { Spinner, UploadImageBox, Button, DayHolder } from '@components';
 
 import styles from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -35,8 +33,7 @@ export const sliderWidth = width;
 export const itemWidth = slideWidth + itemHorizontalMargin;
 
 const AddItineraryDetail = (props) => {
-	const [ top, setTop ] = useState(new Animated.Value(20));
-	const [ height, setHeight ] = useState(new Animated.Value(0));
+	const [ top ] = useState(new Animated.Value(20));
 	const [ isTitleFocus, setIsTitleFocus ] = useState(false);
 
 	const [ startDate, setStartDate ] = useState('');
@@ -55,13 +52,13 @@ const AddItineraryDetail = (props) => {
 		setTitle(itineraryName);
 
 		return () => {
-			ImagePicker.clean()
-				.then(() => {
-					console.log('removed all tmp images from tmp directory');
-				})
-				.catch((e) => {
-					alert(e);
-				});
+			// ImagePicker.clean()
+			// 	.then(() => {
+			// 		console.log('removed all tmp images from tmp directory');
+			// 	})
+			// 	.catch((e) => {
+			// 		alert(e);
+			// 	});
 		};
 	}, []);
 
@@ -126,16 +123,20 @@ const AddItineraryDetail = (props) => {
 	};
 
 	const onPublishHandle = () => {
-		console.log('publish');
+		navigation.navigate('AddQuote', {
+			itineraryName: title
+		});
 	};
 
 	const onUploadCoverPhoto = () => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
+			console.log(image);
 			let newItinerary = {
 				...draftItinerary,
-				coverPhoto: image.sourceURL
+				// coverPhoto: image.sourceURL
+				coverPhoto: image.path
 			};
 
 			props.addItineraryToRedux(newItinerary);
@@ -187,44 +188,18 @@ const AddItineraryDetail = (props) => {
 
 	const onScrollHandle = (event) => {
 		var currentOffset = event.nativeEvent.contentOffset.y;
-		const dif = currentOffset - (this.offset || 0);
-
-		if (Math.abs(dif) < 3) {
-		} else if (dif < 0) {
-			setBackButtonHide(false);
-		} else {
-			setBackButtonHide(true);
-		}
-
-		this.offset = currentOffset;
+		setBackButtonHide(currentOffset > 64);
 	};
 
 	const renderPublishButton = () => {
-		const dateFrom = new Date(startDate);
-		const dateTo = new Date(endDate);
-		const totalDays = calculateDays(dateFrom, dateTo);
-
-		let days = draftItinerary.days || [];
-
-		const hide = totalDays !== days.length;
-
-		Animated.timing(height, {
-			duration: 50,
-			toValue: hide ? 0 : Device.isIphoneX ? 60 : 50,
-			easing: Easing.linear
-		}).start();
-
 		return (
-			<Animated.View style={[ styles.buttonWrapper, { height: height } ]}>
-				{/* <Button
+			<Animated.View style={styles.buttonWrapper}>
+				<Button
 					text={Languages.Publish.toUpperCase()}
 					textStyle={styles.publishButtonTextStyle}
-					bottomColor={Color.primaryLight}
-					topColor={Color.primary}
-					type="gradient"
 					containerStyle={styles.publishButton}
 					onPress={onPublishHandle}
-				/> */}
+				/>
 			</Animated.View>
 		);
 	};
@@ -233,34 +208,21 @@ const AddItineraryDetail = (props) => {
 		<DayHolder type="draft" key={create_UUID()} activity={item} onPress={onNavigateToEditDayDetail} />
 	);
 
-	const renderTotalDays = () => {
-		const dateFrom = new Date(startDate);
-		const dateTo = new Date(endDate);
-
-		const totalDays = calculateDays(dateFrom, dateTo);
-
-		return (
-			<View style={styles.rowWrapper}>
-				<Text style={styles.noOfDaysTextStyle}>
-					{Languages.TotalDays} : {totalDays}
-				</Text>
-			</View>
-		);
-	};
-
 	const renderDays = () => {
 		let renderDays = [];
 
 		const dateFrom = new Date(startDate);
 		const dateTo = new Date(endDate);
 
+		console.log(draftItinerary);
+		
 		const totalDays = calculateDays(dateFrom, dateTo);
 
 		for (let i = 0; i < totalDays; i++) {
 			let title = Languages.AddDay + (i + 1);
 			let hasDayMatch = false;
 
-			if (draftItinerary.days != undefined) {
+			if (draftItinerary.days !== undefined) {
 				for (let day = 0; day < draftItinerary.days.length; day++) {
 					if (i + 1 === draftItinerary.days[day].identifier) {
 						hasDayMatch = true;
@@ -271,16 +233,9 @@ const AddItineraryDetail = (props) => {
 								style={[ Styles.Common.RowCenterBetween, { marginVertical: 12 } ]}
 							>
 								<View style={styles.dayContainer}>
-									<LinearGradient
-										start={{ x: 0.0, y: 0.25 }}
-										end={{ x: 0.5, y: 1.0 }}
-										colors={[ Color.primary, Color.bottom1 ]}
-										style={styles.gradientDayContainer}
-									>
-										<Text style={styles.noOfDayText}>
-											{Languages.Day} {draftItinerary.days[day].identifier}
-										</Text>
-									</LinearGradient>
+									<Text style={styles.noOfDayText}>
+										{Languages.Day} {draftItinerary.days[day].identifier}
+									</Text>
 								</View>
 
 								<TouchableOpacity
@@ -348,10 +303,9 @@ const AddItineraryDetail = (props) => {
 	return (
 		<View>
 			<Animated.View style={[ styles.backButton, { top: top } ]}>
-				{CircleBack(navigation, Color.primary, onBackHandle)}
+				{CircleBack(navigation, Color.white, onBackHandle)}
 			</Animated.View>
 			<ScrollView
-				bounces={false}
 				scrollEventThrottle={16}
 				onScroll={(e) => onScrollHandle(e)}
 				contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
@@ -372,6 +326,7 @@ const AddItineraryDetail = (props) => {
 						<TextInput
 							placeholder={Languages.JourneyName}
 							underlineColorAndroid="transparent"
+							selectionColor={Color.textSelectionColor}
 							value={title}
 							onFocus={() => setIsTitleFocus(true)}
 							onBlur={() => setIsTitleFocus(false)}
@@ -463,9 +418,8 @@ const AddItineraryDetail = (props) => {
 					</View>
 					{renderDays()}
 				</View>
+				{renderPublishButton()}
 			</ScrollView>
-
-			{renderPublishButton()}
 		</View>
 	);
 };

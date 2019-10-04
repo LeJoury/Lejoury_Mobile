@@ -48,7 +48,7 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Regular',
 		color: Color.black3
 	},
-	buttonWrap: {
+	buttonWrapper: {
 		width,
 		position: 'absolute',
 		left: 0,
@@ -56,9 +56,11 @@ export default StyleSheet.create({
 		right: 0,
 		height: Device.isIphoneX ? 60 : 50
 	},
-	gradientWrapper: {
-		paddingVertical: 16,
-		backgroundColor: Color.lightGrey3
+	nextButton: {
+		width: width,
+		height: Device.isIphoneX ? 60 : 50,
+		backgroundColor: Color.transparent,
+		justifyContent: 'center'
 	},
 	nextButtonTextStyle: {
 		color: Color.white,
@@ -66,8 +68,4 @@ export default StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
 	},
-	disabledButtonStyle: {
-		paddingVertical: 16,
-		backgroundColor: Color.lightGrey4
-	}
 });

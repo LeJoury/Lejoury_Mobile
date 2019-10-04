@@ -17,12 +17,7 @@ import { Color } from '@common';
 const { width, height } = Dimensions.get('window');
 
 const Button = (props) => {
-	console.log(props);
-	if (props.type === 'image') {
-		return <ImageButton {...props} />;
-	} else if (props.type === 'tab') {
-		return <TabButton {...props} />;
-	} else if (props.type === 'gradient') {
+	if (props.type === 'gradient') {
 		return <GradientButton {...props} />;
 	} else if (props.type === 'gradientBorder') {
 		return <GradientBorderButton {...props} />;
@@ -79,69 +74,18 @@ const GradientButton = (props) => (
 const StandardButton = (props) => (
 	<TouchableOpacity
 		disabled={props.disabled}
-		onPress={() => props.onPress()}
-		style={[ styles.button, props.style, props.inactive && { backgroundColor: '#C6D8E4' } ]}
-		activeOpacity={0.9}
-		underlayColor="#ccc"
+		style={[ styles.container, props.containerStyle ]}
+		onPress={props.onPress}
 	>
 		<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
 	</TouchableOpacity>
 );
 
-const ImageButton = (props) => (
-	<TouchableHighlight
-		disabled={props.disabled}
-		onPress={() => props.onPress()}
-		activeOpacity={0.8}
-		underlayColor={'#eeeeee'}
-		style={props.buttonStyle}
-	>
-		<Image
-			{...props}
-			defaultSource={props.defaultSource}
-			style={[
-				props.imageStyle,
-				props.isAddWishList && { tintColor: Color.heartActiveWishList },
-				props.isAddToCart && { tintColor: Color.TabActive }
-			]}
-			resizeMode="contain"
-		/>
-	</TouchableHighlight>
-);
-
-const TabButton = (props) => (
-	<TouchableOpacity onPress={() => props.onPress()} activeOpacity={0} selected={props.selected}>
-		<View style={[ styles.tabButton, props.buttonStyle, props.selected && styles.tabActive ]}>
-			<Text style={[ styles.tabButtonText, props.textStyle, props.selected && styles.tabActiveText ]}>
-				{props.text}
-			</Text>
-		</View>
-	</TouchableOpacity>
-);
-
 const styles = StyleSheet.create({
-	tabActiveText: {
-		color: Color.TabActiveText
-	},
-	tabActive: {
-		marginTop: 1,
-		borderBottomWidth: 2,
-		borderBottomColor: Color.TabActive
-	},
 	button: {
 		backgroundColor: '#0B4A7D',
 		justifyContent: 'center',
 		alignItems: 'center'
-	},
-	buttonView: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	imageIcon: {
-		resizeMode: 'contain',
-		width: 20,
-		marginRight: 8
 	},
 	text: {
 		color: 'white',
@@ -155,16 +99,6 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 5,
 		borderColor: 'white'
-	},
-	tabButton: {
-		height: 50,
-		justifyContent: 'center'
-	},
-	tabButtonText: {
-		marginLeft: 10,
-		marginRight: 10,
-		textAlign: 'center',
-		fontSize: 12
 	},
 	gradientButtonContainer: {
 		width: width / 2.3 - 2,

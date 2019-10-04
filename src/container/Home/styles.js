@@ -7,6 +7,19 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
+	searchViewOverlayContainer:{
+		flex: 1,
+		position: 'absolute',
+		marginTop: 80,
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		width: width,
+		height: height,
+		backgroundColor: Color.white,
+		zIndex: 999999
+	},
 	searchViewContainer: {
 		backgroundColor: Color.white,
 		paddingHorizontal: 8,

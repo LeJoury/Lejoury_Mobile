@@ -7,7 +7,7 @@ import { Color, Languages } from '@common';
 
 class BucketListScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(Languages.BucketList, Color.black2),
+		headerTitle: Title(Languages.BucketList, Color.headerTitleColor),
 	});
 
 	componentDidMount() {}

@@ -6,7 +6,8 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 50
+		paddingTop: 40,
+		backgroundColor: Color.white
 	},
 	landingBackground: {
 		width,
@@ -15,33 +16,38 @@ export default StyleSheet.create({
 	backButtonWrapper: {
 		...Styles.Common.ColumnCenterLeft,
 		backgroundColor: Color.transparent,
-		marginTop: 30
-	},
-	logo: {
-		width: 120,
-		height: 120
-	},
-	logoWrap: {
-		flex: 1,
-		flexDirection: 'column'
-	},
-	logoText: {
-		fontSize: 42,
-		color: Color.primary,
-		letterSpacing: 1.5,
-		fontFamily: 'Quicksand-Bold'
-	},
-	welcomeText: {
-		fontSize: 20,
-		marginTop: 6,
-		color: Color.placeHolderColor,
-		fontFamily: 'Quicksand-Regular'
+		marginTop: 15
 	},
 	innerContainer: {
 		flex: 1,
 		flexDirection: 'column',
-		justifyContent: 'space-between',
+		justifyContent: 'center',
 		paddingHorizontal: Styles.width * 0.1
+	},
+	logoWrapper: {
+		flex: 1,
+		flexDirection: 'column'
+	},
+	logo: {
+		width: 160,
+		height: 160
+	},
+	logoText: {
+		fontSize: 32,
+		color: Color.black2,
+		fontFamily: 'Quicksand-Bold'
+	},
+	appNameText: {
+		fontSize: 16,
+		marginTop: 16,
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Bold'
+	},
+	welcomeDescriptionText: {
+		fontSize: 16,
+		marginTop: 8,
+		color: Color.lightGrey3,
+		fontFamily: 'Quicksand-Regular'
 	},
 	subContainer: {
 		flex: 1,
@@ -56,16 +62,26 @@ export default StyleSheet.create({
 		justifyContent: 'center'
 	},
 	buttonWrap: { marginBottom: 20 },
+	loginTextStyle: {
+		fontSize: 16,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold'
+	},
 	loginButton: {
 		marginTop: 20,
-		borderRadius: 5,
 		backgroundColor: Color.splashScreenBg5,
+		...Styles.Button.Radius5,
 		...Styles.Common.ShadowBox
+	},
+	registerTextStyle: {
+		fontSize: 16,
+		color: Color.primary,
+		fontFamily: 'Quicksand-Bold'
 	},
 	registerButton: {
 		marginTop: 20,
-		borderRadius: 5,
 		backgroundColor: Color.white,
+		...Styles.Button.Radius5,
 		...Styles.Common.ShadowBox
 	},
 	separatorWrap: {

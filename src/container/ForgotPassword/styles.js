@@ -30,15 +30,15 @@ export default StyleSheet.create({
 		borderColor: Color.lightGrey6,
 		borderBottomWidth: 1
 	},
-	button: {
+	forgotPasswordButton: {
 		marginTop: 20,
-		borderRadius: 5,
 		backgroundColor: Color.splashScreenBg5,
+		...Styles.Button.Radius5,
 		...Styles.Common.ShadowBox
 	},
-	buttonText: {
-		textAlign: 'center',
-		color: '#FFF',
-		fontSize: 16
+	forgotPasswordTextStyle: {
+		fontSize: 16,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold'
 	}
 });

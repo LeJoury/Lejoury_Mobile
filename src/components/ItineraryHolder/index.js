@@ -1,20 +1,26 @@
 import React from 'react';
-import { View, Text, ImageBackground, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import { Icon, Card } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
+import FastImage from 'react-native-fast-image';
+import { createImageProgress } from 'react-native-image-progress';
 
 import { Images, Color, Languages, Styles } from '@common';
-import { ButtonIndex, TravellerInfoHolder } from '@components';
+import { Button, TravellerInfoHolder } from '@components';
 
 import styles from './styles';
+
+const LoadImage = createImageProgress(FastImage);
 
 const ItineraryHolder = ({ itinerary, type, user = undefined, onPress = undefined, onRemovePress = undefined }) => {
 	if (type === 'main') {
 		return <MainItinerary itinerary={itinerary} onPress={onPress} />;
-	} else if (type == 'draft') {
+	} else if (type === 'draft') {
 		return <DraftItinerary itinerary={itinerary} onPress={onPress} onRemovePress={onRemovePress} />;
-	} else if (type == 'emptyDraft') {
+	} else if (type === 'emptyDraft') {
 		return <EmptyDraftItinerary onPress={onPress} />;
+	} else if (type === 'country') {
+		return <CountryItinerary itinerary={itinerary} onPress={onPress} />;
 	} else {
 		return <ProfileItinerary itinerary={itinerary} onPress={onPress} />;
 	}
@@ -58,11 +64,17 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 	const mainContainer = hasImage ? { borderWidth: 0 } : { borderColor: Color.primary };
 	const imageSource = hasImage ? { uri: itinerary.coverPhoto } : Images.defaultDraftItineraryBackground;
 	const imageBgStyle = hasImage ? styles.draft_ImageBg : styles.draft_DefaultImageBg;
-	const textColor = hasImage ? { color: Color.white } : { color: Color.primary };
-	const buttonBorderColor = hasImage ? { borderColor: Color.white } : { borderColor: Color.primary };
-	const buttonBackground = hasImage ? { backgroundColor: Color.transparent } : { backgroundColor: Color.white };
+	const textColor = hasImage ? Color.white : Color.primary;
 
-	const color = hasImage ? Color.white : Color.primary;
+	const buttonStyle = hasImage
+		? {
+				borderColor: Color.white,
+				backgroundColor: Color.transparent
+			}
+		: {
+				borderColor: Color.primary,
+				backgroundColor: Color.white
+			};
 
 	return (
 		<TouchableOpacity onPress={() => onPress(itinerary)} style={{ margin: 8 }}>
@@ -71,20 +83,19 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 					<View style={imageBgStyle}>
 						<View style={styles.draft_SubContain}>
 							<View style={styles.draft_RowWrapper}>
-								<Text style={[ styles.draft_ItineraryTitleText, textColor ]}>
+								<Text style={[ styles.draft_ItineraryTitleText, { color: textColor } ]}>
 									{itinerary.itineraryName}
 								</Text>
 							</View>
 							<View style={styles.draft_DateRowWrapper}>
-								<Text style={[ styles.draft_DateText, textColor ]}>
+								<Text style={[ styles.draft_DateText, { color: textColor } ]}>
 									{itinerary.startDate} - {itinerary.endDate}
 								</Text>
 							</View>
-							<ButtonIndex
+							<Button
 								text={Languages.Edit}
-								textColor={color}
-								textStyle={[ styles.draft_EditButtonText, textColor ]}
-								containerStyle={[ styles.draft_EditButton, buttonBorderColor, buttonBackground ]}
+								textStyle={[ styles.draft_EditButtonText, { color: textColor } ]}
+								containerStyle={[ styles.draft_EditButton, buttonStyle ]}
 								onPress={() => onPress(itinerary)}
 							/>
 						</View>
@@ -93,7 +104,7 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 						style={styles.draft_RemoveIconStyle}
 						onPress={() => onRemovePress(itinerary.itineraryID)}
 					>
-						<Icon name="trash-2" type="feather" size={Styles.IconSize.Medium} color={color} />
+						<Icon name="trash-2" type="feather" size={Styles.IconSize.Medium} color={textColor} />
 					</TouchableOpacity>
 				</ImageBackground>
 			</Card>
@@ -102,17 +113,19 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 };
 
 const MainItinerary = ({ itinerary, onPress }) => (
-	<TouchableOpacity style={styles.main_Card} onPress={() => onPress(itinerary)}>
-		<Image
-			source={{
-				uri: itinerary.coverPhoto,
-				// cache: 'only-if-cached'
-			}}
-			style={styles.main_Image}
-			resizeMode="cover"
-		/>
+	<View style={styles.main_Card}>
+		<TouchableOpacity onPress={() => onPress(itinerary)}>
+			<LoadImage
+				source={{
+					uri: itinerary.coverPhoto,
+					priority: FastImage.priority.high
+				}}
+				style={styles.main_Image}
+				resizeMode={FastImage.resizeMode.cover}
+			/>
+		</TouchableOpacity>
 		<TravellerInfoHolder itinerary={itinerary} traveller={itinerary.traveller} />
-	</TouchableOpacity>
+	</View>
 );
 
 const ProfileItinerary = ({ itinerary, onPress }) => (
@@ -135,6 +148,29 @@ const ProfileItinerary = ({ itinerary, onPress }) => (
 			</ImageBackground>
 		</TouchableOpacity>
 	</Card>
+);
+
+const CountryItinerary = ({ itinerary, onPress }) => (
+	<TouchableOpacity style={styles.countryRow} onPress={() => onPress(itinerary)}>
+		<View style={styles.countryImageContainer}>
+			<LoadImage
+				source={{
+					uri: itinerary.coverPhoto,
+					priority: FastImage.priority.high
+					// cache: 'only-if-cached'
+				}}
+				style={styles.countryImage}
+				resizeMode={FastImage.resizeMode.cover}
+			/>
+		</View>
+		<View style={styles.countryTravellerContainer}>
+			<Text style={styles.countryItineraryNameTextStyle}>{itinerary.itineraryName}</Text>
+			<Text style={styles.countryItineraryTravellerNameTextStyle}>{itinerary.traveller.username}</Text>
+		</View>
+		<View style={styles.countryIconContainer}>
+			<Icon color={Color.lightGrey4} type="feather" size={22} name="more-vertical" />
+		</View>
+	</TouchableOpacity>
 );
 
 export default ItineraryHolder;

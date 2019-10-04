@@ -7,6 +7,9 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
+	scrollViewContentContainerStyle:{
+		flexGrow: 1
+	},
 	searchBarContainerStyle: {
 		backgroundColor: Color.transparent,
 		paddingVertical: 12,

@@ -48,7 +48,7 @@ export default StyleSheet.create({
 		paddingHorizontal: 16,
 		fontFamily: 'Quicksand-Medium'
 	},
-	followButton: {
+	editButton: {
 		marginTop: 20,
 		height: 40,
 		borderRadius: 20,
@@ -57,7 +57,38 @@ export default StyleSheet.create({
 		justifyContent: 'center',
 		...Styles.Common.ShadowBox
 	},
+	editButtonText: {
+		fontSize: 13,
+		color: Color.primary,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Medium'
+	},
+	followButton: {
+		marginTop: 20,
+		height: 40,
+		borderRadius: 20,
+		width: width / 2.3,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: Color.splashScreenBg5,
+		...Styles.Common.ShadowBox
+	},
 	followButtonText: {
+		fontSize: 13,
+		color: Color.white,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Medium'
+	},
+	unFollowButton: {
+		marginTop: 20,
+		height: 40,
+		borderRadius: 20,
+		width: width / 2.3,
+		alignItems: 'center',
+		justifyContent: 'center',
+		...Styles.Common.ShadowBox
+	},
+	unFollowButtonText: {
 		fontSize: 13,
 		color: Color.primary,
 		textAlign: 'center',

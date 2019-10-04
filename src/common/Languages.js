@@ -19,7 +19,9 @@ export default {
 	Save: 'Save',
 	Send: 'Send',
 	SomethingWentWrong: 'Something went wrong. Please try again.',
+	HelloThere:'Hello There!',
 	Welcome: 'Welcome to LeJoury.',
+	WelcomeDescription: 'Keep your stories with the loved one forever with ',
 	WelcomeBack: 'Welcome Back to LeJoury.',
 	Day: 'Day',
 	UnsavedTitle: 'Unsaved changes',
@@ -276,11 +278,16 @@ export default {
 	Arrival: 'Arrival',
 	Departure: 'Departure',
 
+	//Quote
+	ShareYourQuote:'Share your quote of the trip...',
+
 	// Activity Holder
 	ShareYourPhotos: 'Share Your Photos',
 	AddDescription: 'Add Description',
 	AddBudget: 'Add Budget',
 	SorryMax6Images: 'Only 6 images are allowed. ',
+	NoPhotos:'No Photos',
+	Min1Image:'Min. 1 Image is needed.',
 
 	//Bucket List
 	BucketList: 'Bucket List',

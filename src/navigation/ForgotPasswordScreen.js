@@ -8,7 +8,7 @@ import { Color, Languages } from '@common';
 
 class ForgotPasswordScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(Languages.ForgotPassword, Color.blackTextPrimary),
+		headerTitle: Title(Languages.ForgotPassword, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary)
 	});
 

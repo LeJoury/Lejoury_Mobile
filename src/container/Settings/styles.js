@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5F5F5'
+		backgroundColor: Color.white1
 	},
 	backButtonWrapper: {
 		...Styles.Common.ColumnCenterLeft,
@@ -14,13 +14,13 @@ export default StyleSheet.create({
 		paddingTop: 15
 	},
 	profileSection: {
-		backgroundColor: '#FFF',
+		backgroundColor: Color.white
 	},
 	headerSection: {
 		paddingHorizontal: 20,
-		paddingVertical: 10,
-		fontSize: 15,
-		color: Color.primaryLight,
-		fontWeight: '600'
+		marginTop: 18,
+		fontSize: 16,
+		color: Color.headerTitleColor,
+		fontFamily: 'Quicksand-Medium',
 	}
 });

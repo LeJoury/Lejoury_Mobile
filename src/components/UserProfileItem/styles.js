@@ -9,19 +9,20 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderColor: '#F5F5F5',
+        borderColor: Color.white1,
         paddingHorizontal: 20,
         height: 60
     },
     leftText: {
         fontSize: 15,
-        color: '#9B9B9B',
+        color: Color.darkGrey2,
+		fontFamily: 'Quicksand-Regular',
     },
     rightText: {
-        fontSize: 15,
-        color: Color.blackTextPrimary,
-        fontWeight: '300',
-        alignSelf: 'flex-start'
+        fontSize: 14,
+        color: Color.grey1,
+        alignSelf: 'flex-start',
+		fontFamily: 'Quicksand-Regular',
     },
     rightContainer: {
         flex: 1,

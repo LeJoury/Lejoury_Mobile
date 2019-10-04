@@ -10,13 +10,19 @@ export default StyleSheet.create({
 		flex: 1,
 		backgroundColor: Color.white
 	},
+	scrollViewContainer: {
+		flexGrow: 1,
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		backgroundColor: Color.DirtyBackground
+	},
 	backButton: { top: 20, left: 0, position: 'absolute', zIndex: 99999 },
-	wrapper: {
+	dateWrapper: {
 		paddingHorizontal: 12,
 		paddingVertical: 10,
 		marginVertical: 8,
 		borderColor: Color.lightGrey4,
-		borderTopWidth: 1,
+		borderTopWidth: 0,
 		borderBottomWidth: 1,
 		backgroundColor: Color.white,
 		...Styles.Common.RowCenterBetween
@@ -60,17 +66,25 @@ export default StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Medium'
 	},
-	removeButtonContainer: {
-		paddingVertical: 16,
+	removeButtonWrapper:{
+		...Styles.Common.ColumnCenter,
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
+		height: Device.isIphoneX ? 60 : 50,
+		...Styles.Common.ShadowBox
+	},
+	removeButton: {
+		width: width,
+		height: Device.isIphoneX ? 60 : 50,
 		backgroundColor: Color.red1,
-		marginTop: 12,
-		...Styles.Common.RowCenter
+		justifyContent: 'center'
 	},
 	removeTextStyle: {
 		color: Color.white,
-		marginHorizontal: 6,
 		fontSize: 14,
 		textAlign: 'center',
-		fontFamily: 'Quicksand-Medium'
+		fontFamily: 'Quicksand-Bold'
 	}
 });

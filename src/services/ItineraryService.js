@@ -1,4 +1,4 @@
-import Realm, { schemaVersion } from 'realm';
+import Realm from 'realm';
 import _ from 'lodash';
 import { realmObjectToArray, create_UUID } from '@common';
 
@@ -7,18 +7,16 @@ const DAY = 'DAY';
 const ACTIVITY = 'ACTIVITY';
 const LOCATION = 'LOCATION';
 
-// ItineraryID: 'string',
-// JourneyName: 'string',
-// StartDate: 'string',
-// EndDate: 'string',
-// CoverPhoto: 'string?',
-
 const LocationSchema = {
 	name: LOCATION,
 	properties: {
 		name: 'string',
-		lat: 'double',
-		lng: 'double',
+		types: 'string?[]',
+		url: 'string',
+		longitude: 'double',
+		latitude: 'double',
+		state: 'string',
+		postcode: 'string',
 		country: 'string'
 	}
 };
@@ -139,6 +137,10 @@ export const queryItineraryList = () =>
 								//photos to array
 								const photos = _.values(realmObjectToArray(activities[activity].photos));
 								formatted[itinerary].days[day].activities[activity].photos = photos;
+
+								//types to array
+								const types = _.values(realmObjectToArray(activities[activity].location.types));
+								formatted[itinerary].days[day].activities[activity].location.types = types;
 							}
 						}
 					}

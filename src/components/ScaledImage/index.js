@@ -1,37 +1,37 @@
-import React, { Component, PropTypes } from 'react';
-import { Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, Dimensions } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import { createImageProgress } from 'react-native-image-progress';
 
-export default class ScaledImage extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { source: { uri: this.props.uri } };
-	}
+const { width } = Dimensions.get('window');
+const LoadImage = createImageProgress(FastImage);
 
-	componentDidMount() {
-		Image.getSize(this.props.uri, (width, height) => {
-			if (this.props.width && !this.props.height) {
-				this.setState({
-					width: this.props.width,
-					height: height * (this.props.width / width)
-				});
-			} else if (!this.props.width && this.props.height) {
-				this.setState({
-					width: width * (this.props.height / height),
-					height: this.props.height
-				});
+const ScaledImage = (props) => {
+	const [ source ] = useState(props.uri);
+	const [ imageWidth, setImageWidth ] = useState(width - 40);
+	const [ imageHeight, setImageHeight ] = useState(width - 40);
+
+	useEffect(() => {
+		Image.getSize(source, (width, height) => {
+			if (props.width && !props.height) {
+				setImageWidth(props.width);
+				setImageHeight(height * (props.width / width));
+			} else if (!props.width && props.height) {
+				setImageWidth(width * (props.height / height));
+				setImageHeight(props.height);
 			} else {
-				this.setState({ width: width, height: height });
+				setImageWidth(width);
+				setImageHeight(height);
 			}
 		});
-	}
+	}, []);
 
-	render() {
-		return <Image source={this.state.source} style={{ height: this.state.height, width: this.state.width }} />;
-	}
-}
+	return (
+		<LoadImage
+			source={{ uri: source }}
+			style={{ width: imageWidth, height: imageHeight }}
+		/>
+	);
+};
 
-// ScaledImage.propTypes = {
-// 	uri: PropTypes.string.isRequired,
-// 	width: PropTypes.number,
-// 	height: PropTypes.number
-// };
+export default ScaledImage;

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Back, Title } from './IconNav';
 
-import { ViewImages } from '@container';
+import { AddQuote } from '@container';
 
 import { Color, Languages } from '@common';
 
-class ViewImagesScreen extends Component {
+class AddQuoteSreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
 		headerTitle: Title(navigation.state.params.itineraryName, Color.headerTitleColor)
@@ -17,10 +17,7 @@ class ViewImagesScreen extends Component {
 
 	componentWillUnmount() {}
 	render() {
-		const { navigation } = this.props;
-		const images = navigation.getParam('images');
-
-		return <ViewImages navigation={navigation} images={images} />;
+		return <AddQuote navigation={this.props.container} />;
 	}
 }
-export default ViewImagesScreen;
+export default AddQuoteSreen;

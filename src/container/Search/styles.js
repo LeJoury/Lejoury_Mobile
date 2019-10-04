@@ -11,8 +11,28 @@ export default StyleSheet.create({
 	},
 	recentSearchText: {
 		marginTop: 12,
-		fontSize: 16,
+		fontSize: 18,
 		color: Color.lightGrey3,
 		fontFamily: 'Quicksand-Medium'
+	},
+	flatListStyle: {
+		marginTop: 6
+	},
+	resultRow: {
+		...Styles.Common.RowCenterLeft,
+		flex: 1,
+		paddingVertical: 8,
+	},
+	resultIconContainer: {
+		flex: 1
+	},
+	resultKeywordContainer: {
+		flex: 6
+	},
+	resultKeywordTextStyle: {
+		fontSize: 16,
+		paddingHorizontal: 6,
+		color: Color.primary,
+		fontFamily: 'Quicksand-Regular'
 	}
 });

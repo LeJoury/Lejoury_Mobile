@@ -81,7 +81,7 @@ class Profile extends Component {
 		const name = this._getName(user);
 
 		return (
-			<ScrollView ref="scrollView" contentContainerStyle={{ flexGrow: 1 }}>
+			<ScrollView ref="scrollView" contentContainerStyle={styles.container}>
 				<UserProfileHeader
 					user={user}
 					isMe={isMe}

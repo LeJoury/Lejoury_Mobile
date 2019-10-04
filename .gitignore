@@ -79,3 +79,6 @@ RNTester/build
 /template/ios/Podfile.lock
 /RNTester/Pods/
 /RNTester/Gemfile.lock
+
+# api keys
+.env

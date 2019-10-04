@@ -13,7 +13,11 @@ export default StyleSheet.create({
 	},
 	imageWrapper: {
 		overflow: 'hidden',
-		padding: 8,
+		width: 80,
+		height: 80,
+		borderRadius: 40,
+		borderWidth: 1,
+		borderColor: Color.lightGrey2,
 		...Styles.Common.ColumnCenter,
 		...Styles.Common.ShadowBox
 	},

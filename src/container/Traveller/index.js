@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import {
+	View,
+	Text,
+	FlatList,
+	Image,
+	TouchableOpacity,
+	Platform,
+	ScrollView,
+	TouchableWithoutFeedback
+} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
-import { Color, Styles, Languages } from '@common';
+import { Color, Languages } from '@common';
 
 import styles from './styles';
 
@@ -36,13 +45,17 @@ const travellers = [
 const Traveller = (props) => {
 	const [ search, setSearch ] = useState('');
 
-	_keyExtractor = (item) => item.travellerID;
+	const _keyExtractor = (item) => item.travellerID;
 
-	updateSearch = (search) => {
-		setSearch(search);
+	const updateSearch = (value) => {
+		setSearch(value);
 	};
 
-	_renderTravellerHolder = ({ item }) => {
+	const navigateToSelectedTraveller = () => {
+		console.log('pressed');
+	};
+
+	const renderTravellerHolder = ({ item }) => {
 		const functionButtonBGStyle = item.following ? styles.followingButtonStyle : styles.followButtonStyle;
 		const functionTextColor = item.following ? Color.white : Color.blue5;
 		const functionText = item.following ? Languages.ButtonFollowing : Languages.ButtonFollow;
@@ -51,10 +64,16 @@ const Traveller = (props) => {
 			<View style={styles.travellerContainer}>
 				<Image style={styles.travellerThumbnails} source={{ uri: item.travellerThumbnails }} />
 				<View style={styles.travellerSubcontainer}>
-					<View style={styles.travellerNameContainer}>
-						<Text style={styles.travellerUsernameTextStyle}>{item.travellerName}</Text>
-						<Text style={styles.travellerNameTextStyle}>{item.travellerName}</Text>
-					</View>
+					<TouchableWithoutFeedback
+						style={styles.travellerNameContainer}
+						onPress={navigateToSelectedTraveller}
+					>
+						<View style={styles.travellerNameContainer}>
+							<Text style={styles.travellerUsernameTextStyle}>{item.travellerName}</Text>
+							<Text style={styles.travellerNameTextStyle}>{item.travellerName}</Text>
+						</View>
+					</TouchableWithoutFeedback>
+
 					<TouchableOpacity style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}>
 						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
 							{functionText}
@@ -65,7 +84,7 @@ const Traveller = (props) => {
 		);
 	};
 
-	_renderSearchBar = () => (
+	const renderSearchBar = () => (
 		<SearchBar
 			placeholder={Languages.Search}
 			onChangeText={updateSearch}
@@ -80,13 +99,13 @@ const Traveller = (props) => {
 	);
 
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
-			{_renderSearchBar()}
+		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContentContainerStyle}>
+			{renderSearchBar()}
 			<FlatList
 				data={travellers}
 				// ListHeaderComponent={_renderSearchBar}
 				keyExtractor={_keyExtractor}
-				renderItem={_renderTravellerHolder}
+				renderItem={renderTravellerHolder}
 			/>
 		</ScrollView>
 	);

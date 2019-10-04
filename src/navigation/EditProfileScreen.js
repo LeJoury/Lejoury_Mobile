@@ -7,7 +7,7 @@ import { Color, Styles, Languages } from '@common';
 
 class EditProfileScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(Languages.EditProfile, Color.blackTextPrimary),
+		headerTitle: Title(Languages.EditProfile, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary),
 		headerRight: Save(navigation, Color.blue1)
 	});

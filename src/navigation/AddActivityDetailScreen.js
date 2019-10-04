@@ -15,7 +15,7 @@ class AddActivityDetailScreen extends Component {
 
 		return {
 			headerLeft: Back(navigation, Color.primary, params.handleOnBack),
-			headerTitle: Title(Languages.Activity + ' ' + navigation.state.params.identifier, Color.black2)
+			headerTitle: Title(Languages.Activity + ' ' + navigation.state.params.identifier, Color.headerTitleColor)
 		};
 	};
 
@@ -24,7 +24,7 @@ class AddActivityDetailScreen extends Component {
 	}
 
 	_onBackAlert = () => {
-		this.child.showAlert();
+		this.child.showDiscardAlert();
 	};
 
 	componentDidUpdate() {}

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Animated, KeyboardAvoidingView } from 'react-native';
+import { View, Animated, KeyboardAvoidingView } from 'react-native';
 
-import { ButtonIndex, Spinner } from '@components';
+import { Button, Spinner, AnimatedTextInput } from '@components';
 import { Color, Languages, showOkAlert, validateEmail, createStaggerAnimationStyle } from '@common';
 
 import styles from './styles';
-
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const ForgotPassword = (props) => {
 	const [ emailTitleBox ] = useState(new Animated.Value(0));
@@ -55,7 +53,7 @@ const ForgotPassword = (props) => {
 		}
 	};
 
-	const buttonTextColor = shouldButtonDisabled() ? Color.lightGrey1 : Color.white;
+	const buttonTextColor = shouldButtonDisabled() ? { color: Color.lightGrey1 } : { color: Color.white };
 
 	const buttonStyle = shouldButtonDisabled()
 		? { backgroundColor: Color.lightGrey6, shadowOpacity: 0 }
@@ -73,32 +71,26 @@ const ForgotPassword = (props) => {
 						{Languages.ForgotPasswordMessage}
 					</Animated.Text>
 					<AnimatedTextInput
-						ref={(email) => (this._emailAddress = email)}
-						style={[
+						inputRef={(ref) => (this._emailAddress = ref)}
+						inputStyle={[
 							styles.input,
 							emailAddressBoxStyle,
 							{ borderColor: isEmailAddressFocus ? Color.primary : Color.lightGrey6 }
 						]}
-						underlineColorAndroid={'transparent'}
-						placeholderTextColor={Color.lightGrey3}
 						placeholder={Languages.Email}
 						keyboardType="email-address"
-						selectionColor={Color.textSelectionColor}
-						autoCapitalize={'none'}
 						onFocus={() => setEmailAddressFocus(true)}
-						onBlur={() => {
-							setEmailAddressFocus(false);
-						}}
-						onChangeText={onChangeEmailAddress}
+						onBlur={() => setEmailAddressFocus(false)}
+						onChangeText={(text) => onChangeEmailAddress(text)}
 						value={emailAddress}
 					/>
 
 					<Animated.View style={[ sendButtonBoxStyle ]}>
-						<ButtonIndex
+						<Button
 							disabled={shouldButtonDisabled()}
 							text={Languages.Submit}
-							textColor={buttonTextColor}
-							containerStyle={[ styles.button, buttonStyle ]}
+							textStyle={[ styles.forgotPasswordTextStyle, buttonTextColor ]}
+							containerStyle={[ styles.forgotPasswordButton, buttonStyle ]}
 							onPress={onSubmitPress}
 						/>
 					</Animated.View>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Easing, Animated, BackHandler, Modal, Alert } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -81,7 +80,6 @@ class AddDayDetail extends Component {
 		let hasDay = days.some((day) => {
 			return day.identifier === identifier;
 		});
-
 
 		if (hasDay) {
 			this.setState(
@@ -165,7 +163,6 @@ class AddDayDetail extends Component {
 					activities: [ ...activities, newActivity ]
 				},
 				() => {
-					console.log(activities);
 					this.onSaveHandle();
 				}
 			);
@@ -206,9 +203,18 @@ class AddDayDetail extends Component {
 					let newActivities = this.state.activities;
 					newActivities.splice(index, 1);
 
-					this.setState({
-						activities: newActivities
-					});
+					this.setState(
+						{
+							activities: newActivities
+						},
+						() => {
+							if (this.state.activities.length > 0) {
+								this.onSaveHandle();
+							} else {
+								this.onDayRemove(false);
+							}
+						}
+					);
 				},
 				style: 'destructive'
 			},
@@ -218,38 +224,43 @@ class AddDayDetail extends Component {
 		]);
 	};
 
-	onDayRemove = () => {
+	onDayRemove = (needBack = true) => {
 		const { navigation } = this.props;
 		const { identifier } = this.state;
 		const { draftItinerary } = this.props.draft;
 
+		this.setState(
+			(state) => {
+				const days = state.days.filter((day) => {
+					return day.identifier !== identifier;
+				});
+
+				return {
+					days
+				};
+			},
+			() => {
+				let newItinerary = {
+					...draftItinerary,
+					days: this.state.days
+				};
+
+				this.props.updateItineraryByID(newItinerary);
+				this.props.addDayToItineraryRedux(this.state.days);
+				this.props.getItineraryDraft();
+
+				if (needBack) {
+					navigation.goBack(null);
+				}
+			}
+		);
+	}
+	onDayRemovePress = () => {
+
 		Alert.alert(Languages.RemoveConfirmationDayTitle, Languages.RemoveConfirmationDay, [
 			{
 				text: Languages.Remove,
-				onPress: () => {
-					this.setState(
-						(state) => {
-							const days = state.days.filter((day) => {
-								return day.identifier !== identifier;
-							});
-
-							return {
-								days
-							};
-						},
-						() => {
-							let newItinerary = {
-								...draftItinerary,
-								days: this.state.days
-							};
-
-							this.props.updateItineraryByID(newItinerary);
-							this.props.addDayToItineraryRedux(this.state.days);
-							this.props.getItineraryDraft();
-							navigation.goBack(null);
-						}
-					);
-				},
+				onPress: () => this.onDayRemove(),
 				style: 'destructive'
 			},
 			{
@@ -284,11 +295,12 @@ class AddDayDetail extends Component {
 
 		if (activities.length > 0) {
 			return (
-				<View>
+				<View key={create_UUID()} style={{ paddingBottom: 30 }}>
 					{activities.map((activity, index) => {
 						return (
 							<View style={{ ...Styles.Common.ColumnCenter }} key={create_UUID()}>
 								<ActivityHolder
+									key={create_UUID()}
 									index={index}
 									identifier={identifier}
 									name={activity.title}
@@ -300,19 +312,18 @@ class AddDayDetail extends Component {
 									onPress={this.onNavigateToEditActivityDetail}
 									onRemove={this.onActivityRemove}
 								/>
-								<View style={styles.separatorWrapper}>
+								<View style={styles.separatorWrapper} key={create_UUID()}>
 									<View style={styles.straightSeparator} />
 								</View>
 							</View>
 						);
 					})}
-					<View style={[ styles.buttonWrapper, { marginTop: 10 } ]}>
+					<View style={[ styles.buttonWrapper, { marginTop: 10 } ]} key={create_UUID()}>
 						<Button
 							textStyle={styles.addActivityButtonText}
 							containerStyle={styles.addActivityButton}
-							bottomColor={Color.white}
-							topColor={Color.white}
 							type="gradientBorder"
+							gradientColors={[ Color.white, Color.white ]}
 							text={Languages.AddMoreActivity}
 							disabled={false}
 							onPress={this.onNavigateToActivityDetail}
@@ -328,10 +339,18 @@ class AddDayDetail extends Component {
 
 		if (activities.length > 0) {
 			return (
-				<TouchableOpacity style={styles.removeButtonContainer} onPress={this.onDayRemove}>
-					<Icon name="trash-2" type="feather" size={Styles.IconSize.Small} color={Color.white} />
-					<Text style={styles.removeTextStyle}>{Languages.Remove.toUpperCase()}</Text>
-				</TouchableOpacity>
+				// <TouchableOpacity style={styles.removeButtonContainer} onPress={this.onDayRemovePress}>
+				// 	<Text style={styles.removeTextStyle}>{Languages.Remove.toUpperCase()}</Text>
+				// </TouchableOpacity>
+
+				<View style={styles.removeButtonWrapper}>
+					<Button
+						text={Languages.Remove.toUpperCase()}
+						textStyle={styles.removeTextStyle}
+						containerStyle={styles.removeButton}
+						onPress={this.onDayRemovePress}
+					/>
+				</View>
 			);
 		}
 	};
@@ -344,15 +363,10 @@ class AddDayDetail extends Component {
 				<ScrollView
 					scrollEnabled={activities.length > 0}
 					bounces={true}
-					contentContainerStyle={{
-						flexGrow: 1,
-						flexDirection: 'column',
-						justifyContent: 'space-between',
-						backgroundColor: Color.DirtyBackground
-					}}
+					contentContainerStyle={styles.scrollViewContainer}
 				>
 					<View style={styles.container}>
-						<TouchableOpacity style={[ styles.wrapper, { marginTop: 0 } ]}>
+						<TouchableOpacity style={[ styles.dateWrapper, { marginTop: 0 } ]}>
 							<Text style={styles.titleStyle}>{Languages.Date}</Text>
 							<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>{this.state.date}</Text>
 						</TouchableOpacity>

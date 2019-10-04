@@ -133,5 +133,36 @@ export default StyleSheet.create({
 		borderRadius: 10,
 		overflow: 'hidden'
 	},
-	
+	countryRow: {
+		flexDirection: 'row',
+		flex: 1,
+		margin: 8,
+		backgroundColor: Color.white
+	},
+	countryImageContainer: {
+		flex: 1
+	},
+	countryIconContainer: {
+		flex: 1,
+		alignItems: 'flex-end',
+		justifyContent: 'center'
+	},
+	countryImage: {
+		width: '100%',
+		aspectRatio: 1
+	},
+	countryTravellerContainer: {
+		flex: 3,
+		paddingHorizontal: 12
+	},
+	countryItineraryNameTextStyle: {
+		fontSize: 16,
+		color: Color.primary,
+		fontFamily: 'Quicksand-Bold'
+	},
+	countryItineraryTravellerNameTextStyle: {
+		fontSize: 14,
+		color: Color.lightGrey3,
+		fontFamily: 'Quicksand-Medium'
+	}
 });

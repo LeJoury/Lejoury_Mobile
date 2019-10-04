@@ -66,3 +66,6 @@ export const ForgotPassword = _ForgotPassword;
 
 import _Search from './Search';
 export const Search = _Search;
+
+import _AddQuote from './AddQuote';
+export const AddQuote = _AddQuote;

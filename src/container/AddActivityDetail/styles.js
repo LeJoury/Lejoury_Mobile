@@ -8,12 +8,52 @@ export default StyleSheet.create({
 	scrollViewContainer: {
 		flex: 1
 	},
+	scrollViewContentContainer: {
+		flexGrow: 1
+	},
 	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
 	subContain: {
 		flex: 1,
 		paddingTop: 18,
-		paddingBottom: 30,
 		backgroundColor: Color.white
+	},
+	flatListContainer: {
+		flex: 1,
+		paddingVertical: 12,
+		zIndex: 9999
+	},
+	flatListStyle: {
+		flex: 1
+	},
+	resultContainer: {
+		// height: 60,
+		// paddingVertical: 14
+	},
+	resultRow: {
+		...Styles.Common.RowCenterLeft,
+		height: 60,
+		paddingVertical: 14
+	},
+	resultIconContainer: {
+		flex: 1
+	},
+	resultKeywordContainer: {
+		flex: 6,
+		...Styles.Common.ColumnCenterLeft,
+		paddingRight: 6
+	},
+	resultKeywordMainTextStyle: {
+		fontSize: 16,
+		paddingHorizontal: 6,
+		color: Color.headerTitleColor,
+		fontFamily: 'Quicksand-Bold'
+	},
+	resultKeywordSecondaryTextStyle: {
+		fontSize: 13,
+		marginTop: 2,
+		paddingHorizontal: 6,
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Medium'
 	},
 	titleStyle: {
 		marginHorizontal: 18,
@@ -21,6 +61,10 @@ export default StyleSheet.create({
 		fontSize: 17,
 		flex: 1,
 		fontFamily: 'Quicksand-Bold'
+	},
+	inputView:{
+		flex: 1,
+		paddingBottom: Device.isIphoneX ? 100 : 90
 	},
 	inputWrapper: {
 		...Styles.Common.ColumnCenterLeft,
@@ -39,6 +83,11 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Regular',
 		borderBottomWidth: 1,
 		borderColor: Color.lightGrey1
+	},
+	inputTextStyle: {
+		fontSize: 14,
+		color: Color.black1,
+		fontFamily: 'Quicksand-Regular'
 	},
 	ratingContainer: {
 		marginHorizontal: 18,
@@ -95,25 +144,30 @@ export default StyleSheet.create({
 	},
 	rowWrapper: {
 		...Styles.Common.RowCenterBetween,
-		marginHorizontal: 18,
-		paddingLeft: 6,
-		marginTop: 6
+		marginHorizontal: 28,
+		marginTop: 18,
+		paddingLeft: 6
 	},
 	buttonWrapper: {
+		...Styles.Common.ColumnCenter,
 		position: 'absolute',
-		bottom: -2,
+		bottom: 0,
 		left: 0,
 		right: 0,
-		height: Device.isIphoneX ? 60 : 50
+		height: Device.isIphoneX ? 60 : 50,
+		...Styles.Common.ShadowBox
 	},
-	gradientWrapper: {
-		paddingVertical: 16
+	confirmButton: {
+		width: width,
+		height: Device.isIphoneX ? 60 : 50,
+		backgroundColor: Color.splashScreenBg5,
+		justifyContent: 'center'
 	},
 	doneTextStyle: {
 		color: Color.white,
 		fontSize: 14,
 		textAlign: 'center',
-		fontFamily: 'Quicksand-Medium'
+		fontFamily: 'Quicksand-Bold'
 	},
 	pickerContainer: {
 		paddingLeft: 12,

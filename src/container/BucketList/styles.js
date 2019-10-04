@@ -8,6 +8,7 @@ const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
 export default StyleSheet.create({
 	container: {
 		flex: 1,
+		paddingTop: 6,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},

@@ -70,6 +70,19 @@ let Styles = {
 	}
 };
 
+Styles.Button = {
+	Radius0: {
+		borderRadius: 0,
+		paddingVertical: 12,
+		alignItems: 'center'
+	},
+	Radius5: {
+		borderRadius: 5,
+		paddingVertical: 12,
+		alignItems: 'center'
+	}
+};
+
 Styles.Common = {
 	Column: {},
 	ColumnCenter: {
@@ -99,18 +112,6 @@ Styles.Common = {
 		alignItems: 'center',
 		justifyContent: 'space-evenly'
 	},
-	// Row: {
-	//     flexDirection: 'row',
-
-	//     ...Platform.select({
-	//         ios: {
-	//             top: !Config.showStatusBar ? (Device.isIphoneX ? -20 : -8) : (Device.isIphoneX ? -15 : 0),
-	//         },
-	//         android: {
-	//             top: 0,
-	//         }
-	//     })
-	// },
 	RowCenter: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -154,6 +155,9 @@ Styles.Common = {
 		justifyContent: 'space-evenly'
 	},
 	//More traits
+	noToolbar: {
+		height: 0
+	},
 	centerToolbar: {
 		...Platform.select({
 			android: {
@@ -174,7 +178,12 @@ Styles.Common = {
 				marginTop: showStatusBar ? 0 : 0,
 				elevation: 0
 			}
-		})
+		}),
+		shadowColor: Color.lightGrey3,
+		shadowOpacity: 0.2,
+		elevation: 6,
+		shadowRadius: 2,
+		shadowOffset: { width: 0, height: 2 }
 	},
 	// toolbarNoBorder: {
 	// 	backgroundColor: Color.navigationBarColor,
@@ -258,10 +267,10 @@ Styles.Common = {
 	FloatCircle: {
 		width: 38,
 		height: 38,
-		marginLeft: 12,
+		marginLeft: 10,
 		marginTop: 10,
 		borderRadius: 19,
-		backgroundColor: Color.white,
+		backgroundColor: Color.black30T,
 		alignItems: 'center',
 		justifyContent: 'center',
 		shadowColor: Color.black,

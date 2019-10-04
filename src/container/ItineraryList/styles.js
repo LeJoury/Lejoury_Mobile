@@ -33,5 +33,9 @@ export default StyleSheet.create({
 		paddingHorizontal: 10,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Regular'
+	},
+	separatorRow: {
+		backgroundColor: Color.lightGrey4,
+		height: 0.5
 	}
 });

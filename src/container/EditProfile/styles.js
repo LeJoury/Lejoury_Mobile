@@ -4,10 +4,14 @@ import { Color, Styles, Device } from '@common';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
-	scrollViewContainer: {
-		flex: 1
+	container: {
+		flex: 1,
+		paddingTop:24
 	},
-	container: {},
+	scrollViewContainer: {
+		flexGrow: 1,
+		paddingBottom: 80
+	},
 	subContain: {
 		paddingBottom: 30,
 		backgroundColor: Color.white

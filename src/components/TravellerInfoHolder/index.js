@@ -1,10 +1,14 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, Animated, Image } from 'react-native';
+import { View, Text, Animated, TouchableWithoutFeedback } from 'react-native';
 import { Icon } from 'react-native-elements';
+import FastImage from 'react-native-fast-image';
+import { createImageProgress } from 'react-native-image-progress';
 
 import { Color, Styles, getCountry } from '@common';
 
 import styles from './styles';
+
+const LoadImage = createImageProgress(FastImage);
 
 const TravellerInfo = ({
 	itinerary,
@@ -29,30 +33,34 @@ const TravellerInfo = ({
 			<View style={styles.separator} />
 			<View style={[ styles.main_UserProfileWrapper, { marginTop: travellerWrapperMarginTop } ]}>
 				<View style={Styles.Common.RowCenterRight}>
-					<Icon
-						name="heart"
-						type="feather"
-						size={heartIconSize === undefined ? Styles.IconSize.Small : heartIconSize}
-						color={Color.red2}
-					/>
+					<TouchableWithoutFeedback>
+						<Icon
+							name="heart"
+							type="feather"
+							size={heartIconSize === undefined ? Styles.IconSize.Small : heartIconSize}
+							color={Color.red2}
+						/>
+					</TouchableWithoutFeedback>
 					<Text style={[ styles.socialIconText, { fontSize: titleTextSize } ]}>200</Text>
 				</View>
-				<View style={Styles.Common.RowCenterRight}>
-					<Image
-						source={{
-							uri: traveller.userProfilePicture,
-							// cache: 'only-if-cached'
-						}}
-						style={[
-							styles.main_UserProfilePicture,
-							{ width: travellerPicSize, height: travellerPicSize }
-						]}
-						// PlaceholderContent={<ActivityIndicator />}
-					/>
-					<Text style={[ styles.main_UserProfileName, { fontSize: travellerNameSize } ]}>
-						{traveller.username}
-					</Text>
-				</View>
+				<TouchableWithoutFeedback style={Styles.Common.RowCenterRight}>
+					<View style={Styles.Common.RowCenterRight}>
+						<View style={[ styles.main_UserProfilePicture ]}>
+							<LoadImage
+								source={{
+									uri: traveller.userProfilePicture
+								}}
+								style={[
+									styles.main_UserProfilePicture,
+									{ width: travellerPicSize, height: travellerPicSize }
+								]}
+							/>
+						</View>
+						<Text style={[ styles.main_UserProfileName, { fontSize: travellerNameSize } ]}>
+							{traveller.username}
+						</Text>
+					</View>
+				</TouchableWithoutFeedback>
 			</View>
 		</Animated.View>
 	</Animated.View>

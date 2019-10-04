@@ -75,3 +75,6 @@ export const ScaledImage = scaledImage;
 
 import noInternetNotice from './NoInternetNotice';
 export const NoInternetNotice = noInternetNotice;
+
+import animatedTextInput from './AnimatedTextInput';
+export const AnimatedTextInput = animatedTextInput;

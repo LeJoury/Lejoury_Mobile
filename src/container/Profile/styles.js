@@ -4,7 +4,8 @@ import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
 	container: {
-		flex: 1
+		flexGrow: 1,
+		paddingTop: 6
 	},
 	landingBackground: {
 		width,

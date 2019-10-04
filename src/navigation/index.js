@@ -25,6 +25,8 @@ import UploadNewItineraryScreen from './UploadNewItineraryScreen';
 import AddItineraryDetailScreen from './AddItineraryDetailScreen';
 import AddDayDetailScreen from './AddDayDetailScreen';
 import AddActivityDetailScreen from './AddActivityDetailScreen';
+import AddQuoteScreen from './AddQuoteScreen';
+
 import EditProfileScreen from './EditProfileScreen';
 
 import ProfileScreen from './ProfileScreen';
@@ -64,6 +66,19 @@ const FadeTransition = (index, position) => {
 	};
 };
 
+const BottomTransition = (index, position, height) => {
+	let sceneRange = [ index - 1, index ];
+	let outputHeight = [ height, 0 ];
+
+	let transition = position.interpolate({
+		inputRange: sceneRange,
+		outputRange: outputHeight,
+	});
+	return {
+		transform: [ { translateY: transition } ]
+	};
+};
+
 const AddActivityTransitionConfig = (sceneProps) => {
 	if (sceneProps.scene.route.routeName === 'AddActivityDetail' || sceneProps.scene.route.routeName === 'Landing') {
 		return {
@@ -75,6 +90,16 @@ const AddActivityTransitionConfig = (sceneProps) => {
 				return FadeTransition(index, position);
 			}
 		};
+	} else if (sceneProps.scene.route.routeName === 'UploadItineraryStack') {
+		return {
+			screenInterpolator: (sceneProps) => {
+				const { layout, position, scene } = sceneProps;
+				const { index } = scene;
+				const height = layout.initHeight;
+
+				return BottomTransition(index, position, height);
+			}
+		};
 	}
 };
 
@@ -82,7 +107,7 @@ const HomeStack = createStackNavigator({
 	Home: {
 		screen: HomeScreen,
 		navigationOptions: {
-			// headerStyle: Styles.Common.toolbar
+			headerStyle: Styles.Common.toolbar,
 			header: null
 		}
 	},
@@ -113,12 +138,14 @@ const ItineraryDetailStack = createStackNavigator({
 	ItineraryDetails: {
 		screen: ItineraryDetailsScreen,
 		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
 			header: null
 		}
 	},
 	ActivityDetail: {
 		screen: ActivityDetailScreen,
 		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
 			header: null
 		}
 	},
@@ -136,14 +163,12 @@ const UploadItineraryStack = createStackNavigator(
 			screen: UploadItineraryScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
-				// header: null
 			}
 		},
 		UploadNewItineraryScreen: {
 			screen: UploadNewItineraryScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
-				// header: null
 			}
 		},
 		AddItineraryDetail: {
@@ -157,11 +182,16 @@ const UploadItineraryStack = createStackNavigator(
 			screen: AddDayDetailScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
-				// header: null
 			}
 		},
 		AddActivityDetail: {
 			screen: AddActivityDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		AddQuote:{
+			screen: AddQuoteScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
 			}
@@ -190,6 +220,11 @@ const FollowerTopTabbar = createMaterialTopTabNavigator(
 		Following: { screen: TravellerListScreen }
 	},
 	{
+		navigationOptions: ({ navigation }) => ({
+			headerLeft: Back(navigation, Color.primary, () => navigation.goBack()),
+			headerTitle: Title(navigation.state.params.username, Color.headerTitleColor),
+			headerStyle: Styles.Common.toolbar
+		}),
 		initialRouteName: 'Followers',
 		tabBarPosition: 'top',
 		animationEnabled: true,
@@ -220,12 +255,7 @@ const ProfileStack = createStackNavigator({
 		}
 	},
 	TravellerListScreen: {
-		screen: FollowerTopTabbar,
-		navigationOptions: ({ navigation }) => ({
-			headerLeft: Back(navigation, Color.primary, () => navigation.goBack()),
-			headerTitle: Title(navigation.state.params.username, Color.blackTextPrimary),
-			headerStyle: Styles.Common.toolbar
-		})
+		screen: FollowerTopTabbar
 	}
 });
 
@@ -246,12 +276,16 @@ const AppNavigator = createBottomTabNavigator(
 		UploadItinerary: {
 			screen: UploadItineraryStack,
 			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
 				header: null,
-				tabBarIcon: () => (
-					<View style={uploadButtonStyle}>
-						<Icon name="plus" type="feather" color={Color.white} size={Styles.IconSize.CenterTab} />
-					</View>
+				tabBarIcon: ({ tintColor }) => (
+					<Icon name="plus-circle" type="feather" size={Styles.IconSize.xxLarge} color={tintColor} />
 				)
+				// tabBarIcon: () => (
+				// 	<View style={uploadButtonStyle}>
+				// 		<Icon name="plus" type="feather" color={Color.white} size={Styles.IconSize.CenterTab} />
+				// 	</View>
+				// )
 			}
 		},
 		NotificationStack: {
@@ -287,7 +321,10 @@ const MainNavigator = createStackNavigator(
 		Splash: { screen: SplashScreen, navigationOptions: { header: null } },
 		Landing: {
 			screen: LandingScreen,
-			navigationOptions: { header: null }
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
 		},
 		ForgotPassword: {
 			screen: ForgotPasswordScreen,
@@ -295,18 +332,27 @@ const MainNavigator = createStackNavigator(
 				headerStyle: Styles.Common.toolbar
 			}
 		},
-		Main: { screen: AppNavigator, navigationOptions: { header: null } },
+		Main: {
+			screen: AppNavigator,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
 		UploadItineraryStack: {
 			screen: UploadItineraryStack,
 			navigationOptions: {
-				mode: 'modal',
+				headerStyle: Styles.Common.toolbar,
 				header: null,
 				tabBarIcon: ({ tintColor }) => <Icon name="plus-circle" type="feather" color={tintColor} />
 			}
 		},
 		ItineraryDetailStack: {
 			screen: ItineraryDetailStack,
-			navigationOptions: { header: null }
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
 		},
 		Settings: {
 			screen: SettingsScreen,

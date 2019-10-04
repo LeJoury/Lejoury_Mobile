@@ -430,7 +430,7 @@ const itineraries = [
 class ItineraryListScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
-		headerTitle: Title('Country Name', Color.black2)
+		headerTitle: Title('Country Name', Color.headerTitleColor)
 	});
 
 	componentDidMount() {}

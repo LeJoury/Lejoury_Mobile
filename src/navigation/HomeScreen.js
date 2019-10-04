@@ -7,9 +7,6 @@ import { Home } from '@container';
 import { Color, Languages } from '@common';
 
 class HomeScreen extends Component {
-	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(navigation.state.routeName, Color.black2)
-	});
 
 	constructor(props) {
 		super(props);

@@ -15,7 +15,7 @@ class AddDayDetailScreen extends Component {
 
 		return {
 			headerLeft: Back(navigation, Color.primary),
-			headerTitle: Title(Languages.Day + ' ' + navigation.state.params.identifier, Color.black2),
+			headerTitle: Title(Languages.Day + ' ' + navigation.state.params.identifier, Color.headerTitleColor),
 			headerRight: Add(navigation, Color.primary, params.handleAddActivity)
 		};
 	};

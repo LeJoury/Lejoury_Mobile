@@ -629,42 +629,42 @@ class Home extends Component {
 		});
 	};
 
-	_onPressFamous = (itinerary) => {
+	onPressFamous = (itinerary) => {
 		this.props.navigation.navigate('ItineraryDetails', {
 			itinerary: itinerary
 		});
 	};
 
-	_onPressCountry = (country) => {
+	onPressCountry = (country) => {
 		this.props.navigation.navigate('ItineraryList', {
 			countryID: country.countryID
 		});
 	};
 
-	_onPressTraveller = (user) => {
+	onPressTraveller = (user) => {
 		this.props.navigation.navigate('TravellerProfile', {
 			user
 		});
 	};
 
-	_renderFamousPlaces = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this._onPressFamous(item)} type="main" />
+	renderFamousPlaces = ({ item }) => (
+		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this.onPressFamous(item)} type="main" />
 	);
 
-	_renderPopular = ({ item }) => (
-		<CountryHolder country={item} key={item.countryID} onPress={() => this._onPressCountry(item)} type="main" />
+	renderPopular = ({ item }) => (
+		<CountryHolder country={item} key={item.countryID} onPress={() => this.onPressCountry(item)} type="main" />
 	);
 
-	_renderTraveller = ({ item }) => (
+	renderTraveller = ({ item }) => (
 		<TravellerHolder
 			traveller={item}
 			key={item.travellerID}
-			onPress={() => this._onPressTraveller(item)}
+			onPress={() => this.onPressTraveller(item)}
 			type="main"
 		/>
 	);
 
-	_renderSearchBar = () => {
+	renderSearchBar = () => {
 		const { search } = this.state;
 
 		return (
@@ -694,6 +694,60 @@ class Home extends Component {
 		);
 	};
 
+	renderMainFeed() {
+		return (
+			<ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 12 }}>
+				<Section
+					isHorizontalList={true}
+					showHorizontalIndicator={false}
+					data={itineraries}
+					type="carousel"
+					keyExtractor={this._keyExtractor_Itinerary}
+					renderHolder={this.renderFamousPlaces}
+					// sectionBigTitle={Languages.IntroduceFamousPlaces}
+				>
+					<Text style={[ styles.sectionTitle, { fontSize: 26, color: Color.primary } ]}>
+						{Languages.Destination}
+					</Text>
+					<Text style={[ styles.smallSectionTitle, { marginTop: 8 } ]}>
+						{Languages.Hello}, {user.username}
+					</Text>
+					<Text style={[ styles.smallSectionTitle, { marginTop: 4 } ]}>
+						{Languages.WhereWouldYouLikeToExplore}
+					</Text>
+				</Section>
+				<Section
+					containerStyle={styles.sectionContainer}
+					isHorizontalList={true}
+					showHorizontalIndicator={false}
+					data={countries}
+					keyExtractor={this._keyExtractor_Country}
+					renderHolder={this.renderPopular}
+				>
+					<Text style={styles.smallSectionTitle}>{Languages.TrendingCountries}</Text>
+				</Section>
+				<Section
+					containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
+					isHorizontalList={true}
+					showHorizontalIndicator={false}
+					data={travellers}
+					keyExtractor={this._keyExtractor_Traveller}
+					renderHolder={this.renderTraveller}
+					flatListStyle={{ paddingLeft: 10 }}
+				>
+					<View style={[ Styles.Common.RowCenterBetween, { flex: 1 } ]}>
+						<View style={{ flex: 2 }}>
+							<Text style={styles.sectionTitle}>{Languages.TopTraveller}</Text>
+						</View>
+						<TouchableOpacity style={styles.seeMoreContainer}>
+							<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
+						</TouchableOpacity>
+					</View>
+				</Section>
+			</ScrollView>
+		);
+	}
+
 	render() {
 		const { searchViewOpacity, showSearchView } = this.state;
 
@@ -714,61 +768,21 @@ class Home extends Component {
 
 		return (
 			<View style={styles.container}>
-				{this._renderSearchBar()}
-				{showSearchView ? (
+				{this.renderSearchBar()}
+				{/* {showSearchView ? (
 					<Animated.View style={[ searchViewStyle, { flex: 1 } ]}>
-						<Search navigation={this.props.navigation}/>
+						<Search navigation={this.props.navigation} />
 					</Animated.View>
 				) : (
-					<ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 12 }}>
-						<Section
-							isHorizontalList={true}
-							showHorizontalIndicator={false}
-							data={itineraries}
-							type="carousel"
-							keyExtractor={this._keyExtractor_Itinerary}
-							renderHolder={this._renderFamousPlaces}
-							// sectionBigTitle={Languages.IntroduceFamousPlaces}
-						>
-							<Text style={[ styles.sectionTitle, { fontSize: 26, color: Color.primary } ]}>
-								{Languages.Destination}
-							</Text>
-							<Text style={[ styles.smallSectionTitle, { marginTop: 8 } ]}>
-								{Languages.Hello}, {user.username}
-							</Text>
-							<Text style={[ styles.smallSectionTitle, { marginTop: 4 } ]}>
-								{Languages.WhereWouldYouLikeToExplore}
-							</Text>
-						</Section>
-						<Section
-							containerStyle={styles.sectionContainer}
-							isHorizontalList={true}
-							showHorizontalIndicator={false}
-							data={countries}
-							keyExtractor={this._keyExtractor_Country}
-							renderHolder={this._renderPopular}
-						>
-							<Text style={styles.smallSectionTitle}>{Languages.TrendingCountries}</Text>
-						</Section>
-						<Section
-							containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
-							isHorizontalList={true}
-							showHorizontalIndicator={false}
-							data={travellers}
-							keyExtractor={this._keyExtractor_Traveller}
-							renderHolder={this._renderTraveller}
-							flatListStyle={{ paddingLeft: 10 }}
-						>
-							<View style={[ Styles.Common.RowCenterBetween, { flex: 1 } ]}>
-								<View style={{ flex: 2 }}>
-									<Text style={styles.sectionTitle}>{Languages.TopTraveller}</Text>
-								</View>
-								<TouchableOpacity style={styles.seeMoreContainer}>
-									<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
-								</TouchableOpacity>
-							</View>
-						</Section>
-					</ScrollView>
+					this.renderMainFeed()
+				)} */}
+
+				{this.renderMainFeed()}
+
+				{showSearchView && (
+					<Animated.View style={[ searchViewStyle, styles.searchViewOverlayContainer ]}>
+						<Search navigation={this.props.navigation} />
+					</Animated.View>
 				)}
 			</View>
 		);

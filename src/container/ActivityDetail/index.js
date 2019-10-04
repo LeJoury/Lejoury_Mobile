@@ -19,16 +19,16 @@ import StarRating from 'react-native-star-rating';
 
 import { Back, AddBucket } from '../../navigation/IconNav';
 
-import { Styles, Languages, Color, Device, formatImages } from '@common';
+import { Constants, Styles, Languages, Color, Device, formatImages } from '@common';
+
+const { Sizes } = Constants.Spinner;
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
-const STICKY_HEADER_HEIGHT = Device.isIphoneX ? 90 : 70;
-const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 450 : 350;
 const backTop = Device.isIphoneX ? 35 : 20;
 
-const ActivityDetails = (props) => {
+const ActivityDetail = (props) => {
 	//location details
 	const [ locationName, setLocationName ] = useState('');
 	const [ locationLat, setLocationLat ] = useState(0);
@@ -42,6 +42,7 @@ const ActivityDetails = (props) => {
 	const [ budget, setBudget ] = useState('');
 	const [ description, setDescription ] = useState('');
 	const [ rate, setRate ] = useState(0);
+	const [ selectedIndex, setSelectedIndex ] = useState(0);
 
 	//map
 	const [ region, setRegion ] = useState();
@@ -75,11 +76,11 @@ const ActivityDetails = (props) => {
 		navigation.goBack(null);
 	};
 
-	onRegionChange = (region) => {
+	const onRegionChange = (region) => {
 		setRegion(region);
 	};
 
-	onMapReady = () => {
+	const onMapReady = () => {
 		if (Platform.OS === 'ios') {
 			// Create the object to update this.state.mapRegion through the onRegionChange function
 			const region = {
@@ -101,7 +102,7 @@ const ActivityDetails = (props) => {
 		}
 	};
 
-	renderSliderBox = () => {
+	const renderSliderBox = () => {
 		return (
 			<Swiper
 				style={styles.imageWrapper}
@@ -113,7 +114,13 @@ const ActivityDetails = (props) => {
 			>
 				{photos.map((uri, index) => {
 					return (
-						<TouchableOpacity key={index} onPress={() => setPreviewModalVisible(true)}>
+						<TouchableOpacity
+							key={index}
+							onPress={() => {
+								setPreviewModalVisible(true);
+								setSelectedIndex(index);
+							}}
+						>
 							<ImageBackground
 								source={{ uri: uri }}
 								style={styles.image}
@@ -122,7 +129,7 @@ const ActivityDetails = (props) => {
 							>
 								<Image
 									source={{
-										uri: uri,
+										uri: uri
 										// cache: 'only-if-cached'
 									}}
 									style={styles.image}
@@ -136,7 +143,7 @@ const ActivityDetails = (props) => {
 		);
 	};
 
-	renderPreviewModal = () => {
+	const renderPreviewModal = () => {
 		return (
 			<Modal
 				visible={previewModalVisible}
@@ -147,12 +154,17 @@ const ActivityDetails = (props) => {
 					imageUrls={formatImages(photos)}
 					onSwipeDown={() => setPreviewModalVisible(false)}
 					enableSwipeDown={true}
+					enablePreload={true}
+					index={selectedIndex}
+					loadingRender={() => (
+						<ActivityIndicator color={Color.white} size={Sizes.LARGE} style={styles.loadingStyle} />
+					)}
 				/>
 			</Modal>
 		);
 	};
 
-	renderNavButton = () => {
+	const renderNavButton = () => {
 		const { navigation } = props;
 
 		return (
@@ -164,7 +176,7 @@ const ActivityDetails = (props) => {
 	};
 
 	return (
-		<ScrollView bounces={false} style={styles.scrollViewContainer} contentContainerStyle={{ flexGrow: 1 }}>
+		<ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ flexGrow: 1 }}>
 			{renderSliderBox()}
 			{renderNavButton()}
 			{renderPreviewModal()}
@@ -222,4 +234,4 @@ const ActivityDetails = (props) => {
 	);
 };
 
-export default ActivityDetails;
+export default ActivityDetail;

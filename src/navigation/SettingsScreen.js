@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Back } from './IconNav';
+import { Back, Title } from './IconNav';
 
 import { Settings } from '@container';
-import { Color, Styles } from '@common';
+import { Color, Styles, Languages } from '@common';
 
 class SettingsScreen  extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		// headerTitle: Title(user.username, Color.blackTextPrimary),
+		headerTitle: Title(Languages.Settings, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.black2)
 	});
 

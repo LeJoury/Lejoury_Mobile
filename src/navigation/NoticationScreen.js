@@ -3,11 +3,11 @@ import { View, Text } from 'react-native';
 import { Logo, Title } from './IconNav';
 
 import { Notification } from '@container';
-import { Color, Styles } from '@common';
+import { Color, Languages } from '@common';
 
 class NotifcationScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
-		// headerTitle: Title(navigation.state.routeName, Color.black2),
+		headerTitle: Title(Languages.Notification, Color.headerTitleColor),
 	});
 
 	componentDidMount() {}

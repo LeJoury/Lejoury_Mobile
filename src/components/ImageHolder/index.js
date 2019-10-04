@@ -1,84 +1,65 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Animated, TouchableOpacity, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { Color, Styles } from '@common';
 
-class ImageHolder extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			removeViewOpacity: new Animated.Value(0),
-			canRemove: false
-		};
-	}
+import styles from './styles';
 
-	componentDidMount() {}
+const ImageHolder = (props) => {
+	const [ removeViewOpacity ] = useState(new Animated.Value(0));
+	const [ canRemove, setCanRemove ] = useState(false);
 
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
-
-	showRemoveImageView = () => {
-		this.setState(
-			{
-				canRemove: true
-			},
-			() => {
-				Animated.timing(this.state.removeViewOpacity, {
+	const showRemoveImageView = () => {
+		setCanRemove(true);
+		Animated.timing(removeViewOpacity, {
+			duration: 300,
+			delay: 0.3,
+			toValue: 1
+		}).start(() => {
+			Animated.sequence([
+				Animated.delay(800),
+				Animated.timing(removeViewOpacity, {
 					duration: 300,
-					toValue: 1
-				}).start(() => {
-					Animated.sequence([
-						Animated.delay(800),
-						Animated.timing(this.state.removeViewOpacity, {
-							duration: 300,
-							toValue: 0
-						})
-					]).start(() => {
-						this.setState({ canRemove: false });
-					});
-				});
-			}
-		);
+					toValue: 0
+				})
+			]).start(() => {
+				setCanRemove(false);
+			});
+		});
 	};
 
-	removeRemoveView() {
-		const { imageStyle, imageUri, onRemovePress } = this.props;
+	const removeRemoveView = () => {
+		const { imageStyle, imageUri, onRemovePress } = props;
 
-		if (!this.state.canRemove) return;
+		if (!canRemove) {
+			return;
+		}
 
 		return (
 			<Animated.View
 				style={[
+					styles.removeContainer,
+					imageStyle,
 					{
-						top: 0,
-						position: 'absolute',
-						backgroundColor: Color.lightGrey6,
-						opacity: this.state.removeViewOpacity,
-						...Styles.Common.ColumnCenter
-					},
-					imageStyle
+						opacity: removeViewOpacity
+					}
 				]}
 			>
-				<TouchableOpacity
-					onPress={() => (this.state.canRemove ? onRemovePress(imageUri) : this.showRemoveImageView)}
-				>
+				<TouchableOpacity onPress={() => (canRemove ? onRemovePress(imageUri) : showRemoveImageView)}>
 					<Icon name="x" size={Styles.IconSize.CenterTab} type="feather" color={Color.red1} />
 				</TouchableOpacity>
 			</Animated.View>
 		);
-	}
+	};
 
-	render() {
-		const { containerStyle, imageStyle, imageUri } = this.props;
+	const { containerStyle, imageStyle, imageUri } = props;
 
-		return (
-			<TouchableOpacity style={containerStyle} onPress={this.showRemoveImageView}>
-				<Image style={imageStyle} source={{ uri: imageUri }} />
-				{this.removeRemoveView()}
-			</TouchableOpacity>
-		);
-	}
-}
+	return (
+		<TouchableOpacity style={containerStyle} onPress={showRemoveImageView}>
+			<Image style={imageStyle} source={{ uri: imageUri }} />
+			{removeRemoveView()}
+		</TouchableOpacity>
+	);
+};
 export default ImageHolder;

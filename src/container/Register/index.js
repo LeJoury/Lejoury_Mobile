@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Animated } from 'react-native';
+import { View, Text, Animated } from 'react-native';
 
+import { Button, AnimatedTextInput } from '@components';
 import { Color, Languages, validateEmail, validatePassword, createStaggerAnimationStyle } from '@common';
-import { ButtonIndex } from '@components';
 
 import styles from './styles';
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const Register = (props) => {
 	const [ usernameBox ] = useState(new Animated.Value(0));
@@ -115,7 +114,7 @@ const Register = (props) => {
 		}
 	};
 
-	const buttonTextColor = shouldButtonDisabled() ? Color.lightGrey1 : Color.white;
+	const buttonTextColor = shouldButtonDisabled() ? { color: Color.lightGrey1 } : { color: Color.white };
 
 	const buttonStyle = shouldButtonDisabled()
 		? { backgroundColor: Color.lightGrey6, shadowOpacity: 0 }
@@ -130,92 +129,79 @@ const Register = (props) => {
 		<View style={styles.loginForm}>
 			<View style={[ styles.inputWrap, { marginTop: 0 } ]}>
 				<AnimatedTextInput
-					ref={(ref) => (this._username = ref)}
+					inputRef={(ref) => (this._username = ref)}
 					underlineColorAndroid={'transparent'}
-					placeholderTextColor={Color.lightGrey3}
+					inputStyle={[
+						styles.input,
+						usernameBoxStyle,
+						{ borderColor: isUsernameFocus ? Color.primary : Color.lightGrey6 }
+					]}
 					placeholder={Languages.username}
-					selectionColor={Color.textSelectionColor}
-					autoCapitalize={'none'}
-					onChangeText={onChangeUsername}
+					onChangeText={(text) => onChangePassword(text)}
 					onFocus={() => setUsernameFocus(true)}
 					onBlur={() => {
 						setUsernameError(isUsernameDirty && username.length < 6);
 						setUsernameFocus(false);
 					}}
-					onSubmitEditing={() => {
-						this._emailAddress.getNode().focus();
-					}}
+					onSubmitEditing={() => this._emailAddress.getNode().focus()}
 					blurOnSubmit={false}
 					returnKeyType={'next'}
 					value={username}
-					style={[
-						styles.input,
-						usernameBoxStyle,
-						{ borderColor: isUsernameFocus ? Color.primary : Color.lightGrey6 }
-					]}
 				/>
 				{renderUsernameError()}
 			</View>
 			<View style={styles.inputWrap}>
 				<AnimatedTextInput
-					ref={(ref) => (this._emailAddress = ref)}
-					underlineColorAndroid={'transparent'}
-					placeholderTextColor={Color.lightGrey3}
+					inputRef={(ref) => (this._emailAddress = ref)}
+					inputStyle={[
+						styles.input,
+						emailAddressBoxStyle,
+						{ borderColor: isEmailAddressFocus ? Color.primary : Color.lightGrey6 }
+					]}
 					placeholder={Languages.Email}
-					selectionColor={Color.textSelectionColor}
-					autoCapitalize={'none'}
-					keyboardType={'email-address'}
-					onChangeText={onChangeEmailAddress}
+					keyboardType="email-address"
+					onChangeText={(text) => onChangeEmailAddress(text)}
 					onFocus={() => setEmailAddressFocus(true)}
 					onBlur={() => {
 						setEmailAddressError(isEmailAddressDirty && !validateEmail(emailAddress));
 						setEmailAddressFocus(false);
 					}}
-					onSubmitEditing={() => {
-						this._password.getNode().focus();
-					}}
+					onSubmitEditing={() => this._password.getNode().focus()}
 					blurOnSubmit={false}
-					returnKeyType={'next'}
 					value={emailAddress}
-					style={[
-						styles.input,
-						emailAddressBoxStyle,
-						{ borderColor: isEmailAddressFocus ? Color.primary : Color.lightGrey6 }
-					]}
+					returnKeyType={'next'}
 				/>
 				{renderEmailAddressError()}
 			</View>
 			<View style={styles.inputWrap}>
 				<AnimatedTextInput
-					ref={(ref) => (this._password = ref)}
+					inputRef={(ref) => (this._password = ref)}
 					underlineColorAndroid={'transparent'}
-					placeholderTextColor={Color.lightGrey3}
+					inputStyle={[
+						styles.input,
+						passwordBoxStyle,
+						{ borderColor: isPasswordFocus ? Color.primary : Color.lightGrey6 }
+					]}
 					placeholder={Languages.password}
-					selectionColor={Color.textSelectionColor}
-					autoCapitalize={'none'}
+					keyboardType="email-address"
 					secureTextEntry={true}
-					onChangeText={onChangePassword}
+					onChangeText={(text) => onChangePassword(text)}
 					onFocus={() => setPasswordFocus(true)}
 					onBlur={() => {
 						setPasswordError(isPasswordDirty && !validatePassword(password));
 						setPasswordFocus(false);
 					}}
 					blurOnSubmit={true}
-					returnKeyType={'go'}
+					returnKeyType={'next'}
 					value={password}
-					style={[
-						styles.input,
-						passwordBoxStyle,
-						{ borderColor: isPasswordFocus ? Color.primary : Color.lightGrey6 }
-					]}
 				/>
 				{renderPasswordError()}
 			</View>
 			<Animated.View style={[ styles.buttonWrap, registerButtonBoxStyle ]}>
-				<ButtonIndex
+				<Button
 					disabled={shouldButtonDisabled()}
 					text={Languages.Register}
-					textColor={buttonTextColor}
+					textStyle={[ styles.registerTextStyle, buttonTextColor ]}
 					containerStyle={[ styles.registerButton, buttonStyle ]}
 					onPress={onRegisterPress}
 				/>

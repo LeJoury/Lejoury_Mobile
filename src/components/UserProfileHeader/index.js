@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator, Image } from 'react-native';
 
 import { ProfileNumber, Button } from '@components';
@@ -15,8 +15,17 @@ const UserProfileHeader = ({
 	onViewFollowingPress = undefined,
 	onViewItinerariesPress = undefined,
 	onEditProfilePress = undefined,
-	onFunctionPress = undefined
 }) => {
+	const [ isFollow, setIsFollow ] = useState(false);
+
+	useEffect(() => {
+		setIsFollow(user.isFollow);
+	}, []);
+
+	const onFollowPress = () => {
+		setIsFollow(!isFollow);
+	};
+
 	const avatar =
 		user && user.avatar_url
 			? { uri: user.avatar_url }
@@ -43,21 +52,28 @@ const UserProfileHeader = ({
 						<Button
 							text={Languages.EditProfile}
 							textColor={Color.primaryLight}
-							textStyle={styles.followButtonText}
-							containerStyle={styles.followButton}
+							textStyle={styles.editButtonText}
+							containerStyle={styles.editButton}
 							gradientColors={[ Color.secondPrimary, Color.primary ]}
 							type="gradientBorder"
 							onPress={onEditProfilePress}
+						/>
+					) : isFollow ? (
+						<Button
+							text={Languages.ButtonFollow}
+							textStyle={styles.followButtonText}
+							containerStyle={styles.followButton}
+							onPress={onFollowPress}
 						/>
 					) : (
 						<Button
 							text={Languages.ButtonFollow}
 							textColor={Color.primaryLight}
-							textStyle={styles.followButtonText}
-							containerStyle={styles.followButton}
+							textStyle={styles.unFollowButtonText}
+							containerStyle={styles.unFollowButton}
 							gradientColors={[ Color.secondPrimary, Color.primary ]}
 							type="gradientBorder"
-							onFunctionPress={onFunctionPress}
+							onPress={onFollowPress}
 						/>
 					)}
 				</View>
