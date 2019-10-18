@@ -78,3 +78,12 @@ export const NoInternetNotice = noInternetNotice;
 
 import animatedTextInput from './AnimatedTextInput';
 export const AnimatedTextInput = animatedTextInput;
+
+import currencyPicker from './CurrencyPicker';
+export const CurrencyPicker = currencyPicker;
+
+import heart from './Heart';
+export const Heart = heart;
+
+import bookmark from './Bookmark';
+export const Bookmark = bookmark;

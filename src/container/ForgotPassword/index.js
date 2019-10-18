@@ -40,6 +40,7 @@ const ForgotPassword = (props) => {
 	};
 
 	const onSubmitPress = () => {
+		//TODO: CALL FORGET PASSWORD API
 		console.log(emailAddress);
 	};
 

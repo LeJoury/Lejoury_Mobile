@@ -65,13 +65,6 @@ const Register = (props) => {
 		setPassword(value);
 	};
 
-	const onRegisterPress = () => {
-		const isValidDetails = !shouldButtonDisabled;
-
-		// if (isValidDetails) then register
-		// props.onRegisterWithEmail(username, emailAddress, password)
-	};
-
 	const renderUsernameError = () => {
 		const opacity = hasUsernameError ? 1 : 0;
 
@@ -137,7 +130,7 @@ const Register = (props) => {
 						{ borderColor: isUsernameFocus ? Color.primary : Color.lightGrey6 }
 					]}
 					placeholder={Languages.username}
-					onChangeText={(text) => onChangePassword(text)}
+					onChangeText={(text) => onChangeUsername(text)}
 					onFocus={() => setUsernameFocus(true)}
 					onBlur={() => {
 						setUsernameError(isUsernameDirty && username.length < 6);
@@ -203,15 +196,14 @@ const Register = (props) => {
 					text={Languages.Register}
 					textStyle={[ styles.registerTextStyle, buttonTextColor ]}
 					containerStyle={[ styles.registerButton, buttonStyle ]}
-					onPress={onRegisterPress}
+					onPress={() => props.onRegisterWithEmail(username, emailAddress, password)}
 				/>
 			</Animated.View>
 		</View>
 	);
 };
 
-// const mapStateToProps = ({ netInfo, user }) => ({
-// 	netInfo,
+// const mapStateToProps = ({  user }) => ({
 // 	user
 // });
 

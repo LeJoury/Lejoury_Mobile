@@ -1,18 +1,22 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 
 import { ActivityDetail } from '@container';
 
-class ActivityDetailScreen extends Component {
-	componentDidMount() {}
+import { NoInternetNotice } from '@components';
 
-	componentDidUpdate() {}
+import { Styles } from '@common';
 
-	componentWillUnmount() {}
-
+class ActivityDetailScreen extends PureComponent {
 	render() {
 		const { navigation } = this.props;
 
-		return <ActivityDetail navigation={navigation} />;
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<ActivityDetail navigation={navigation} />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 export default ActivityDetailScreen;

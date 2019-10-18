@@ -27,6 +27,7 @@
 		6B9C3D77EEE64C9E9950CCAC /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 516D8E6B6504412EB8D41854 /* libc++.tbd */; };
 		732E308ECD804C2D9958D829 /* Quicksand-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BDE64CAAD7F467D9F08C674 /* Quicksand-Medium.ttf */; };
 		AA1A66DF92A34B3EAE22B6D2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A238A7B33AE4AF7B65AD17C /* libz.tbd */; };
+		BED56806234F7CD700D2081E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BED567E2234F7CD700D2081E /* GoogleService-Info.plist */; };
 		BEF33E232331247700B96E06 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		BEF33E242331247D00B96E06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		BEF33E252331247D00B96E06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -376,6 +377,7 @@
 		BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJoury.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury.debug.xcconfig"; sourceTree = "<group>"; };
 		BE96796922F337F500DC3D1D /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE96796D22F337FC00DC3D1D /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BED567E2234F7CD700D2081E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0086C2A7AC5415B8AE3F401 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		D1EF1F40B40542F7A9C23260 /* libRealmReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRealmReact.a; sourceTree = "<group>"; };
 		D64DDBA2685148138A8F14D2 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 		13B07FAE1A68108700A75B9A /* LeJoury */ = {
 			isa = PBXGroup;
 			children = (
+				BED567E2234F7CD700D2081E /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1157,6 +1160,7 @@
 				E21BDA5525C742679A1AAF5F /* Quicksand-Light.ttf in Resources */,
 				732E308ECD804C2D9958D829 /* Quicksand-Medium.ttf in Resources */,
 				3872266FF47F41C88D975843 /* Quicksand-Regular.ttf in Resources */,
+				BED56806234F7CD700D2081E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1249,7 +1253,9 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -1271,6 +1277,8 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -1292,7 +1300,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

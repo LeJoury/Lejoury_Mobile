@@ -34,16 +34,8 @@ const EditProfile = (props) => {
 	const [ isBioFocus, setBioFocus ] = useState(false);
 
 	useEffect(() => {
-		const { navigation } = props;
-
 		return () => {
-			// ImagePicker.clean()
-			// 	.then(() => {
-			// 		console.log('removed all tmp images from tmp directory');
-			// 	})
-			// 	.catch((e) => {
-			// 		alert(e);
-			// 	});
+			ImagePicker.clean();
 		};
 	}, []);
 
@@ -74,14 +66,12 @@ const EditProfile = (props) => {
 	const onPressUploadProfilePhoto = () => {
 		ImagePicker.openPicker({
 			cropping: true,
-			includeBase64: true,
 			cropperCircleOverlay: true,
 			cropperToolbarTitle: Languages.MoveScale,
 			cropperChooseText: Languages.Done
 		}).then((image) => {
-			// console.log(image);
 			setIsDirty(true);
-			// setProfilePhoto(image.sourceURL);
+			// TODO: RESIZE AND UPLOAD
 			setProfilePhoto(image.path);
 		});
 	};
@@ -104,8 +94,8 @@ const EditProfile = (props) => {
 							}}
 							style={styles.profileImage}
 						/>
-						<TouchableOpacity style={{ flex: 1 }} onPress={onPressUploadProfilePhoto}>
-							<Text style={styles.profileImageText}>Change Profile Picture</Text>
+						<TouchableOpacity style={Styles.Common.FullFlex} onPress={onPressUploadProfilePhoto}>
+							<Text style={styles.profileImageText}>{Languages.ChangeProfilePicture}</Text>
 						</TouchableOpacity>
 					</View>
 					<View style={styles.inputContainer}>

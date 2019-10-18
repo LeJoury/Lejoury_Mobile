@@ -7,7 +7,6 @@ const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
 
 export default StyleSheet.create({
 	scrollViewContainer: {
-		backgroundColor: Color.white,
 		flex: 1
 	},
 	imageWrapper: {
@@ -35,7 +34,8 @@ export default StyleSheet.create({
 		borderTopLeftRadius: 6,
 		height: height + 50,
 		paddingBottom: 30,
-		...Styles.Common.ShadowBox
+		...Styles.Common.ShadowBox,
+		shadowOffset: { width: 0, height: -5 }
 	},
 	contentWrapper: {
 		...Styles.Common.ColumnCenterLeft,

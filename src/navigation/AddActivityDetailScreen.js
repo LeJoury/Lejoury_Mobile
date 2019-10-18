@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
+import React, { PureComponent } from 'react';
 import { Back, Title } from './IconNav';
 
 import { AddActivityDetail } from '@container';
 import { Color, Languages } from '@common';
 
-class AddActivityDetailScreen extends Component {
+class AddActivityDetailScreen extends PureComponent {
 	//constructor(props) {
 	//super (props)
 	//}
@@ -15,7 +14,7 @@ class AddActivityDetailScreen extends Component {
 
 		return {
 			headerLeft: Back(navigation, Color.primary, params.handleOnBack),
-			headerTitle: Title(Languages.Activity + ' ' + navigation.state.params.identifier, Color.headerTitleColor)
+			headerTitle: Title(Languages.Activity + ' ' + navigation.state.params.day, Color.headerTitleColor)
 		};
 	};
 

@@ -20,9 +20,6 @@ const calculateDays = (date1, date2) => {
 
 	var diff = new Date(date2_ms - date1_ms);
 
-	// Calculate the difference in milliseconds
-	// var difference_ms = Math.abs(date1_ms - date2_ms);
-
 	// Convert back to days and return
 	return diff.getUTCDate();
 };

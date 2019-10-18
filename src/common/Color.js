@@ -117,5 +117,7 @@ export default {
 	black1: '#2d3436',
 	black2: '#2d2e2e',
 
-	starYellow: '#ffe234'
+	starYellow: '#ffe234',
+
+	orange: '#f39c12'
 };

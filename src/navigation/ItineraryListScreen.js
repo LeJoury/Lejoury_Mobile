@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
+
 import { Back, Title } from './IconNav';
 
 import { ItineraryList } from '@container';
-import { Color } from '@common';
+
+import { NoInternetNotice } from '@components';
+import { Color, Styles } from '@common';
 
 const itineraries = [
 	{
@@ -10,8 +14,8 @@ const itineraries = [
 			username: 'Zoey',
 			userProfilePicture: 'https://randomuser.me/api/portraits/women/47.jpg'
 		},
-		itineraryID: '8ab479cc-b25c-4557-98db-246bd9d89d49',
-		itineraryName: 'Sekinchan 2 days 1 night',
+		itineraryId: '8ab479cc-b25c-4557-98db-246bd9d89d49',
+		title: 'Sekinchan 2 days 1 night',
 		country: 'MY',
 		startDate: '9-Sept-2016',
 		endDate: '10-Sept-2016',
@@ -131,8 +135,8 @@ const itineraries = [
 			username: 'Dave',
 			userProfilePicture: 'https://randomuser.me/api/portraits/men/47.jpg'
 		},
-		itineraryID: '9bb479cc-b25c-4557-98db-246bd9d89d50',
-		itineraryName: 'Singapore 3Days Trip !',
+		itineraryId: '9bb479cc-b25c-4557-98db-246bd9d89d50',
+		title: 'Singapore 3Days Trip !',
 		country: 'SG',
 		startDate: '17-Jun-2018',
 		endDate: '19-Jun-2018',
@@ -334,8 +338,8 @@ const itineraries = [
 			username: 'Alex',
 			userProfilePicture: 'https://randomuser.me/api/portraits/men/57.jpg'
 		},
-		itineraryName: 'Tanjung Sepat One Day Trip',
-		itineraryID: '1cb479cc-b25c-4557-98db-246bd9d89d90',
+		title: 'Tanjung Sepat One Day Trip',
+		itineraryId: '1cb479cc-b25c-4557-98db-246bd9d89d90',
 		country: 'MY',
 		startDate: '9-May-2016',
 		endDate: '9-May-2016',
@@ -427,7 +431,7 @@ const itineraries = [
 	}
 ];
 
-class ItineraryListScreen extends Component {
+class ItineraryListScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
 		headerTitle: Title('Country Name', Color.headerTitleColor)

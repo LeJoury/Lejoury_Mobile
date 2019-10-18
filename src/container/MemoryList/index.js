@@ -36,7 +36,6 @@ class MemoryList extends Component {
 	);
 
 	_renderEmpty = () => {
-		console.log('empty');
 		return <Text>Empty</Text>;
 	};
 

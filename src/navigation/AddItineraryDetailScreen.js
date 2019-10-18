@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { StatusBar, View } from 'react-native';
 
 import { AddItineraryDetail } from '@container';
-import { Color } from '@common';
 
-class AddItineraryDetailScreen extends Component {
+import { NoInternetNotice } from '@components';
+import { Color, Styles } from '@common';
+
+class AddItineraryDetailScreen extends PureComponent {
 	componentDidMount() {}
 
 	componentDidUpdate() {}
@@ -14,7 +16,7 @@ class AddItineraryDetailScreen extends Component {
 	render() {
 		const { navigation } = this.props;
 		return (
-			<View>
+			<View style={Styles.Common.FullFlex}>
 				<StatusBar
 					backgroundColor={Color.transparent1}
 					translucent={true}
@@ -22,6 +24,7 @@ class AddItineraryDetailScreen extends Component {
 					showHideTransition="fade"
 				/>
 				<AddItineraryDetail navigation={navigation} />
+				<NoInternetNotice />
 			</View>
 		);
 	}

@@ -120,6 +120,12 @@ export default StyleSheet.create({
 		fontSize: 12,
 		fontFamily: 'Quicksand-Regular'
 	},
+	addToBookmark: {
+		color: Color.lightGrey3,
+		fontSize: 12,
+		fontFamily: 'Quicksand-Regular',
+		marginLeft: 6
+	},
 	separator: {
 		height: 1,
 		backgroundColor: Color.lightGrey6,

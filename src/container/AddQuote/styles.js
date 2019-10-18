@@ -38,14 +38,16 @@ export default StyleSheet.create({
 		justifyContent: 'flex-end'
 	},
 	confirmTextStyle: {
-		fontSize: 16,
 		color: Color.white,
+		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
+		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
 	},
 	confirmButton: {
-		marginTop: 12,
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
 		backgroundColor: Color.splashScreenBg5,
-		...Styles.Button.Radius0,
-		...Styles.Common.ShadowBox
+		justifyContent: 'center'
 	}
 });

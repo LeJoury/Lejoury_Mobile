@@ -7,14 +7,13 @@ export default StyleSheet.create({
 	backButton: { left: 0, position: 'absolute', zIndex: 99999 },
 	separatorWrapper: {
 		...Styles.Common.ColumnCenter,
-		marginTop: 18,
-		marginBottom: 18
+		marginVertical: 18
 	},
 	straightSeparator: {
 		width: 1,
 		height: 30,
 		borderRadius: 5,
-		backgroundColor: Color.placeHolderColor
+		backgroundColor: Color.lightGrey3
 	},
 	subContain: {
 		paddingTop: 30
@@ -106,18 +105,6 @@ export default StyleSheet.create({
 		height: Device.isIphoneX ? 60 : 50,
 		...Styles.Common.ShadowBox
 	},
-	publishButtonTextStyle: {
-		color: Color.white,
-		fontSize: 14,
-		textAlign: 'center',
-		fontFamily: 'Quicksand-Bold'
-	},
-	publishButton: {
-		width: width,
-		height: Device.isIphoneX ? 60 : 50,
-		backgroundColor: Color.splashScreenBg5,
-		justifyContent: 'center'
-	},
 	dayContainer: {
 		width: '35%',
 		...Styles.Common.ShadowBox,
@@ -145,5 +132,31 @@ export default StyleSheet.create({
 		fontSize: 14,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Medium'
+	},
+	publishButtonTextStyle: {
+		color: Color.white,
+		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Bold'
+	},
+	publishButton: {
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
+		backgroundColor: Color.splashScreenBg5,
+		justifyContent: 'center'
+	},
+	updateButtonTextStyle: {
+		color: Color.white,
+		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Bold'
+	},
+	updateButton: {
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
+		backgroundColor: Color.green1,
+		justifyContent: 'center'
 	}
 });

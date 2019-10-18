@@ -7,10 +7,10 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	searchViewOverlayContainer:{
+	searchViewOverlayContainer: {
 		flex: 1,
 		position: 'absolute',
-		marginTop: 80,
+		marginTop: 85,
 		top: 0,
 		bottom: 0,
 		left: 0,
@@ -49,7 +49,8 @@ export default StyleSheet.create({
 	cancelSearchBarContainer: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		flex: 1
+		flex: 1,
+		paddingHorizontal: 4
 	},
 	cancelSearchBarText: {
 		alignItems: 'center',

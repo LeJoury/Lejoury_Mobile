@@ -25,10 +25,6 @@ export default StyleSheet.create({
 	flatListStyle: {
 		flex: 1
 	},
-	resultContainer: {
-		// height: 60,
-		// paddingVertical: 14
-	},
 	resultRow: {
 		...Styles.Common.RowCenterLeft,
 		height: 60,
@@ -62,7 +58,7 @@ export default StyleSheet.create({
 		flex: 1,
 		fontFamily: 'Quicksand-Bold'
 	},
-	inputView:{
+	inputView: {
 		flex: 1,
 		paddingBottom: Device.isIphoneX ? 100 : 90
 	},
@@ -88,6 +84,12 @@ export default StyleSheet.create({
 		fontSize: 14,
 		color: Color.black1,
 		fontFamily: 'Quicksand-Regular'
+	},
+	cancelSearchBarText: {
+		alignItems: 'center',
+		fontSize: 14,
+		fontFamily: 'Quicksand-Medium',
+		color: Color.grey1
 	},
 	ratingContainer: {
 		marginHorizontal: 18,
@@ -154,26 +156,20 @@ export default StyleSheet.create({
 		bottom: 0,
 		left: 0,
 		right: 0,
-		height: Device.isIphoneX ? 60 : 50,
 		...Styles.Common.ShadowBox
 	},
 	confirmButton: {
 		width: width,
-		height: Device.isIphoneX ? 60 : 50,
+		height: Device.isIphoneX ? 62 : 50,
 		backgroundColor: Color.splashScreenBg5,
 		justifyContent: 'center'
 	},
 	doneTextStyle: {
 		color: Color.white,
 		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
-	},
-	pickerContainer: {
-		paddingLeft: 12,
-		paddingRight: 18,
-		justifyContent: 'center',
-		alignItems: 'center'
 	},
 	inputIOS: {
 		fontSize: 16,

@@ -170,7 +170,7 @@ const ActivityDetail = (props) => {
 		return (
 			<View style={styles.navButtonWrapper}>
 				<View style={[ styles.backButton, { top: backTop } ]}>{Back(navigation, Color.white)}</View>
-				<View style={[ styles.bucketButton, { top: backTop } ]}>{AddBucket(navigation, Color.white)}</View>
+				{/* <View style={[ styles.bucketButton, { top: backTop } ]}>{AddBucket(navigation, Color.white)}</View> */}
 			</View>
 		);
 	};

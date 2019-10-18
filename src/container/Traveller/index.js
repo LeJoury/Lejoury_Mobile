@@ -52,6 +52,7 @@ const Traveller = (props) => {
 	};
 
 	const navigateToSelectedTraveller = () => {
+		//TODO: GO TO TRAVELLER PROFILE
 		console.log('pressed');
 	};
 
@@ -91,6 +92,7 @@ const Traveller = (props) => {
 			value={search}
 			lightTheme={true}
 			platform={Platform.OS}
+			showCancel={false}
 			containerStyle={styles.searchBarContainerStyle}
 			inputContainerStyle={styles.searchBarInputContainerStyle}
 			inputStyle={styles.searchBarInputStyle}

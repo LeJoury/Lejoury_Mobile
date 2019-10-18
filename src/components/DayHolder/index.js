@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, ActivityIndicator, Dimensions, Image } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import { Color, Languages } from '@common';
 import styles from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-const { width, height } = Dimensions.get('window');
 
 const DayHolder = ({ day, activity, dayNo, date, type = 'main', onPress = undefined }) => {
 	if (type === 'draft') {
@@ -18,7 +15,7 @@ const DraftItineraryDay = ({ activity }) => {
 	return (
 		<View style={styles.draftContainer}>
 			<Image
-				source={{ uri: activity.photos[0] }}
+				source={{ uri: activity.photos[0].path ? activity.photos[0].path : activity.photos[0] }}
 				style={styles.draftImageWrapper}
 				// loadingIndicatorSource={<ActivityIndicator />}
 			/>

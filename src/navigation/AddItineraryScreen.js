@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
-import { Back, Title, Add } from './IconNav';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 
-import { getItineraryDraft } from '@actions';
+import { Back, Title, Add } from './IconNav';
 
 import { DraftItinerary } from '@container';
-import { Color, Languages } from '@common';
 
-class UploadItineraryScreen extends Component {
+import { NoInternetNotice } from '@components';
+import { Color, Languages, Styles } from '@common';
+
+class AddItineraryScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
 		const { params = {} } = navigation.state;
 
@@ -20,7 +22,6 @@ class UploadItineraryScreen extends Component {
 
 	componentDidMount() {
 		this.props.navigation.setParams({ handleAddItinerary: this.goToAddItinerary });
-		this.props.getItineraryDraft();
 	}
 
 	goToAddItinerary = () => {
@@ -35,12 +36,15 @@ class UploadItineraryScreen extends Component {
 		const { navigation } = this.props;
 
 		return (
-			<DraftItinerary
-				navigation={navigation}
-				onRef={(child) => {
-					this.child = child;
-				}}
-			/>
+			<View style={Styles.Common.FullFlex}>
+				<DraftItinerary
+					navigation={navigation}
+					onRef={(child) => {
+						this.child = child;
+					}}
+				/>
+				<NoInternetNotice />
+			</View>
 		);
 	}
 }
@@ -49,4 +53,4 @@ const mapStateToProps = ({ draft }) => ({
 	draft
 });
 
-export default connect(mapStateToProps, { getItineraryDraft })(UploadItineraryScreen);
+export default connect(mapStateToProps)(AddItineraryScreen);

@@ -7,7 +7,7 @@ import { reducer as NetInfoReducer } from './NetInfoRedux';
 import { reducer as AuthReducer } from './AuthRedux';
 import { reducer as DraftReducer } from './DraftRedux';
 
-const saveSubsetFilter = createFilter('user', [ 'username', 'token' ]);
+const saveSubsetFilter = createFilter('user', [ 'username', 'userId', 'token' ]);
 
 const config = {
 	key: 'root',

@@ -1,66 +1,74 @@
-import React, { Component } from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
+import { NoInternetNotice } from '@components';
 
 import { connect } from 'react-redux';
+import { refreshToken } from '@actions';
 
 import { Splash } from '@components';
-import { Constants } from '@common';
+import { Styles } from '@common';
 
-const { ASYNCKEY } = Constants.ASYNCKEY;
-
-class SplashScreen extends React.Component {
+class SplashScreen extends PureComponent {
 	performTimeConsumingTask = async () => {
 		return new Promise((resolve) =>
 			setTimeout(() => {
 				resolve('result');
-			}, 2500)
+			}, 1500)
 		);
 	};
 
 	async componentDidMount() {
 		// Preload data from an external API
-		// Preload data using AsyncStorage
 		const data = await this.performTimeConsumingTask();
-		// const { token } = this.props.user;
+		const { token } = this.props.user;
 
+		//development
 		// if (data !== null) {
-		// 	if (!token) this.props.navigation.navigate('Login');
-		// 	else {this.props.refreshToken(token)}
+		// 	try {
+		// 		if (token !== null) {
+		// 			// value previously stored
+		// 			this.props.navigation.navigate('Main');
+		// 		} else {
+		// 			this.props.navigation.navigate('Landing');
+		// 		}
+		// 	} catch (e) {
+		// 		// error reading value
+		// 		console.log(e);
+		// 	}
 		// }
 
+		// production
 		if (data !== null) {
-			try {
-				const sessions = await AsyncStorage.getItem(ASYNCKEY.SESSION);
-				if (sessions !== null) {
-					// value previously stored
-					this.props.navigation.navigate('Main');
-				} else {
+			if (!token) {
+				this.props.navigation.navigate('Landing');
+			} else {
+				try {
+					let result = await this.props.refreshToken(token);
+
+					if (result.OK) {
+						this.props.navigation.navigate('Main');
+					} else {
+						this.props.navigation.navigate('Landing');
+					}
+				} catch (error) {
 					this.props.navigation.navigate('Landing');
 				}
-			} catch (e) {
-				// error reading value
-				console.log(e);
 			}
 		}
 	}
 
-	componentDidUpdate() {
-		// if (this.props.user.token !== prevProps.user.token && this.props.user.token !== null) {
-		// 	this.props.navigation.navigate('Main');
-		// }else if (this.props.user === null || this.props.user.token === null) {
-		// 	this.props.navigation.navigate('Login');
-		// }
-		// this.props.navigation.navigate('Landing');
-	}
-
 	render() {
-		return <Splash />;
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<Splash />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 
-// const mapStateToProps = ({ user }) => ({
-// 	user
-// });
+const mapStateToProps = ({ user }) => ({
+	user
+});
 
-// export default connect(mapStateToProps, { refreshToken })(SplashScreen);
-export default SplashScreen;
+export default connect(mapStateToProps, { refreshToken })(SplashScreen);

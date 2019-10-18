@@ -3,6 +3,9 @@ import { View, Animated, ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions } from 'react-navigation';
 
+import { connect } from 'react-redux';
+import { logout } from '@actions';
+
 import { Back } from '../../navigation/IconNav';
 
 import { UserProfileHeader, UserProfileItem, ProfileCenterItem } from '@components';
@@ -72,15 +75,16 @@ class Settings extends Component {
 	};
 
 	onSignOutHandle = async () => {
-		// this.props.logout();
-		await AsyncStorage.removeItem(ASYNCKEY.SESSION);
+		let result = await this.props.logout();
 
-		this.props.navigation.dispatch({
-			type: 'Navigation/RESET',
-			index: 0,
-			key: null,
-			actions: [ NavigationActions.navigate({ routeName: 'Landing' }) ]
-		});
+		if (result.OK) {
+			this.props.navigation.dispatch({
+				type: 'Navigation/RESET',
+				index: 0,
+				key: null,
+				actions: [ NavigationActions.navigate({ routeName: 'Landing' }) ]
+			});
+		}
 	};
 
 	render() {
@@ -115,4 +119,5 @@ class Settings extends Component {
 		);
 	}
 }
-export default Settings;
+
+export default connect(null, { logout })(Settings);

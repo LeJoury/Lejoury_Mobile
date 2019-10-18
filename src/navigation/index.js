@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NavigationActions, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -20,8 +20,8 @@ import NotificationScreen from './NoticationScreen';
 
 import BucketListScreen from './BucketListScreen';
 
-import UploadItineraryScreen from './UploadItineraryScreen';
-import UploadNewItineraryScreen from './UploadNewItineraryScreen';
+import AddItineraryScreen from './AddItineraryScreen';
+import AddNewItineraryScreen from './AddNewItineraryScreen';
 import AddItineraryDetailScreen from './AddItineraryDetailScreen';
 import AddDayDetailScreen from './AddDayDetailScreen';
 import AddActivityDetailScreen from './AddActivityDetailScreen';
@@ -42,16 +42,7 @@ import ItineraryListScreen from './ItineraryListScreen';
 
 import SplashScreen from './SplashScreen';
 
-const uploadButtonStyle = {
-	...Styles.Common.ColumnCenter,
-	width: 70,
-	height: 70,
-	borderRadius: 35,
-	paddingBottom: 4,
-	marginBottom: Device.isIphoneX ? 10 : 15,
-	backgroundColor: Color.primary,
-	...Styles.Common.ShadowBox
-};
+import { NoInternetNotice } from '@components';
 
 const FadeTransition = (index, position) => {
 	const sceneRange = [ index - 1, index ];
@@ -72,7 +63,7 @@ const BottomTransition = (index, position, height) => {
 
 	let transition = position.interpolate({
 		inputRange: sceneRange,
-		outputRange: outputHeight,
+		outputRange: outputHeight
 	});
 	return {
 		transform: [ { translateY: transition } ]
@@ -90,14 +81,19 @@ const AddActivityTransitionConfig = (sceneProps) => {
 				return FadeTransition(index, position);
 			}
 		};
-	} else if (sceneProps.scene.route.routeName === 'UploadItineraryStack') {
+	} else if (sceneProps.scene.route.routeName === 'AddItineraryStack') {
 		return {
 			screenInterpolator: (sceneProps) => {
-				const { layout, position, scene } = sceneProps;
-				const { index } = scene;
-				const height = layout.initHeight;
+				const position = sceneProps.position;
+				const scene = sceneProps.scene;
+				const index = scene.index;
 
-				return BottomTransition(index, position, height);
+				// const { layout, position, scene } = sceneProps;
+				// const { index } = scene;
+				// const height = layout.initHeight;
+
+				// return BottomTransition(index, position, height);
+				return FadeTransition(index, position);
 			}
 		};
 	}
@@ -157,16 +153,16 @@ const ItineraryDetailStack = createStackNavigator({
 	}
 });
 
-const UploadItineraryStack = createStackNavigator(
+const AddItineraryStack = createStackNavigator(
 	{
-		UploadItinerary: {
-			screen: UploadItineraryScreen,
+		AddItinerary: {
+			screen: AddItineraryScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
 			}
 		},
-		UploadNewItineraryScreen: {
-			screen: UploadNewItineraryScreen,
+		AddNewItineraryScreen: {
+			screen: AddNewItineraryScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
 			}
@@ -190,7 +186,7 @@ const UploadItineraryStack = createStackNavigator(
 				headerStyle: Styles.Common.toolbar
 			}
 		},
-		AddQuote:{
+		AddQuote: {
 			screen: AddQuoteScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
@@ -273,19 +269,14 @@ const AppNavigator = createBottomTabNavigator(
 				tabBarIcon: ({ tintColor }) => <Icon name="heart" type="feather" color={tintColor} />
 			}
 		},
-		UploadItinerary: {
-			screen: UploadItineraryStack,
+		AddItinerary: {
+			screen: AddItineraryStack,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar,
 				header: null,
 				tabBarIcon: ({ tintColor }) => (
 					<Icon name="plus-circle" type="feather" size={Styles.IconSize.xxLarge} color={tintColor} />
 				)
-				// tabBarIcon: () => (
-				// 	<View style={uploadButtonStyle}>
-				// 		<Icon name="plus" type="feather" color={Color.white} size={Styles.IconSize.CenterTab} />
-				// 	</View>
-				// )
 			}
 		},
 		NotificationStack: {
@@ -339,12 +330,11 @@ const MainNavigator = createStackNavigator(
 				header: null
 			}
 		},
-		UploadItineraryStack: {
-			screen: UploadItineraryStack,
+		AddItineraryStack: {
+			screen: AddItineraryStack,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar,
-				header: null,
-				tabBarIcon: ({ tintColor }) => <Icon name="plus-circle" type="feather" color={tintColor} />
+				header: null
 			}
 		},
 		ItineraryDetailStack: {
@@ -390,9 +380,7 @@ const navigateOnce = (getStateForAction) => (action, state) => {
 
 // ProfileStack.router.getStateForAction = navigateOnce(ProfileStack.router.getStateForAction);
 
-// AttendanceStack.router.getStateForAction = navigateOnce(AttendanceStack.router.getStateForAction);
-
-// UploadItineraryStack.router.getStateForAction = navigateOnce(UploadItineraryStack.router.getStateForAction);
+// AddItineraryStack.router.getStateForAction = navigateOnce(AddItineraryStack.router.getStateForAction);
 
 // AppNavigator.router.getStateForAction = navigateOnce(AppNavigator.router.getStateForAction);
 
@@ -401,8 +389,6 @@ MainNavigator.router.getStateForAction = navigateOnce(MainNavigator.router.getSt
 const defaultGetStateForAction = MainNavigator.router.getStateForAction;
 MainNavigator.router.getStateForAction = (action, state) => {
 	if (state && action.type === NavigationActions.BACK && state.routes[state.index].routeName === 'Splash') {
-		// console.log(state.routes[state.index].routeName);
-
 		// Returning null indicates stack end, and triggers exit
 		return null;
 	}

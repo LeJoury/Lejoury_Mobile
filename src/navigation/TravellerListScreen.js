@@ -1,20 +1,14 @@
-import React, { Component } from 'react';
-import { Traveller } from '@container';
+import React, { PureComponent } from 'react';
+
 import { Back, Title } from './IconNav';
 
-import { Color } from '@common';
+import { Traveller } from '@container';
 
-class TravellerListScreen extends Component {
+class TravellerListScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		// headerLeft: Back(navigation, Color.primary),
 		// headerTitle: Title(navigation.state.routeName, Color.headerTitleColor)
 	});
-
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
 
 	render() {
 		return <Traveller />;

@@ -5,25 +5,26 @@ import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { connect } from 'react-redux';
+import { createItinerary } from '@actions';
 
-import { getItineraryDraft, addItineraryToDraft, addItineraryToRedux } from '@actions';
-
-import { Languages, Color, calculateDays, getMonths } from '@common';
+import { Languages, Color, calculateDays, getMonths, Constants } from '@common';
 import { Spinner, Button } from '@components';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
+const { Action } = Constants.Action;
+
 const MONTHS = getMonths();
 
-class UploadItinerary extends Component {
+class AddItinerary extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			selectedStartDate: '',
 			selectedEndDate: '',
-			itineraryName: '',
+			title: '',
 			isJourneyInputFocus: false,
 			greetingTitle: Languages.PastJourneyDesc,
 			backgroundAnim: new Animated.Value(0)
@@ -52,21 +53,34 @@ class UploadItinerary extends Component {
 	}
 
 	onNextPressHandle = () => {
-		const { selectedStartDate, selectedEndDate, itineraryName } = this.state;
+		const { selectedStartDate, selectedEndDate, title } = this.state;
 
 		const startDate = moment(selectedStartDate).format('DD-MMM-YYYY');
 		const endDate = moment(selectedEndDate).format('DD-MMM-YYYY');
+		const { token, userId } = this.props.user;
+
+		let newItinerary = {
+			title: title,
+			startDate: startDate,
+			endDate: endDate
+		};
 
 		this.props
-			.addItineraryToDraft(itineraryName, startDate, endDate)
-			.then((itinerary) => {
-				//added successfully
-				this.props.addItineraryToRedux(itinerary);
-				this.props.getItineraryDraft();
-				this.props.navigation.navigate('AddItineraryDetail');
+			.createItinerary(newItinerary, token, userId)
+			.then((response) => {
+				if (response.OK) {
+					this.props.navigation.navigate('AddItineraryDetail', {
+						draftItinerary: newItinerary,
+						itineraryId: response.itineraryId,
+						action: Action.ADD
+					});
+				} else {
+					// TODO: SELF-DEFINED ERROR
+				}
 			})
 			.catch((error) => {
-				console.log(error);
+				//TODO: show fail system fail message
+				console.log('CREATING IN SERVER', error);
 			});
 	};
 
@@ -115,9 +129,9 @@ class UploadItinerary extends Component {
 	}
 
 	renderNextButton() {
-		const { selectedStartDate, selectedEndDate, itineraryName } = this.state;
+		const { selectedStartDate, selectedEndDate, title } = this.state;
 
-		const disabled = selectedStartDate === '' || selectedEndDate === '' || itineraryName === '';
+		const disabled = selectedStartDate === '' || selectedEndDate === '' || title === '';
 
 		Animated.timing(
 			this.state.backgroundAnim, // The value to drive
@@ -136,7 +150,7 @@ class UploadItinerary extends Component {
 			<Animated.View style={[ styles.buttonWrapper, { backgroundColor: backgroundColorInterpolate } ]}>
 				<Button
 					disabled={disabled}
-					text={Languages.Next.toUpperCase()}
+					text={Languages.Next}
 					textStyle={styles.nextButtonTextStyle}
 					containerStyle={styles.nextButton}
 					onPress={this.onNextPressHandle}
@@ -194,8 +208,8 @@ class UploadItinerary extends Component {
 												: Color.lightGrey6
 										}
 									]}
-									onChangeText={(text) => this.setState({ itineraryName: text })}
-									value={this.state.itineraryName}
+									onChangeText={(text) => this.setState({ title: text })}
+									value={this.state.title}
 								/>
 							</View>
 						</View>
@@ -206,4 +220,12 @@ class UploadItinerary extends Component {
 		);
 	}
 }
-export default connect(null, { getItineraryDraft, addItineraryToDraft, addItineraryToRedux })(UploadItinerary);
+
+const mapStateToProps = ({ user, draft }) => ({
+	user,
+	draft
+});
+
+export default connect(mapStateToProps, {
+	createItinerary
+})(AddItinerary);

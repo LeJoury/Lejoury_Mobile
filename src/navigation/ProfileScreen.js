@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 
 import { Settings, Title } from './IconNav';
 
 import { Profile } from '@container';
+
+import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
 const user = {
@@ -19,19 +21,14 @@ const user = {
 	itineraries: 8
 };
 
-class ProfileScreen extends Component {
+class ProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: Title(user.username, Color.headerTitleColor),
 		headerRight: Settings(navigation, Color.lightGrey3)
 	});
 
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
 	render() {
-		return <Profile navigation={this.props.navigation} user={user} isMe={true}/>;
+		return <Profile navigation={this.props.navigation} user={user} isMe={true} />;
 	}
 }
 export default ProfileScreen;

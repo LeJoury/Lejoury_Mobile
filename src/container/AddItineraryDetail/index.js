@@ -4,22 +4,26 @@ import DatePicker from 'react-native-datepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel from 'react-native-snap-carousel';
 import { Icon } from 'react-native-elements';
+import ImageResizer from 'react-native-image-resizer';
+import Bugsnag from '@services';
+import moment from 'moment';
 
 import { StackActions } from 'react-navigation';
 
 import { CircleBack } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
+import { addItineraryToRedux, uploadCoverPhoto, updateItineraryByID, getDraftItineraryDetails } from '@actions';
 
-import { getItineraryDraft, updateItineraryByID, addItineraryToRedux } from '@actions';
-
-import { Languages, Color, calculateDays, Images, Styles, create_UUID, Device } from '@common';
+import { Languages, Color, calculateDays, Images, Styles, create_UUID, Constants, showOkAlert } from '@common';
 import { Spinner, UploadImageBox, Button, DayHolder } from '@components';
 
 import styles from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
+const { Action } = Constants.Action;
+const TAG = 'AddItineraryDetail';
 
 function wp(percentage) {
 	const value = percentage * width / 100;
@@ -33,34 +37,43 @@ export const sliderWidth = width;
 export const itemWidth = slideWidth + itemHorizontalMargin;
 
 const AddItineraryDetail = (props) => {
+	const { navigation } = props;
+	const { token, userId } = props.user;
+	const { draftItinerary, itineraryId, action } = navigation.state.params;
+
 	const [ top ] = useState(new Animated.Value(20));
 	const [ isTitleFocus, setIsTitleFocus ] = useState(false);
 
-	const [ startDate, setStartDate ] = useState('');
-	const [ endDate, setEndDate ] = useState('');
-	const [ title, setTitle ] = useState('');
+	const [ startDate, setStartDate ] = useState(moment(draftItinerary.startDate).format('DD-MMM-YYYY'));
+	const [ endDate, setEndDate ] = useState(moment(draftItinerary.endDate).format('DD-MMM-YYYY'));
+	const [ title, setTitle ] = useState(draftItinerary.title);
+
+	const [ coverPhoto, setCoverPhoto ] = useState(draftItinerary.coverPhoto);
+
+	const [ selectedItinerary, setSelectedItinerary ] = useState(
+		props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId)
+	);
+
+	// const [ days, setDays ] = useState();
+
 	const [ isDirty, setIsDirty ] = useState(false);
 
-	const { draftItinerary } = props.draft;
-	const { navigation } = props;
+	useEffect(
+		() => {
+			// if (action === Action.ADD) {
+			// 	// props.getDraftItineraryDetails(token, itineraryId);
+			// } else {
+			// 	// props.getDraftItineraryDetails(token, itineraryId);
+			// }
+			setSelectedItinerary(props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId));
 
-	useEffect(() => {
-		const { startDate, endDate, itineraryName } = draftItinerary;
-
-		setStartDate(startDate);
-		setEndDate(endDate);
-		setTitle(itineraryName);
-
-		return () => {
-			// ImagePicker.clean()
-			// 	.then(() => {
-			// 		console.log('removed all tmp images from tmp directory');
-			// 	})
-			// 	.catch((e) => {
-			// 		alert(e);
-			// 	});
-		};
-	}, []);
+			// console.log(props.draft.itineraries);
+			return () => {
+				ImagePicker.clean();
+			};
+		},
+		[ props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId) ]
+	);
 
 	const setBackButtonHide = (hide) => {
 		Animated.timing(top, {
@@ -71,60 +84,60 @@ const AddItineraryDetail = (props) => {
 	};
 
 	const onAddDayHandle = (day) => {
-		let days = draftItinerary.days || [];
+		let tmpDays = selectedItinerary.days || [];
 
 		if (isDirty) {
-			let newItinerary = {
-				...draftItinerary,
-				startDate: startDate,
-				endDate: endDate,
-				itineraryName: title
-			};
-
-			props.addItineraryToRedux(newItinerary);
-			props.updateItineraryByID(newItinerary);
-			props.getItineraryDraft();
-
-			setIsDirty(false);
+			onUpdateHandle();
 		}
 
 		navigation.navigate('AddDayDetail', {
-			identifier: day,
-			days,
-			type: 'add',
-			startDate: startDate //itinerary start date
+			day: day,
+			itineraryId: itineraryId,
+			days: tmpDays,
+			type: Action.ADD,
+			publishedDate: moment(startDate, 'DD-MMM-YYYY').add(day - 1, 'd').format('DD-MMM-YYYY')
 		});
 	};
 
 	const onNavigateToEditDayDetail = (selectedDay) => {
-		let days = draftItinerary.days || [];
-
+		let tmpDays = selectedItinerary.days || [];
 		if (isDirty) {
-			let newItinerary = {
-				...draftItinerary,
-				startDate: startDate,
-				endDate: endDate,
-				itineraryName: title
-			};
-
-			props.addItineraryToRedux(newItinerary);
-			props.updateItineraryByID(newItinerary);
-			props.getItineraryDraft();
-
-			setIsDirty(false);
+			onUpdateHandle();
 		}
 
 		navigation.navigate('AddDayDetail', {
-			identifier: draftItinerary.days[selectedDay].identifier,
-			selectedDay: draftItinerary.days[selectedDay],
-			days,
-			type: 'edit' //itinerary start date
+			day: selectedDay,
+			selectedDay: selectedItinerary.days.find((tmpDay) => tmpDay.day === selectedDay),
+			itineraryId: itineraryId,
+			days: tmpDays,
+			type: Action.EDIT
 		});
 	};
 
 	const onPublishHandle = () => {
-		navigation.navigate('AddQuote', {
-			itineraryName: title
+		if (selectedItinerary.coverPhoto === null) {
+			showOkAlert(Languages.CoverPhotoNeededTitle, Languages.CoverPhotoNeededMessage);
+			return;
+		} else {
+			navigation.navigate('AddQuote', {
+				title: title,
+				itineraryId: itineraryId
+			});
+		}
+	};
+
+	const onUpdateHandle = () => {
+		let newItinerary = {
+			startDate: startDate,
+			endDate: endDate,
+			title: title,
+			itineraryId: itineraryId
+		};
+
+		props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
+			if (response.OK) {
+				setIsDirty(false);
+			}
 		});
 	};
 
@@ -132,16 +145,32 @@ const AddItineraryDetail = (props) => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
-			console.log(image);
-			let newItinerary = {
-				...draftItinerary,
-				// coverPhoto: image.sourceURL
-				coverPhoto: image.path
-			};
+			ImageResizer.createResizedImage(image.path, 500, 400, 'JPEG', 75)
+				.then((response) => {
+					let resizedImage = {
+						uri: response.uri,
+						path: response.path,
+						filename: response.name,
+						mime: image.mime
+					};
 
-			props.addItineraryToRedux(newItinerary);
-			props.updateItineraryByID(newItinerary);
-			props.getItineraryDraft();
+					let tmpItinerary = {
+						startDate: startDate,
+						endDate: endDate,
+						title: title,
+						itineraryId: itineraryId,
+						coverPhoto: resizedImage.path
+					};
+
+					props.uploadCoverPhoto(itineraryId, token, resizedImage.path).then(() => {
+						setCoverPhoto(resizedImage.path);
+						props.addItineraryToRedux(tmpItinerary);
+					});
+				})
+				.catch((error) => {
+					Bugsnag.leaveBreadcrumb(TAG, `RESIZE IMAGE - ${error}`);
+					Bugsnag.notify(new Error(error));
+				});
 		});
 	};
 
@@ -161,17 +190,7 @@ const AddItineraryDetail = (props) => {
 				{
 					text: Languages.SaveAsDraft,
 					onPress: () => {
-						let newItinerary = {
-							...draftItinerary,
-							startDate: startDate,
-							endDate: endDate,
-							itineraryName: title
-						};
-
-						props.addItineraryToRedux(newItinerary);
-						props.updateItineraryByID(newItinerary);
-						props.getItineraryDraft();
-
+						props.onUpdateHandle();
 						onGoBack();
 					}
 				},
@@ -191,22 +210,38 @@ const AddItineraryDetail = (props) => {
 		setBackButtonHide(currentOffset > 64);
 	};
 
-	const renderPublishButton = () => {
-		return (
-			<Animated.View style={styles.buttonWrapper}>
-				<Button
-					text={Languages.Publish.toUpperCase()}
-					textStyle={styles.publishButtonTextStyle}
-					containerStyle={styles.publishButton}
-					onPress={onPublishHandle}
-				/>
-			</Animated.View>
-		);
+	const renderUpdateOrPublishButton = () => {
+		const dateFrom = new Date(startDate);
+		const dateTo = new Date(endDate);
+
+		if (isDirty) {
+			return (
+				<Animated.View style={styles.buttonWrapper}>
+					<Button
+						text={Languages.Update}
+						textStyle={styles.updateButtonTextStyle}
+						containerStyle={styles.updateButton}
+						onPress={onUpdateHandle}
+					/>
+				</Animated.View>
+			);
+		}
+
+		if (selectedItinerary.days != null && selectedItinerary.days.length === calculateDays(dateFrom, dateTo)) {
+			return (
+				<Animated.View style={styles.buttonWrapper}>
+					<Button
+						text={Languages.Publish}
+						textStyle={styles.publishButtonTextStyle}
+						containerStyle={styles.publishButton}
+						onPress={onPublishHandle}
+					/>
+				</Animated.View>
+			);
+		}
 	};
 
-	const renderActivity = ({ item }) => (
-		<DayHolder type="draft" key={create_UUID()} activity={item} onPress={onNavigateToEditDayDetail} />
-	);
+	const renderActivity = ({ item }) => <DayHolder type="draft" key={create_UUID()} activity={item} />;
 
 	const renderDays = () => {
 		let renderDays = [];
@@ -214,19 +249,18 @@ const AddItineraryDetail = (props) => {
 		const dateFrom = new Date(startDate);
 		const dateTo = new Date(endDate);
 
-		console.log(draftItinerary);
-		
 		const totalDays = calculateDays(dateFrom, dateTo);
 
 		for (let i = 0; i < totalDays; i++) {
-			let title = Languages.AddDay + (i + 1);
+			let label = Languages.AddDay + (i + 1);
 			let hasDayMatch = false;
 
-			if (draftItinerary.days !== undefined) {
-				for (let day = 0; day < draftItinerary.days.length; day++) {
-					if (i + 1 === draftItinerary.days[day].identifier) {
+			if (selectedItinerary.days !== null && selectedItinerary.days !== undefined) {
+				var sortedDays = selectedItinerary.days.sort((a, b) => (a.day > b.day ? 1 : -1));
+				// console.log(sortedDays);
+				for (let index = 0; index < sortedDays.length; index++) {
+					if (i + 1 === sortedDays[index].day) {
 						hasDayMatch = true;
-
 						renderDays.push(
 							<View
 								key={create_UUID()}
@@ -234,13 +268,13 @@ const AddItineraryDetail = (props) => {
 							>
 								<View style={styles.dayContainer}>
 									<Text style={styles.noOfDayText}>
-										{Languages.Day} {draftItinerary.days[day].identifier}
+										{Languages.Day} {sortedDays[index].day}
 									</Text>
 								</View>
 
 								<TouchableOpacity
 									style={styles.editDayContainer}
-									onPress={() => onNavigateToEditDayDetail(day)}
+									onPress={() => onNavigateToEditDayDetail(sortedDays[index].day)}
 								>
 									<Text style={styles.editDayText}>{Languages.Edit}</Text>
 								</TouchableOpacity>
@@ -250,7 +284,7 @@ const AddItineraryDetail = (props) => {
 						renderDays.push(
 							<View key={create_UUID()} style={{ marginTop: 8 }}>
 								<Carousel
-									data={draftItinerary.days[day].activities}
+									data={sortedDays[index].activities}
 									layout={'default'}
 									renderItem={renderActivity}
 									sliderWidth={sliderWidth}
@@ -291,12 +325,13 @@ const AddItineraryDetail = (props) => {
 								}
 							]}
 						>
-							<Text style={styles.addDayText}>{title}</Text>
+							<Text style={styles.addDayText}>{label}</Text>
 						</View>
 					</TouchableOpacity>
 				);
 			}
 		}
+
 		return renderDays;
 	};
 
@@ -310,14 +345,10 @@ const AddItineraryDetail = (props) => {
 				onScroll={(e) => onScrollHandle(e)}
 				contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
 			>
-				{draftItinerary.coverPhoto === '' || draftItinerary.coverPhoto === null ? (
+				{coverPhoto === '' || coverPhoto === null || coverPhoto === undefined ? (
 					<UploadImageBox background={Images.worldMapBackground} onPress={() => onUploadCoverPhoto()} />
 				) : (
-					<UploadImageBox
-						background={draftItinerary.coverPhoto}
-						onPress={() => onUploadCoverPhoto()}
-						hide={true}
-					/>
+					<UploadImageBox background={coverPhoto} onPress={() => onUploadCoverPhoto()} hide={true} />
 				)}
 				<View style={styles.subContain}>
 					<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.titleWrapper ]}>
@@ -418,17 +449,20 @@ const AddItineraryDetail = (props) => {
 					</View>
 					{renderDays()}
 				</View>
-				{renderPublishButton()}
+				{renderUpdateOrPublishButton()}
 			</ScrollView>
 		</View>
 	);
 };
 
-const mapStateToProps = ({ netInfo, draft }) => ({
-	netInfo,
-	draft
+const mapStateToProps = ({ draft, user }) => ({
+	draft,
+	user
 });
 
-export default connect(mapStateToProps, { getItineraryDraft, updateItineraryByID, addItineraryToRedux })(
-	AddItineraryDetail
-);
+export default connect(mapStateToProps, {
+	addItineraryToRedux,
+	uploadCoverPhoto,
+	updateItineraryByID,
+	getDraftItineraryDetails
+})(AddItineraryDetail);

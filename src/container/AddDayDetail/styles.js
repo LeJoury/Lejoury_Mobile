@@ -39,26 +39,23 @@ export default StyleSheet.create({
 		color: Color.darkGrey1,
 		fontSize: 16
 	},
-	buttonWrapper: {
-		marginTop: height / 4,
-		...Styles.Common.ColumnCenter
-	},
 	separatorWrapper: {
-		...Styles.Common.ColumnCenter
+		...Styles.Common.ColumnCenter,
+		marginVertical: 18
 	},
 	straightSeparator: {
-		width: 2,
+		width: 1,
 		height: 30,
 		borderRadius: 5,
-		backgroundColor: Color.lightGrey4
+		backgroundColor: Color.lightGrey3
+	},
+	addMoreButtonWrapper: {
+		...Styles.Common.ColumnCenter
 	},
 	addActivityButton: {
-		height: 40,
-		borderRadius: 20,
-		width: width / 2.3,
+		paddingHorizontal: 12,
 		alignItems: 'center',
-		justifyContent: 'center',
-		...Styles.Common.ShadowBox
+		justifyContent: 'center'
 	},
 	addActivityButtonText: {
 		fontSize: 14,
@@ -66,24 +63,24 @@ export default StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Medium'
 	},
-	removeButtonWrapper:{
+	removeButtonWrapper: {
 		...Styles.Common.ColumnCenter,
 		position: 'absolute',
 		bottom: 0,
 		left: 0,
 		right: 0,
-		height: Device.isIphoneX ? 60 : 50,
 		...Styles.Common.ShadowBox
 	},
 	removeButton: {
 		width: width,
-		height: Device.isIphoneX ? 60 : 50,
+		height: Device.isIphoneX ? 62 : 50,
 		backgroundColor: Color.red1,
 		justifyContent: 'center'
 	},
 	removeTextStyle: {
 		color: Color.white,
 		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
 	}

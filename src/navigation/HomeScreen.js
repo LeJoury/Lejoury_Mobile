@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { StatusBar, SafeAreaView, View } from 'react-native';
-
-import { Title } from './IconNav';
+import React, { PureComponent } from 'react';
+import { StatusBar, SafeAreaView } from 'react-native';
 
 import { Home } from '@container';
-import { Color, Languages } from '@common';
 
-class HomeScreen extends Component {
+import { NoInternetNotice } from '@components';
+import { Color, Styles } from '@common';
+
+class HomeScreen extends PureComponent {
 
 	constructor(props) {
 		super(props);
@@ -19,7 +19,7 @@ class HomeScreen extends Component {
 
 	render() {
 		return (
-			<SafeAreaView style={{ flex: 1 }}>
+			<SafeAreaView style={Styles.Common.FullFlex}>
 				<StatusBar
 					backgroundColor={Color.white}
 					translucent={false}

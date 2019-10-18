@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, Animated, TouchableWithoutFeedback } from 'react-native';
-import { Icon } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 
-import { Color, Styles, getCountry } from '@common';
+import Heart from '../Heart';
+import { Styles, getCountry } from '@common';
 
 import styles from './styles';
 
@@ -24,24 +24,17 @@ const TravellerInfo = ({
 }) => (
 	<Animated.View style={[ Styles.Common.ColumnCenter, mainContainer ]}>
 		<Animated.View style={[ styles.main_contentContainer, contentContainer ]}>
-			<Text style={[ styles.main_Country, , { fontSize: countryTextSize } ]} numberOfLines={1}>
+			<Text style={[ styles.main_Country, { fontSize: countryTextSize } ]} numberOfLines={1}>
 				{getCountry(itinerary.country)}
 			</Text>
 			<Text style={[ styles.main_Title, { fontSize: titleTextSize } ]} numberOfLines={1}>
-				{itinerary.itineraryName}
+				{itinerary.title}
 			</Text>
 			<View style={styles.separator} />
 			<View style={[ styles.main_UserProfileWrapper, { marginTop: travellerWrapperMarginTop } ]}>
 				<View style={Styles.Common.RowCenterRight}>
-					<TouchableWithoutFeedback>
-						<Icon
-							name="heart"
-							type="feather"
-							size={heartIconSize === undefined ? Styles.IconSize.Small : heartIconSize}
-							color={Color.red2}
-						/>
-					</TouchableWithoutFeedback>
-					<Text style={[ styles.socialIconText, { fontSize: titleTextSize } ]}>200</Text>
+					<Heart heartIconSize={heartIconSize} isLike={false}/>
+					<Text style={[ styles.noOfLikesText, { fontSize: titleTextSize } ]}>200</Text>
 				</View>
 				<TouchableWithoutFeedback style={Styles.Common.RowCenterRight}>
 					<View style={Styles.Common.RowCenterRight}>

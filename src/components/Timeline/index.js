@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
-import { FlatList, Image, View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { FlatList, View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 
-import { Color } from '@common';
+import { Color, Styles, Languages } from '@common';
+import { Bookmark } from '@components';
 
 import styles from './styles';
 
@@ -35,7 +36,6 @@ export default class Timeline extends PureComponent {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
 				<FlatList
-					ref="listView"
 					style={[ styles.listview, this.props.listViewStyle ]}
 					data={this.state.dataSource}
 					renderItem={this.renderRow}
@@ -92,9 +92,16 @@ export default class Timeline extends PureComponent {
 					onPress={() => (this.props.onEventPress ? this.props.onEventPress(item) : null)}
 				>
 					<View style={styles.detail}>{this.renderDetail(item)}</View>
-					<View style={styles.readMoreWrapper}>
-						<Text style={styles.readMore}>Read More</Text>
-						<Icon color={Color.lightGrey3} size={12} name="chevron-right" />
+					<View style={Styles.Common.RowCenterBetween}>
+						<TouchableOpacity>
+							<Bookmark isBookmark={false} wrapperStyle={styles.readMoreWrapper}>
+								<Text style={styles.addToBookmark}>{Languages.Bookmark}</Text>
+							</Bookmark>
+						</TouchableOpacity>
+						<View style={styles.readMoreWrapper}>
+							<Text style={styles.readMore}>{Languages.ReadMore}</Text>
+							<Icon color={Color.lightGrey3} size={12} type="feather" name="chevron-right" />
+						</View>
 					</View>
 				</TouchableOpacity>
 

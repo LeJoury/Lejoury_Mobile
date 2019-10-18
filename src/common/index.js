@@ -1,7 +1,7 @@
-import _Color from "./Color";
+import _Color from './Color';
 export const Color = _Color;
 
-import _Device from "./Device";
+import _Device from './Device';
 export const Device = _Device;
 
 import _Images from './Images';
@@ -15,8 +15,5 @@ export const Languages = _Languages;
 
 import _Constants from './Constants';
 export const Constants = _Constants;
-
-import _Footpath from './Footpath';
-export const Footpath = _Footpath;
 
 export * from './Utilize';

@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { ScrollView } from 'react-native';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 
 import { Title, Back } from './IconNav';
 
 import { Profile } from '@container';
+
+import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
 const user = {
@@ -20,17 +22,11 @@ const user = {
 	isFollow: true
 };
 
-class TravellerProfileScreen extends Component {
+class TravellerProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: Title(user.username, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary)
 	});
-
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
 
 	render() {
 		return <Profile navigation={this.props.navigation} user={user} isMe={false} />;

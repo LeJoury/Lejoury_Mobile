@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
-import {
-	Animated,
-	Text,
-	Dimensions,
-	ScrollView,
-	View,
-	TouchableOpacity,
-	SafeAreaView,
-	Platform,
-	StyleSheet
-} from 'react-native';
+import { Animated, Text, Dimensions, ScrollView, View, TouchableOpacity, Platform } from 'react-native';
+
 import { SearchBar } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 
-import { getItineraryDraft } from '@actions';
+import { getDraftItineraries } from '@actions';
 
 import { ItineraryHolder, CountryHolder, TravellerHolder, Section } from '@components';
 import { Search } from '@container';
 import { Images, Languages, Device, Color, Styles } from '@common';
+import { Bugsnag } from '@services';
 
 import styles from './styles';
 
@@ -87,8 +79,8 @@ const itineraries = [
 			username: 'Zoey',
 			userProfilePicture: 'https://randomuser.me/api/portraits/women/47.jpg'
 		},
-		itineraryID: '8ab479cc-b25c-4557-98db-246bd9d89d49',
-		itineraryName: 'Sekinchan 2 days 1 night',
+		itineraryId: '8ab479cc-b25c-4557-98db-246bd9d89d49',
+		title: 'Sekinchan 2 days 1 night',
 		country: 'MY',
 		startDate: '9-Sept-2016',
 		endDate: '10-Sept-2016',
@@ -208,8 +200,8 @@ const itineraries = [
 			username: 'Dave',
 			userProfilePicture: 'https://randomuser.me/api/portraits/men/47.jpg'
 		},
-		itineraryID: '9bb479cc-b25c-4557-98db-246bd9d89d50',
-		itineraryName: 'Singapore 3Days Trip !',
+		itineraryId: '9bb479cc-b25c-4557-98db-246bd9d89d50',
+		title: 'Singapore 3Days Trip !',
 		country: 'SG',
 		startDate: '17-Jun-2018',
 		endDate: '19-Jun-2018',
@@ -411,8 +403,8 @@ const itineraries = [
 			username: 'Alex',
 			userProfilePicture: 'https://randomuser.me/api/portraits/men/57.jpg'
 		},
-		itineraryName: 'Tanjung Sepat One Day Trip',
-		itineraryID: '1cb479cc-b25c-4557-98db-246bd9d89d90',
+		title: 'Tanjung Sepat One Day Trip',
+		itineraryId: '1cb479cc-b25c-4557-98db-246bd9d89d90',
 		country: 'MY',
 		startDate: '9-May-2016',
 		endDate: '9-May-2016',
@@ -537,7 +529,7 @@ const travellers = [
 	}
 ];
 
-const user = {
+const thisUser = {
 	userId: '622dcef6-2e6e-4009-b810-6f39b557c79d',
 	name: 'Leanne Graham',
 	username: 'Bret',
@@ -562,14 +554,15 @@ class Home extends Component {
 			showSearchView: false
 		};
 	}
-	_keyExtractor_Itinerary = (item) => item.itineraryID.toString();
+	_keyExtractor_Itinerary = (item) => item.itineraryId.toString();
 
 	_keyExtractor_Country = (item) => item.countryID.toString();
 
 	_keyExtractor_Traveller = (item) => item.travellerID.toString();
 
 	componentDidMount() {
-		this.props.getItineraryDraft();
+		const { token, userId } = this.props.user;
+		this.props.getDraftItineraries(token, userId);
 	}
 
 	componentDidUpdate() {}
@@ -641,14 +634,14 @@ class Home extends Component {
 		});
 	};
 
-	onPressTraveller = (user) => {
+	onPressTraveller = (selectedUser) => {
 		this.props.navigation.navigate('TravellerProfile', {
-			user
+			user: selectedUser
 		});
 	};
 
 	renderFamousPlaces = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this.onPressFamous(item)} type="main" />
+		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressFamous(item)} type="main" />
 	);
 
 	renderPopular = ({ item }) => (
@@ -710,7 +703,7 @@ class Home extends Component {
 						{Languages.Destination}
 					</Text>
 					<Text style={[ styles.smallSectionTitle, { marginTop: 8 } ]}>
-						{Languages.Hello}, {user.username}
+						{Languages.Hello}, {thisUser.username}
 					</Text>
 					<Text style={[ styles.smallSectionTitle, { marginTop: 4 } ]}>
 						{Languages.WhereWouldYouLikeToExplore}
@@ -789,8 +782,9 @@ class Home extends Component {
 	}
 }
 
-const mapStateToProps = ({ draft }) => ({
-	draft
+const mapStateToProps = ({ draft, user }) => ({
+	draft,
+	user
 });
 
-export default connect(mapStateToProps, { getItineraryDraft })(Home);
+export default connect(mapStateToProps, { getDraftItineraries })(Home);

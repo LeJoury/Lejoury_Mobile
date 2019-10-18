@@ -15,7 +15,7 @@ const MemoryHolder = ({ memory }) => (
 					style={styles.itineraryContainer}
 					colors={[ Color.transparent1, Color.black, Color.black ]}
 				>
-					<Text style={styles.titleItinerary}>{memory.itineraryName}</Text>
+					<Text style={styles.titleItinerary}>{memory.title}</Text>
 					<View style={styles.userContainer}>
 						<Text style={styles.dateText}>
 							{memory.dateStart} - {memory.dateEnd}

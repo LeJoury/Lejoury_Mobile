@@ -25,7 +25,7 @@ class ItineraryList extends Component {
 	//super (props)
 	//}
 
-	_keyExtractor = (item, index) => item.itineraryID;
+	_keyExtractor = (item, index) => item.itineraryId;
 
 	componentDidMount() {}
 
@@ -57,13 +57,13 @@ class ItineraryList extends Component {
 	}
 
 	renderItem = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryID} onPress={() => this.onPressItinerary(item)} />
+		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressItinerary(item)} />
 	);
 
 	renderItineraryBasedOnCountry = ({ item }) => (
 		<ItineraryHolder
 			itinerary={item}
-			key={item.itineraryID}
+			key={item.itineraryId}
 			onPress={() => this.onPressCountryItinerary(item)}
 			type="country"
 		/>

@@ -13,19 +13,21 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import ImagePicker from 'react-native-image-crop-picker';
-import RNPickerSelect from 'react-native-picker-select';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import StarRating from 'react-native-star-rating';
+import ImageResizer from 'react-native-image-resizer';
+import Bugsnag from '@services';
 
 import { QUERY_PLACES, GET_PLACE_DETAILS } from '../../services/GooglePlaceService';
 import { Languages, Color, Styles, showOkAlert } from '@common';
-import { ImageHolder, Button } from '@components';
+import { ImageHolder, Button, CurrencyPicker } from '@components';
 
 import styles from './styles';
 
 const numColumns = 3;
 const defaultRate = 4;
 const { width, height } = Dimensions.get('window');
+const TAG = 'AddActivityDetail';
 
 // const GOOGLE_API_KEY = config.GOOGLE_PLACE_API_KEY;
 
@@ -318,7 +320,6 @@ const AddActivityDetail = (props) => {
 			} = navigation.state.params.selectedActivity;
 
 			let currentPhotos = photos.length < 6 ? photos.concat('empty') : photos;
-			console.log(location);
 
 			setTitle(title);
 			setLocation(location);
@@ -331,13 +332,7 @@ const AddActivityDetail = (props) => {
 
 		return () => {
 			props.onRef(undefined);
-			// ImagePicker.clean()
-			// 	.then(() => {
-			// 		console.log('removed all tmp images from tmp directory');
-			// 	})
-			// 	.catch((e) => {
-			// 		// alert(e);
-			// 	});
+			ImagePicker.clean();
 		};
 	}, []);
 
@@ -376,18 +371,30 @@ const AddActivityDetail = (props) => {
 		if (newPhotos.length < 7) {
 			ImagePicker.openPicker({
 				multiple: true,
-				includeBase64: true,
 				maxFiles: 6
 			}).then((images) => {
 				images.forEach((image) => {
-					if (newPhotos.length < 7) {
-						newPhotos = Array.from(new Set([ image.path ].concat(newPhotos)));
-					} else {
-						showMax6ImagesAlert();
-					}
+					ImageResizer.createResizedImage(image.path, 500, 400, 'JPEG', 70)
+						.then((response) => {
+							let newImage = {
+								uri: response.uri,
+								path: response.path,
+								filename: response.name,
+								mime: image.mime
+							};
 
-					setIsDirty(true);
-					setPhotos(newPhotos);
+							if (newPhotos.length < 7) {
+								newPhotos = Array.from(new Set([ newImage ].concat(newPhotos)));
+							} else {
+								showMax6ImagesAlert();
+							}
+							setIsDirty(true);
+							setPhotos(newPhotos);
+						})
+						.catch((error) => {
+							Bugsnag.leaveBreadcrumb(TAG, `RESIZE IMAGE - ${error}`);
+							Bugsnag.notify(new Error(error));
+						});
 				});
 			});
 		} else {
@@ -431,24 +438,6 @@ const AddActivityDetail = (props) => {
 		navigation.goBack(null);
 	};
 
-	const currencyPicker = () => {
-		return (
-			<RNPickerSelect
-				onValueChange={(value) => setCurrency(value)}
-				doneText={Languages.Done}
-				value={currency}
-				style={{
-					viewContainer: styles.pickerContainer
-				}}
-				items={[
-					{ label: 'USD', value: 'USD' },
-					{ label: 'MYR', value: 'MYR' },
-					{ label: 'SGD', value: 'SGD' }
-				]}
-			/>
-		);
-	};
-
 	const imageHolder = ({ item }) => {
 		if (item === 'empty') {
 			return (
@@ -464,7 +453,7 @@ const AddActivityDetail = (props) => {
 			<ImageHolder
 				containerStyle={styles.imageHolder}
 				imageStyle={styles.imageThumbnail}
-				imageUri={item}
+				imageUri={item.path}
 				onRemovePress={onRemoveImage}
 			/>
 		);
@@ -528,7 +517,12 @@ const AddActivityDetail = (props) => {
 
 		this.timer = setTimeout(() => {
 			if (value.length >= 3) {
-				QUERY_PLACES(value).then((results) => setLocationResults(results)).catch((error) => console.log(error));
+				QUERY_PLACES(value)
+				.then((results) => setLocationResults(results))
+				.catch((error) => {
+					//TODO: recall search bugsnag this issue
+					console.log(error);
+				});
 			}
 		}, 3000);
 	};
@@ -586,7 +580,7 @@ const AddActivityDetail = (props) => {
 		const { main_text, secondary_text } = structured_formatting;
 
 		return (
-			<TouchableWithoutFeedback style={styles.resultContainer} onPress={() => onLocationPress(place_id)}>
+			<TouchableWithoutFeedback onPress={() => onLocationPress(place_id)}>
 				<View style={styles.resultRow}>
 					<View style={styles.resultIconContainer}>
 						<Icon color={Color.splashScreenBg6} type="feather" size={16} name="map-pin" />
@@ -646,10 +640,10 @@ const AddActivityDetail = (props) => {
 					<View style={styles.photoContainer}>{imagesList()}</View>
 				</View>
 
-				<View style={styles.inputWrapper}>
+				<View style={[ styles.inputWrapper, { backgroundColor: Color.lighGrey6 } ]}>
 					<Text style={styles.titleStyle}>{Languages.Budget}</Text>
-					<View style={styles.rowWrapper}>
-						{currencyPicker()}
+					<View style={[ styles.rowWrapper, { marginTop: 6 } ]}>
+						<CurrencyPicker currency={currency} setCurrency={(value) => setCurrency(value)} />
 						<TextInput
 							underlineColorAndroid="transparent"
 							selectionColor={Color.textSelectionColor}
@@ -714,7 +708,7 @@ const AddActivityDetail = (props) => {
 		return (
 			<View style={styles.buttonWrapper}>
 				<Button
-					text={Languages.Confirm.toUpperCase()}
+					text={Languages.Confirm}
 					textStyle={styles.doneTextStyle}
 					containerStyle={styles.confirmButton}
 					onPress={onSaveActivity}

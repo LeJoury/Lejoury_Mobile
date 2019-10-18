@@ -1,31 +1,37 @@
 import React, { Component } from 'react';
 import { View, Text, Animated, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import { SocialIcon, Icon } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-community/async-storage';
+
+import { connect } from 'react-redux';
+import { login, register, loginBySocial } from '@actions';
 
 import { Login, Register } from '@container';
-
-// import { connect } from 'react-redux';
-// import { login, dismissLoginDialog } from '@actions';
 
 import { Images, Color, Languages, Styles, Constants, showOkAlert } from '@common';
 import { Button, Spinner } from '@components';
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
-const { ASYNCKEY } = Constants.ASYNCKEY;
+const { Mode, Sizes } = Constants.Spinner;
+
+const LOGIN_TYPE_FACEBOOK = 'FACEBOOK';
+const LOGIN_TYPE_GOOGLE = 'GOOGLE';
 
 class Landing extends Component {
 	constructor(props) {
 		super(props);
+		GoogleSignin.configure();
 
 		this.state = {
 			optionAnimations: new Animated.Value(1),
 			optionVisible: true,
 			backVisible: new Animated.Value(0),
 			landingAnimation: new Animated.Value(0),
-			isLogin: true
+			isLogin: true,
+			isLoading: false
 		};
 	}
 
@@ -34,6 +40,21 @@ class Landing extends Component {
 	componentDidUpdate() {}
 
 	componentWillUnmount() {}
+
+	onNavigateToMain = () => {
+		const { navigation } = this.props;
+
+		navigation.dispatch({
+			type: 'Navigation/RESET',
+			index: 0,
+			key: null,
+			actions: [ { type: 'Navigate', routeName: 'Main' } ]
+		});
+	};
+
+	onNavigateToForgotPassword = () => {
+		this.props.navigation.navigate('ForgotPassword');
+	};
 
 	onBackToOptions = () => {
 		if (!this.state.optionVisible) {
@@ -79,9 +100,110 @@ class Landing extends Component {
 		}
 	};
 
+	// Result: {
+	// 	'email': 'ohyeah547@gmail.com',
+	// 	'id': '10220086199094726',
+	// 	'picture': {
+	// 		'data': {
+	// 			'is_silhouette': false,
+	// 			'width': 50,
+	// 			'height': 50,
+	// 			'url': 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10220086199094726&height=50&width=50&ext=1573996369&hash=AeTB4lWqSYslQ-6p'
+	// 		}
+	// 	},
+	// 	'name': 'Sze Jing'
+	// };
+	responseInfoCallback = async (error, result) => {
+		if (error) {
+			//TODO: show something went wrong message
+			console.log('Error fetching data: ' + error.toString());
+			showOkAlert(Languages.LoginFail, Languages.SystemError);
+		} else {
+			//FACEBOOK LOGIN
+			const { name, picture, id, email } = result;
+
+			try {
+				let response = await this.props.loginBySocial(name, email, id, picture.data.url, LOGIN_TYPE_FACEBOOK);
+
+				if (response.OK) {
+					this.onNavigateToMain();
+				} else {
+					showOkAlert(Languages.LoginFail, response.message);
+				}
+			} catch (e) {
+				console.log(e);
+				showOkAlert(Languages.LoginFail, Languages.SystemError);
+			}
+		}
+		LoginManager.logOut();
+	};
+
+	onFacebookLogin = () => {
+		LoginManager.logInWithPermissions([ 'public_profile', 'email' ]).then(
+			(result) => {
+				if (result.isCancelled) {
+					//TODO: CANCEL MESSAGE
+					console.log('Login cancelled');
+				} else {
+					AccessToken.getCurrentAccessToken().then((data) => {
+						const req = new GraphRequest('/me?fields=name,picture,email', null, this.responseInfoCallback);
+						new GraphRequestManager().addRequest(req).start();
+					});
+				}
+			},
+			(error) => {
+				//TODO: SHOW SYSTEM ERROR MESSAGE
+				console.log('Login fail with error: ' + error);
+			}
+		);
+	};
+
+	// 	email: "lejoury.my@gmail.com"
+	// familyName: null
+	// givenName: "lejoury"
+	// id: "115603408340880260293"
+	// name: "lejoury"
+	// photo: "https://lh4.googleusercontent.com/-Sv6e8t5bUC4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3reJNnEGmC6sCqk1XzVJgMtzNlXucw/s120/photo.jpg"
+
+	// GOOGLE LOGIN
+	onGoogleLogin = async () => {
+		try {
+			await GoogleSignin.hasPlayServices();
+			const userInfo = await GoogleSignin.signIn();
+
+			const { user } = userInfo;
+
+			const { email, id, name, photo } = user;
+
+			try {
+				let response = await this.props.loginBySocial(name, email, id, photo, LOGIN_TYPE_GOOGLE);
+
+				if (response.OK) {
+					this.onNavigateToMain();
+				} else {
+					showOkAlert(Languages.LoginFail, response.message);
+				}
+			} catch (e) {
+				console.log(e);
+				showOkAlert(Languages.LoginFail, Languages.SystemError);
+			}
+
+			console.log(userInfo);
+		} catch (error) {
+			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+				// user cancelled the login flow
+			} else if (error.code === statusCodes.IN_PROGRESS) {
+				// operation (e.g. sign in) is in progress already
+			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+				// play services not available or outdated
+			} else {
+				// some other error happened
+			}
+		}
+	};
+
 	onLoginPressHandle = () => {
 		//type = email, social
-
 		this.setState(
 			{
 				isLogin: true
@@ -117,33 +239,47 @@ class Landing extends Component {
 		);
 	};
 
+	onRegisterWithEmail = async (username, email, password) => {
+		this.setState({ isLoading: true });
+		try {
+			let result = await this.props.register(username, email, password);
+
+			if (result.OK) {
+				let loginResult = await this.props.login(email, password);
+
+				this.setState({ isLoading: false }, () => {
+					if (loginResult.OK) {
+						showOkAlert(Languages.RegisterSuccess, Languages.RegisterSuccessDescription, Languages.OK, () =>
+							this.onNavigateToMain()
+						);
+					}
+				});
+			} else {
+				showOkAlert(Languages.RegisterFail, result.message);
+			}
+		} catch (error) {
+			this.setState({ isLoading: false });
+		}
+	};
+
 	onLoginWithEmail = async (email, password) => {
-		const { navigation } = this.props;
-
-		const fakeEmail = 'testing@test.com';
-		const fakePassword = 'testing123';
-
-		//show loading
 		if (!email || !password) {
 			showOkAlert(Languages.Empty, Languages.FillUpBothField);
 		}
 
-		if (email === fakeEmail && password === fakePassword) {
-			try {
-				await AsyncStorage.setItem(ASYNCKEY.SESSION, '123');
+		this.setState({ isLoading: true });
+		try {
+			let result = await this.props.login(email, password);
 
-				navigation.dispatch({
-					type: 'Navigation/RESET',
-					index: 0,
-					key: null,
-					actions: [ { type: 'Navigate', routeName: 'Main' } ]
-				});
-			} catch (e) {
-				// saving error
-				console.log(e);
-			}
-		} else {
-			showOkAlert(Languages.LoginFail, Languages.PleaseMakeSureYourLoginDetails);
+			this.setState({ isLoading: false }, () => {
+				if (result.OK) {
+					this.onNavigateToMain();
+				} else {
+					showOkAlert(Languages.LoginFail, result.message);
+				}
+			});
+		} catch (error) {
+			this.setState({ isLoading: false });
 		}
 	};
 
@@ -183,9 +319,15 @@ class Landing extends Component {
 		);
 	};
 
-	onNavigateToForgotPassword = () => {
-		this.props.navigation.navigate('ForgotPassword');
-	};
+	renderLoading() {
+		const { isLoading } = this.state;
+
+		if (!isLoading) {
+			return;
+		}
+
+		return <Spinner mode={Mode.overlayLogin} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
+	}
 
 	render() {
 		const { navigation } = this.props;
@@ -286,7 +428,7 @@ class Landing extends Component {
 												type="facebook"
 												style={styles.socialButtonStyle}
 												underlayColor={Color.normalButtonHover}
-												onPress={() => this.onLoginPressHandle('fb')}
+												onPress={() => this.onFacebookLogin()}
 											/>
 
 											<SocialIcon
@@ -295,7 +437,7 @@ class Landing extends Component {
 												type="google"
 												style={styles.socialButtonStyle}
 												underlayColor={Color.normalButtonHover}
-												onPress={() => this.onLoginPressHandle('gmail')}
+												onPress={() => this.onGoogleLogin()}
 											/>
 										</View>
 									</Animated.View>
@@ -308,11 +450,16 @@ class Landing extends Component {
 												onNavigateToForgotPassword={this.onNavigateToForgotPassword}
 											/>
 										) : (
-											<Register navigation={navigation} />
+											<Register
+												navigation={navigation}
+												onRegisterWithEmail={this.onRegisterWithEmail}
+											/>
 										)}
 									</Animated.View>
 								)}
 							</View>
+
+							{this.renderLoading()}
 						</View>
 					</View>
 				</KeyboardAwareScrollView>
@@ -321,9 +468,8 @@ class Landing extends Component {
 	}
 }
 
-// const mapStateToProps = ({ netInfo, user }) => ({
-// 	netInfo,
+// const mapStateToProps = ({  user }) => ({
 // 	user
 // });
 
-export default Landing;
+export default connect(null, { login, register, loginBySocial })(Landing);

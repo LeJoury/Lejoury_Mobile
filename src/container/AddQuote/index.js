@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Animated, Dimensions } from 'react-native';
 
+import { connect } from 'react-redux';
+import { updateItineraryByID, publishItineraryByID } from '@actions';
+
 import { Button, AnimatedTextInput } from '@components';
-import { Styles, Languages, Color, Device, createStaggerAnimationStyle } from '@common';
+import { Styles, Languages, Color, Device, createStaggerAnimationStyle, showOkAlert } from '@common';
 
 import styles from './styles';
 
@@ -15,6 +18,11 @@ const AddQuote = (props) => {
 	const [ quote, setQuote ] = useState('');
 	const [ isQuoteFocus, setQuoteFocus ] = useState(false);
 
+	const [ itineraryId ] = useState(props.navigation.state.params.itineraryId);
+
+	const [ selectedItinerary ] = useState(
+		props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId)
+	);
 	const onChangeQuote = (value) => {
 		setQuote(value);
 	};
@@ -33,9 +41,38 @@ const AddQuote = (props) => {
 			this._quote.getNode().focus();
 		});
 	}, []);
-	
+
 	const quoteBoxStyle = createStaggerAnimationStyle(quoteBox);
 	const confirmButtonBoxStyle = createStaggerAnimationStyle(confirmButtonBox);
+
+	const onConfirmPublish = () => {
+		let newItinerary = {
+			...selectedItinerary,
+			quote: quote
+		};
+		console.log(props);
+
+		const { token, userId } = props.user;
+
+		props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
+			if (response.OK) {
+				props
+					.publishItineraryByID(itineraryId, token)
+					.then((publishResponse) => {
+						if (publishResponse.OK) {
+							showOkAlert(Languages.SuccessfullyPublishedTitle, Languages.SuccessfullyPublishedMessage);
+						} else {
+							//TODO: show failed message
+							// try again
+						}
+					})
+					.catch((error) => {
+						//TODO: show failed message
+						// try again
+					});
+			}
+		});
+	};
 
 	return (
 		<View style={styles.container}>
@@ -61,10 +98,16 @@ const AddQuote = (props) => {
 					text={Languages.Confirm}
 					textStyle={styles.confirmTextStyle}
 					containerStyle={styles.confirmButton}
-					// onPress={() => props.onLoginWithEmail(emailAddress, password)}
+					onPress={onConfirmPublish}
 				/>
 			</Animated.View>
 		</View>
 	);
 };
-export default AddQuote;
+
+const mapStateToProps = ({ draft, user }) => ({
+	draft,
+	user
+});
+
+export default connect(mapStateToProps, { updateItineraryByID, publishItineraryByID })(AddQuote);

@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 
 import { Title, Back } from './IconNav';
 
 import { ForgotPassword } from '@container';
 
-import { Color, Languages } from '@common';
+import { NoInternetNotice } from '@components';
+import { Color, Languages, Styles } from '@common';
 
-class ForgotPasswordScreen extends Component {
+class ForgotPasswordScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: Title(Languages.ForgotPassword, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary)
@@ -19,7 +21,12 @@ class ForgotPasswordScreen extends Component {
 	componentWillUnmount() {}
 	render() {
 		const { navigation } = this.props;
-		return <ForgotPassword navigation={navigation} />;
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<ForgotPassword navigation={navigation} />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 export default ForgotPasswordScreen;

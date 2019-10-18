@@ -1,112 +1,130 @@
-import base from '../services/Config';
-import { Constants } from '@common';
+import { Languages, Constants } from '@common';
 
+import { LOGIN_WITH_EMAIL, REGISTER_WITH_EMAIL, REFRESH_TOKEN, LOGIN_BY_SOCIAL } from '@services';
+
+const { STATUS } = Constants.STATUS;
 const { Types } = Constants.Actions;
-const { URL } = Constants.URL;
+const { ASYNCKEY } = Constants.ASYNCKEY;
 
 // ----------------------------------- login ----------------------------------- //
-const login = (username, password) => async (dispatch) => {
-	dispatch({ type: Types.LOGIN });
+const login = (email, password) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		LOGIN_WITH_EMAIL(email, password)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { profile, token } = result.data;
+					let response = { OK: true, token: token };
+					dispatch({
+						type: Types.LOGIN_SUCCESS,
+						payload: { token: token, username: profile.username, id: profile.userId }
+					});
 
-	let params = JSON.stringify({
-		username,
-		password
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
 	});
+};
 
-	try {
-		const response = await base.post(`${URL.URL_AUTH}/${URL.URL_TOKEN}`, params, {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
+const register = (username, email, password) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		REGISTER_WITH_EMAIL(username, email, password)
+			.then((result) => {
+				console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
 
-		if (response.status === 200) {
-			dispatch({
-				type: Types.LOGIN_SUCCESS,
-				payload: response.data
+					resolve(response);
+				} else if (result.statusCode === 402) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					let response = { OK: false, message: Languages.SystemError };
+					resolve(response);
+				}
+			})
+			.catch((error) => {
+				reject(error);
 			});
-		}
-	} catch (error) {
-		if (error.response.status === 401) {
-			console.log(error.response.data.message);
-			dispatch({
-				type: Types.LOGIN_FAIL,
-				payload: error.response.data.message
+	});
+};
+
+// ----------------------------------- refresh token ----------------------------------- //
+const refreshToken = (currentToken) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		REFRESH_TOKEN(currentToken)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { profile, token } = result.data;
+					let response = { OK: true, token: token };
+
+					dispatch({
+						type: Types.LOGIN_SUCCESS,
+						payload: { token: token, username: profile.username, id: profile.userId }
+					});
+
+					resolve(response);
+				} else {
+					//invalid login
+					let response = { OK: false };
+					dispatch({ type: Types.LOGOUT });
+					resolve(response);
+				}
+			})
+			.catch((error) => {
+				let response = { OK: false };
+				dispatch({ type: Types.LOGOUT });
+				reject(response);
 			});
-		} else {
-			console.log(error);
-			dispatch({
-				type: Types.LOGIN_FAIL,
-				payload: ''
+	});
+};
+
+
+// ----------------------------------- login by social ----------------------------------- //
+const loginBySocial = (username, email, socialId, photoUrl, loginType) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		LOGIN_BY_SOCIAL(username, email, socialId, photoUrl, loginType)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { profile, token } = result.data;
+					let response = { OK: true, token: token };
+					console.log(response);
+
+					dispatch({
+						type: Types.LOGIN_SUCCESS,
+						payload: { token: token, username: profile.username, id: profile.userId }
+					});
+
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
 			});
-		}
-	}
+	});
 };
 
 // ----------------------------------- logout ----------------------------------- //
 const logout = () => (dispatch) => {
-	dispatch({ type: Types.LOGOUT });
+	return new Promise((resolve, reject) => {
+		let response = { OK: true };
+
+		dispatch({ type: Types.LOGOUT });
+
+		resolve(response);
+	});
 };
 
-// ----------------------------- dismiss dialog ----------------------------------- //
-const dismissLoginDialog = () => (dispatch) => {
-	dispatch({ type: Types.DISMISS_LOGIN_DIALOG });
-};
-
-// ----------------------------------- refresh token ----------------------------------- //
-const refreshToken = (token) => async (dispatch) => {
-	dispatch({ type: Types.TOKEN_REFRESH });
-
-	try {
-		const response = await base.get(`${URL.URL_AUTH}/${URL.URL_REFRESH_TOKEN}`, {
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
-			}
-		});
-
-		if (response.status === 200) {
-			dispatch({
-				type: Types.TOKEN_REFRESH_SUCCESS,
-				payload: response.data
-			});
-		}
-	} catch (error) {
-		if (error.response.status === 401) {
-			console.log(error.response.data.message);
-
-			dispatch({
-				type: Types.TOKEN_REFRESH_FAIL,
-				payload: error.response.data.message
-			});
-		} else {
-			dispatch({
-				type: Types.TOKEN_REFRESH_FAIL,
-				payload: ''
-			});
-		}
-		// console.log(error);
-	}
-};
-
-// ----------------------------------- reset token ----------------------------------- //
-const resetToken = (token, name = '') => (dispatch) => {
-	if (name === '') {
-		dispatch({
-			type: Types.TOKEN_RESET,
-			payload: token
-		});
-	}else {
-		let payload = {
-			token,
-			name
-		}
-
-		dispatch({
-			type: Types.TOKEN_NAME_RESET,
-			payload: payload
-		});
-	}
-};
-
-export { login, logout, refreshToken, dismissLoginDialog, resetToken };
+export { login, register, logout, refreshToken, loginBySocial };

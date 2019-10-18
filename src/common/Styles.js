@@ -84,6 +84,7 @@ Styles.Button = {
 };
 
 Styles.Common = {
+	FullFlex: { flex: 1 },
 	Column: {},
 	ColumnCenter: {
 		justifyContent: 'center',

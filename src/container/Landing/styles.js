@@ -1,12 +1,12 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { Color, Styles } from '@common';
+import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 40,
+		paddingTop: Device.isIphoneX ? 80 : 40,
 		backgroundColor: Color.white
 	},
 	landingBackground: {

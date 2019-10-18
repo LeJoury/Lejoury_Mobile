@@ -31,8 +31,8 @@ export const Register = _Register;
 import _Notification from './Notification';
 export const Notification = _Notification;
 
-import _UploadItinerary from './UploadItinerary';
-export const UploadItinerary = _UploadItinerary;
+import _AddItinerary from './AddItinerary';
+export const AddItinerary = _AddItinerary;
 
 import _AddItineraryDetail from './AddItineraryDetail';
 export const AddItineraryDetail = _AddItineraryDetail;

@@ -50,10 +50,10 @@ export default StyleSheet.create({
 		marginTop: 8,
 		backgroundColor: Color.lightGrey2
 	},
-	socialIconText: {
+	noOfLikesText: {
 		marginLeft: 8,
-		paddingTop: 2,
 		fontSize: 13,
-		color: Color.grey1
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Regular'
 	}
 });

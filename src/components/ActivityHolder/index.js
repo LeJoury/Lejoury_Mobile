@@ -29,11 +29,11 @@ const ActivityHolder = ({ index, name, photos, description, currency, budget, ra
 						loadMinimalLoader={<ActivityIndicator />}
 						loadMinimal={true}
 					>
-						{photos.map((uri, index) => {
+						{photos.map((photo, index) => {
 							return (
 								<Image
 									source={{
-										uri: uri,
+										uri: photo.uri,
 										// cache: 'only-if-cached'
 									}}
 									style={styles.image}

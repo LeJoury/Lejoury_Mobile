@@ -3,7 +3,7 @@ export default {
 	Exit: 'Exit',
 	ExitConfirm: 'Are you sure you want to exit this app',
 	YES: 'YES',
-	Remove: 'Remove',
+	Update: 'Update',
 	OK: 'OK',
 	CANCEL: 'CANCEL',
 	Cancel: 'Cancel',
@@ -19,7 +19,7 @@ export default {
 	Save: 'Save',
 	Send: 'Send',
 	SomethingWentWrong: 'Something went wrong. Please try again.',
-	HelloThere:'Hello There!',
+	HelloThere: 'Hello There!',
 	Welcome: 'Welcome to LeJoury.',
 	WelcomeDescription: 'Keep your stories with the loved one forever with ',
 	WelcomeBack: 'Welcome Back to LeJoury.',
@@ -37,8 +37,11 @@ export default {
 	RemoveConfirmationActivity: 'Are you sure to remove this activity ?',
 	RemoveConfirmationDayTitle: 'Remove Day',
 	RemoveConfirmationDay: 'Are you sure to remove this day ?',
+	RemoveConfirmationItineraryTitle: 'Remove Itinerary',
+	RemoveConfirmationItinerary: 'Are you sure to remove this itinerary ?',
 	Title: 'Title',
 	FillUpBothField: 'Please fill up everything.',
+	SystemError: 'Sorry, our system might having some problems. Please try again later.',
 
 	//MONTHS
 	Jan: 'Jan',
@@ -142,6 +145,7 @@ export default {
 	ButtonFollow: 'Follow',
 	ButtonFollowing: 'Following',
 	EditProfile: 'Edit Profile',
+	ChangeProfilePicture: 'Change Profile Picture',
 	Username: 'Username',
 	Bio: 'Bio',
 	NoItineraries: ' has no itineraries yet.',
@@ -160,7 +164,6 @@ export default {
 	ChangePassword: 'Change Password',
 	ChangeUsername: 'Change Username',
 	ViewPayslips: 'View Payslips',
-	Language: 'Languague',
 	ContactUs: 'Contact Us',
 	PrivacyPolicies: 'Privacy policies',
 	TermConditions: 'Term & Condition',
@@ -179,6 +182,9 @@ export default {
 		'Please enter your email address, you will received a link to create a new password via email.',
 	Login: 'Login',
 	Register: 'Register',
+	RegisterFail: 'Registration Failed',
+	RegisterSuccess: 'Successfully Register !',
+	RegisterSuccessDescription: 'Thank you for register for LeJoury. Start to keep your stories with the loved one ! ',
 	PersonalInfo: 'Personal Information',
 	AccountInfo: 'Account Information',
 	ContinueWithFacebook: 'Continue with Facebook',
@@ -255,7 +261,11 @@ export default {
 	DateIncorrectMessage: 'End date cannot before than start date',
 	Journeys: 'Journeys',
 	AddItinerary: 'There is no journey yet. Add a new one ?',
-
+	CoverPhotoNeededTitle: 'Cover Photo',
+	CoverPhotoNeededMessage: 'Please upload a cover photo for your beloved itinerary thumbnail ',
+	SuccessfullyPublishedTitle: 'Congratulation !',
+	SuccessfullyPublishedMessage: 'You have successfully published your itinerary !',
+	
 	// Add Itinerary
 	TotalDays: 'Total Days',
 	SelectDate: 'Select Date',
@@ -279,17 +289,21 @@ export default {
 	Departure: 'Departure',
 
 	//Quote
-	ShareYourQuote:'Share your quote of the trip...',
+	ShareYourQuote: 'Share your quote of the trip...',
 
 	// Activity Holder
 	ShareYourPhotos: 'Share Your Photos',
 	AddDescription: 'Add Description',
 	AddBudget: 'Add Budget',
 	SorryMax6Images: 'Only 6 images are allowed. ',
-	NoPhotos:'No Photos',
-	Min1Image:'Min. 1 Image is needed.',
+	NoPhotos: 'No Photos',
+	Min1Image: 'Min. 1 Image is needed.',
 
 	//Bucket List
 	BucketList: 'Bucket List',
-	EmptyBucketText: 'You do not have any bucket list yet.'
+	EmptyBucketText: 'You do not have any bucket list yet.',
+
+	//Activity Detail
+	Bookmark: 'Bookmark',
+	ReadMore: 'Read More'
 };

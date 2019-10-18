@@ -3,47 +3,81 @@ import { Constants } from '@common';
 const { Types } = Constants.Actions;
 
 const INITIAL_STATE = {
-	itineraries: [],
-	getLoading: false,
-	draftItinerary: null
+	itineraries: []
 };
 
-export const reducer = (state = INITIAL_STATE, action) => {
+const addOrUpdateItinerary = (itineraries, newItinerary) => {
+	var tmpItineraries = itineraries;
+	if (tmpItineraries.length === 0) {
+		tmpItineraries.push(newItinerary);
+	} else {
+		var index = tmpItineraries.findIndex((itinerary) => itinerary.itineraryId === newItinerary.itineraryId);
+		if (index === -1) {
+			tmpItineraries.unshift(newItinerary);
+		} else {
+			tmpItineraries[index] = { ...tmpItineraries[index], ...newItinerary };
+		}
+	}
+
+	return tmpItineraries;
+};
+
+// const updateItinerary = (itineraries, newItinerary) => {
+// 	var tmpItineraries = itineraries;
+// 	var index = tmpItineraries.findIndex((itinerary) => itinerary.itineraryId === newItinerary.itineraryId);
+// 	if (index === -1) {
+// 	} else {
+// 		tmpItineraries[index] = { ...tmpItineraries[index], ...newItinerary };
+// 	}
+
+// 	return tmpItineraries;
+// };
+
+const addOrUpdateDay = (itineraries, payload) => {
+	var tmpItineraries = itineraries;
+	var index = tmpItineraries.findIndex((itinerary) => itinerary.itineraryId === payload.itineraryId);
+
+	if (index === -1) {
+		//not found
+	} else {
+		tmpItineraries[index] = { ...tmpItineraries[index], days: payload.days };
+	}
+
+	return tmpItineraries;
+};
+
+const removeItinerary = (itineraries, itineraryId) => {
+	var tmpItineraries = itineraries;
+	return tmpItineraries.filter((itinerary) => itinerary.itineraryId !== itineraryId);
+};
+
+const reducer = (state = INITIAL_STATE, action) => {
 	const { type } = action;
 
 	switch (type) {
-		case Types.GETTING_DRAFT:
+		case Types.ADD_ITINERARIES:
 			return {
 				...state,
-				getLoading: true,
-				itineraries: []
-			};
-		case Types.GET_ITINERARY_SUCCESS:
-			return {
-				...state,
-				getLoading: false,
 				itineraries: action.payload
 			};
-		case Types.GET_ITINERARY_FAILED:
+		case Types.ADD_UPDATE_ITINERARY:
 			return {
 				...state,
-				getLoading: false,
-				itineraries: []
+				itineraries: addOrUpdateItinerary(state.itineraries, action.payload)
 			};
-		case Types.ADD_ITINERARY_TO_REDUX:
+		case Types.ADD_UPDATE_DAY:
 			return {
 				...state,
-				draftItinerary: action.payload
+				itineraries: addOrUpdateDay(state.itineraries, action.payload)
 			};
-		case Types.ADD_DAY_TO_REDUX:
+		case Types.DELETE_UPDATE_ITINERARY:
 			return {
 				...state,
-				draftItinerary: {
-					...state.draftItinerary,
-					days: action.payload
-				}
+				itineraries: removeItinerary(state.itineraries, action.payload)
 			};
 		default:
 			return state;
 	}
 };
+
+export { reducer };

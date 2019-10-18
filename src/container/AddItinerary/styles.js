@@ -53,18 +53,18 @@ export default StyleSheet.create({
 		position: 'absolute',
 		left: 0,
 		bottom: 0,
-		right: 0,
-		height: Device.isIphoneX ? 60 : 50
+		right: 0
 	},
 	nextButton: {
 		width: width,
-		height: Device.isIphoneX ? 60 : 50,
+		height: Device.isIphoneX ? 62 : 50,
 		backgroundColor: Color.transparent,
 		justifyContent: 'center'
 	},
 	nextButtonTextStyle: {
 		color: Color.white,
 		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
 	},

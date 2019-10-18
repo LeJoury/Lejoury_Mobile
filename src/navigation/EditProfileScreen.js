@@ -1,26 +1,29 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
 
 import { Title, Back, Save } from './IconNav';
 
 import { EditProfile } from '@container';
-import { Color, Styles, Languages } from '@common';
 
-class EditProfileScreen extends Component {
+import { NoInternetNotice } from '@components';
+import { Color, Languages, Styles } from '@common';
+
+class EditProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: Title(Languages.EditProfile, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary),
 		headerRight: Save(navigation, Color.blue1)
 	});
 
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
-
 	render() {
 		const { navigation } = this.props;
-		return <EditProfile navigation={navigation} />;
+
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<EditProfile navigation={navigation} />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 export default EditProfileScreen;

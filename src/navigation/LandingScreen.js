@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { StatusBar, View } from 'react-native';
 
 import { Landing } from '@container';
+
+import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
-class LandingScreen extends Component {
+class LandingScreen extends PureComponent {
 	componentDidMount() {}
 
 	componentDidUpdate() {}
@@ -12,7 +14,7 @@ class LandingScreen extends Component {
 	componentWillUnmount() {}
 	render() {
 		return (
-			<View>
+			<View style={Styles.Common.FullFlex}>
 				<StatusBar
 					backgroundColor={Color.transparent1}
 					translucent={true}
@@ -20,6 +22,7 @@ class LandingScreen extends Component {
 					showHideTransition="fade"
 				/>
 				<Landing navigation={this.props.navigation} />
+				<NoInternetNotice />
 			</View>
 		);
 	}

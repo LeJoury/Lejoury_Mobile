@@ -1,7 +1,5 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-import { Color, Constants, Device, Styles } from '@common';
-
-const { width, height } = Dimensions.get('window');
+import { StyleSheet } from 'react-native';
+import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
 	connectionStatus: {
@@ -13,8 +11,8 @@ export default StyleSheet.create({
 	},
 	connectionText: {
 		color: Color.white,
-		fontSize: 12,
+		fontSize: Device.isIphoneX ? 14 : 12,
 		fontFamily: 'Quicksand-Bold',
-		paddingVertical: 8
+		paddingVertical: Device.isIphoneX ? 10 : 8
 	}
 });

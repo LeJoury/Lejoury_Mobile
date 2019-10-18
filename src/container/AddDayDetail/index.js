@@ -1,55 +1,62 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Easing, Animated, BackHandler, Modal, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { getItineraryDraft, updateItineraryByID, addDayToItineraryRedux } from '@actions';
+import { connect } from 'react-redux';
+import { updateDayToItineraryRedux, createActivity, getDraftActivityDetails, deleteActivityByID } from '@actions';
 
-import { Languages, Color, Styles, create_UUID, formatImages, Device } from '@common';
+import { Languages, Color, Styles, create_UUID, Constants } from '@common';
 import { Spinner, Button, ActivityHolder } from '@components';
 
 import styles from './styles';
 
+const { Action } = Constants.Action;
+
 class AddDayDetail extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			activities: [],
 			days: [],
-			date: '',
-			identifier: '',
+			publishedDate: '',
+			day: '',
+			itineraryId: '',
 			height: new Animated.Value(0)
 		};
 		this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		const { navigation } = this.props;
+		const { token } = this.props.user;
 		const { type } = navigation.state.params;
 
 		this.props.onRef(this);
 
-		if (type === 'add') {
-			const { identifier, days, startDate } = navigation.state.params;
-
-			let thisDate = moment(startDate, 'DD-MMM-YYYY').add(identifier - 1, 'd').format('DD-MMM-YYYY');
+		if (type === Action.ADD) {
+			const { day, days, publishedDate, itineraryId } = navigation.state.params;
 
 			this.setState({
-				identifier,
+				day,
 				days,
-				date: thisDate
+				itineraryId,
+				publishedDate: publishedDate
 			});
 		} else {
-			const { selectedDay, days } = navigation.state.params;
-
+			const { selectedDay, days, itineraryId } = navigation.state.params;
 			this.setState({
-				identifier: selectedDay.identifier,
+				day: selectedDay.day,
 				days,
-				date: selectedDay.date,
+				publishedDate: selectedDay.publishedDate,
+				itineraryId,
 				activities: selectedDay.activities
 			});
+
+			this.props.getDraftActivityDetails(token, itineraryId, selectedDay.day);
 		}
+
 		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
 
 		this.props.navigation.setParams({ handleGoToAddActivity: this.onNavigateToActivityDetail });
@@ -68,43 +75,35 @@ class AddDayDetail extends Component {
 	}
 
 	onSaveHandle = () => {
-		const { draftItinerary } = this.props.draft;
-		const { days, identifier, date, activities } = this.state;
+		const { days, day, publishedDate, activities } = this.state;
 
 		let newDay = {
-			identifier: identifier,
-			date: date,
+			day: day,
+			publishedDate: publishedDate,
 			activities: activities
 		};
 
-		let hasDay = days.some((day) => {
-			return day.identifier === identifier;
+		let hasDay = days.some((d) => {
+			return d.day === day;
 		});
 
 		if (hasDay) {
 			this.setState(
 				(state) => {
-					const days = state.days.map((day) => {
-						if (day.identifier === newDay.identifier) {
+					const days = state.days.map((d) => {
+						if (d.day === newDay.day) {
 							return newDay;
 						} else {
-							return day;
+							return d;
 						}
 					});
-
 					return {
 						days
 					};
 				},
 				() => {
-					let newItinerary = {
-						...draftItinerary,
-						days: this.state.days
-					};
-
-					this.props.updateItineraryByID(newItinerary);
-					this.props.addDayToItineraryRedux(this.state.days);
-					this.props.getItineraryDraft();
+					//TODO: UPDATE ITINERARY
+					this.props.updateDayToItineraryRedux(this.state.days, this.state.itineraryId);
 				}
 			);
 		} else {
@@ -113,19 +112,13 @@ class AddDayDetail extends Component {
 					days: [ ...days, newDay ]
 				},
 				() => {
-					let newItinerary = {
-						...draftItinerary,
-						days: this.state.days
-					};
-
-					this.props.updateItineraryByID(newItinerary);
-					this.props.addDayToItineraryRedux(this.state.days);
-					this.props.getItineraryDraft();
+					//TODO: UPDATE ITINERARY
+					this.props.updateDayToItineraryRedux(this.state.days, this.state.itineraryId);
 				}
 			);
 		}
 	};
-	onAddActivity = (title, location, photos, description, currency, budget, rate, type, index) => {
+	onAddActivity = async (title, location, photos, description, currency, budget, rate, type, index) => {
 		const { activities } = this.state;
 
 		let newActivity = {
@@ -138,34 +131,47 @@ class AddDayDetail extends Component {
 			rate
 		};
 
-		if (type === 'edit') {
-			this.setState(
-				(state) => {
-					const activities = state.activities.map((activity, position) => {
-						if (position === index) {
-							return newActivity;
-						} else {
-							return activity;
-						}
-					});
+		const { publishedDate, day, itineraryId } = this.state;
+		const { token } = this.props.user;
 
-					return {
-						activities
-					};
-				},
-				() => {
-					this.onSaveHandle();
+		try {
+			let response = await this.props.createActivity(newActivity, token, itineraryId, publishedDate, day);
+
+			if (response.OK) {
+				if (type === 'edit') {
+					this.setState(
+						(state) => {
+							const activities = state.activities.map((activity, position) => {
+								if (position === index) {
+									return response.newActivity;
+								} else {
+									return activity;
+								}
+							});
+
+							return {
+								activities
+							};
+						},
+						() => {
+							this.onSaveHandle();
+						}
+					);
+				} else {
+					this.setState(
+						{
+							activities: [ ...activities, response.newActivity ]
+						},
+						() => {
+							this.onSaveHandle();
+						}
+					);
 				}
-			);
-		} else {
-			this.setState(
-				{
-					activities: [ ...activities, newActivity ]
-				},
-				() => {
-					this.onSaveHandle();
-				}
-			);
+			} else {
+				//TODO: show failed to create activity
+			}
+		} catch (error) {
+			//TODO: show failed to create activity
 		}
 	};
 
@@ -176,7 +182,7 @@ class AddDayDetail extends Component {
 		let selectedActivity = activities[index];
 
 		navigation.navigate('AddActivityDetail', {
-			identifier: index + 1,
+			day: index + 1,
 			type: 'edit',
 			index,
 			selectedActivity,
@@ -189,7 +195,7 @@ class AddDayDetail extends Component {
 		const { navigation } = this.props;
 
 		navigation.navigate('AddActivityDetail', {
-			identifier: activities.length + 1,
+			day: activities.length + 1,
 			type: 'add',
 			onSaved: this.onAddActivity
 		});
@@ -199,22 +205,28 @@ class AddDayDetail extends Component {
 		Alert.alert(Languages.RemoveConfirmationActivityTitle, Languages.RemoveConfirmationActivity, [
 			{
 				text: Languages.Remove,
-				onPress: () => {
+				onPress: async () => {
 					let newActivities = this.state.activities;
-					newActivities.splice(index, 1);
+					let removedActivity = newActivities.splice(index, 1);
+					const { token } = this.props.user;
+					try {
+						let response = await this.props.deleteActivityByID(removedActivity[0].id, token);
 
-					this.setState(
-						{
-							activities: newActivities
-						},
-						() => {
-							if (this.state.activities.length > 0) {
-								this.onSaveHandle();
-							} else {
-								this.onDayRemove(false);
-							}
+						if (response.OK) {
+							this.setState(
+								{
+									activities: newActivities
+								},
+								() => {
+									if (this.state.activities.length > 0) {
+										this.onSaveHandle();
+									} else {
+										this.onDayRemove(false);
+									}
+								}
+							);
 						}
-					);
+					} catch (error) {}
 				},
 				style: 'destructive'
 			},
@@ -226,13 +238,12 @@ class AddDayDetail extends Component {
 
 	onDayRemove = (needBack = true) => {
 		const { navigation } = this.props;
-		const { identifier } = this.state;
-		const { draftItinerary } = this.props.draft;
+		const { day } = this.state;
 
 		this.setState(
 			(state) => {
-				const days = state.days.filter((day) => {
-					return day.identifier !== identifier;
+				const days = state.days.filter((d) => {
+					return d.day !== day;
 				});
 
 				return {
@@ -240,23 +251,17 @@ class AddDayDetail extends Component {
 				};
 			},
 			() => {
-				let newItinerary = {
-					...draftItinerary,
-					days: this.state.days
-				};
-
-				this.props.updateItineraryByID(newItinerary);
-				this.props.addDayToItineraryRedux(this.state.days);
-				this.props.getItineraryDraft();
+				//TODO: REMOVE DAY AND UPDATE ITINERARY
+				this.props.updateDayToItineraryRedux(this.state.days, this.state.itineraryId);
 
 				if (needBack) {
 					navigation.goBack(null);
 				}
 			}
 		);
-	}
-	onDayRemovePress = () => {
+	};
 
+	onDayRemovePress = () => {
 		Alert.alert(Languages.RemoveConfirmationDayTitle, Languages.RemoveConfirmationDay, [
 			{
 				text: Languages.Remove,
@@ -291,7 +296,7 @@ class AddDayDetail extends Component {
 	}
 
 	renderHolderAndAddButton() {
-		const { activities, identifier } = this.state;
+		const { activities, day } = this.state;
 
 		if (activities.length > 0) {
 			return (
@@ -302,7 +307,7 @@ class AddDayDetail extends Component {
 								<ActivityHolder
 									key={create_UUID()}
 									index={index}
-									identifier={identifier}
+									day={day}
 									name={activity.title}
 									photos={activity.photos}
 									description={activity.description}
@@ -318,14 +323,12 @@ class AddDayDetail extends Component {
 							</View>
 						);
 					})}
-					<View style={[ styles.buttonWrapper, { marginTop: 10 } ]} key={create_UUID()}>
+					<View style={styles.addMoreButtonWrapper} key={create_UUID()}>
 						<Button
+							disabled={false}
+							text={Languages.AddMoreActivity}
 							textStyle={styles.addActivityButtonText}
 							containerStyle={styles.addActivityButton}
-							type="gradientBorder"
-							gradientColors={[ Color.white, Color.white ]}
-							text={Languages.AddMoreActivity}
-							disabled={false}
 							onPress={this.onNavigateToActivityDetail}
 						/>
 					</View>
@@ -339,13 +342,9 @@ class AddDayDetail extends Component {
 
 		if (activities.length > 0) {
 			return (
-				// <TouchableOpacity style={styles.removeButtonContainer} onPress={this.onDayRemovePress}>
-				// 	<Text style={styles.removeTextStyle}>{Languages.Remove.toUpperCase()}</Text>
-				// </TouchableOpacity>
-
 				<View style={styles.removeButtonWrapper}>
 					<Button
-						text={Languages.Remove.toUpperCase()}
+						text={Languages.Remove}
 						textStyle={styles.removeTextStyle}
 						containerStyle={styles.removeButton}
 						onPress={this.onDayRemovePress}
@@ -359,7 +358,7 @@ class AddDayDetail extends Component {
 		const { activities } = this.state;
 
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={Styles.Common.FullFlex}>
 				<ScrollView
 					scrollEnabled={activities.length > 0}
 					bounces={true}
@@ -368,7 +367,9 @@ class AddDayDetail extends Component {
 					<View style={styles.container}>
 						<TouchableOpacity style={[ styles.dateWrapper, { marginTop: 0 } ]}>
 							<Text style={styles.titleStyle}>{Languages.Date}</Text>
-							<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>{this.state.date}</Text>
+							<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>
+								{this.state.publishedDate}
+							</Text>
 						</TouchableOpacity>
 
 						{this.renderAddActivityView()}
@@ -382,11 +383,13 @@ class AddDayDetail extends Component {
 	}
 }
 
-const mapStateToProps = ({ netInfo, draft }) => ({
-	netInfo,
-	draft
+const mapStateToProps = ({ user }) => ({
+	user
 });
 
-export default connect(mapStateToProps, { getItineraryDraft, updateItineraryByID, addDayToItineraryRedux })(
-	AddDayDetail
-);
+export default connect(mapStateToProps, {
+	updateDayToItineraryRedux,
+	createActivity,
+	getDraftActivityDetails,
+	deleteActivityByID
+})(AddDayDetail);

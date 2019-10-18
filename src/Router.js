@@ -1,9 +1,9 @@
 import React from 'react';
 import { Animated, View } from 'react-native';
 
-import { NoInternetNotice } from '@components';
-
 import Navigation from './navigation';
+
+import { Styles } from '@common';
 
 class Router extends React.PureComponent {
 	constructor(props) {
@@ -17,16 +17,15 @@ class Router extends React.PureComponent {
 	goToScreen = (routeName, params) => {
 		const { navigator } = this.refs;
 		if (!navigator) {
-			return toast('Cannot navigate');
+			return;
 		}
 		navigator.dispatch({ type: 'Navigation/NAVIGATE', routeName, params });
 	};
 
 	render() {
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={Styles.Common.FullFlex}>
 				<Navigation ref={'navigator'} />
-				<NoInternetNotice />
 			</View>
 		);
 	}

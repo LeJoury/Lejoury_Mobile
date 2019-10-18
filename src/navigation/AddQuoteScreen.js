@@ -1,23 +1,28 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
+
 import { Back, Title } from './IconNav';
 
 import { AddQuote } from '@container';
 
-import { Color, Languages } from '@common';
+import { NoInternetNotice } from '@components';
+import { Color, Styles } from '@common';
 
-class AddQuoteSreen extends Component {
+class AddQuoteSreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
-		headerTitle: Title(navigation.state.params.itineraryName, Color.headerTitleColor)
+		headerTitle: Title(navigation.state.params.title, Color.headerTitleColor)
 	});
 
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
 	render() {
-		return <AddQuote navigation={this.props.container} />;
+		const { navigation } = this.props;
+
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<AddQuote navigation={navigation} />
+				<NoInternetNotice />
+			</View>
+		);
 	}
 }
 export default AddQuoteSreen;

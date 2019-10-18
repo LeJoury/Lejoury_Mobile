@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import { Alert, AlertIOS, Platform } from 'react-native';
+import React, { PureComponent } from 'react';
 
 import { Back, Title, Add } from './IconNav';
 
 import { AddDayDetail } from '@container';
 import { Color, Languages } from '@common';
 
-class AddDayDetailScreen extends Component {
+class AddDayDetailScreen extends PureComponent {
 	//constructor(props) {
 	//super (props)
 	//}
@@ -15,7 +14,7 @@ class AddDayDetailScreen extends Component {
 
 		return {
 			headerLeft: Back(navigation, Color.primary),
-			headerTitle: Title(Languages.Day + ' ' + navigation.state.params.identifier, Color.headerTitleColor),
+			headerTitle: Title(Languages.Day + ' ' + navigation.state.params.day, Color.headerTitleColor),
 			headerRight: Add(navigation, Color.primary, params.handleAddActivity)
 		};
 	};

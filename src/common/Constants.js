@@ -1,72 +1,126 @@
 let Constants = {};
 
+Constants.Action = {
+	Action: {
+		ADD: 'ADD',
+		EDIT: 'EDIT',
+		REMOVE: 'REMOVE',
+		UPDATE: 'UPDATE'
+	}
+};
+
 Constants.Actions = {
 	Types: {
 		UPDATE_CONNECTION_STATUS: 'UPDATE_CONNECTION_STATUS',
 		LOGOUT: 'LOGOUT',
-		LOGIN: 'LOGIN',
 		LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-		LOGIN_FAIL: 'LOGIN_FAIL',
-		TOKEN_RESET: 'TOKEN_RESET',
-		TOKEN_NAME_RESET: 'TOKEN_NAME_RESET',
-		TOKEN_REFRESH: 'TOKEN_REFRESH',
 		TOKEN_REFRESH_SUCCESS: 'TOKEN_REFRESH_SUCCESS',
-		TOKEN_REFRESH_FAIL: 'TOKEN_REFRESH_FAIL',
-		DISMISS_LOGIN_DIALOG: 'DISMISS_LOGIN_DIALOG',
-		GET_PROFILE: 'GET_PROFILE',
-		GET_PROFILE_SUCCESS: 'GET_PROFILE_SUCCESS',
-		GET_PROFILE_FAIL: 'GET_PROFILE_FAIL',
-		GET_PAYSLIPS: 'GET_PAYSLIPS',
-		GET_PAYSLIPS_SUCCESS: 'GET_PAYSLIPS_SUCCESS',
-		GET_PAYSLIPS_FAIL: 'GET_PAYSLIPS_FAIL',
-		SET_SEARCH: 'SET_SEARCH',
-		GETTING_DRAFT: 'GETTING_DRAFT',
-		GET_ITINERARY_SUCCESS: 'GET_ITINERARY_SUCCESS',
-		GET_ITINERARY_FAILED: 'GET_ITINERARY_FAILED',
-		ADD_ITINERARY_TO_REDUX: 'ADD_ITINERARY_TO_REDUX',
-		ADD_DAY_TO_REDUX: 'ADD_DAY_TO_REDUX'
+		ADD_ITINERARIES: 'ADD_ITINERARIES',
+		ADD_UPDATE_ITINERARY: 'ADD_UPDATE_ITINERARY',
+		ADD_UPDATE_DAY: 'ADD_UPDATE_DAY',
+		DELETE_UPDATE_ITINERARY: 'DELETE_UPDATE_ITINERARY'
 	}
 };
 
 Constants.URL = {
 	URL: {
-		MAIN: 'http://13.229.70.227:5002',
+		MAIN: 'http://103.75.190.53:8083',
 		HERE_API: 'https://places.cit.api.here.com/places/v1/autosuggest?', //not using
 		HERE_PLACE_URL: 'http://autocomplete.geocoder.api.here.com/6.2/suggest.json?', //not using
 		GOOGLE_PLACE_URL: 'https://maps.googleapis.com/maps/api/place/autocomplete/json?',
 		GOOGLE_PLACE_DETAILS_URL: 'https://maps.googleapis.com/maps/api/place/details/json?',
 		URL_AUTH: 'auth',
-		URL_TOKEN: 'token',
-		URL_REFRESH_TOKEN: 'token-refresh',
-		URL_ACCOUNT: 'account',
-		URL_CHANGE_USERNAME: 'change-username',
-		URL_RESET_PASSWORD: 'reset-password',
-		URL_MY_PROFILE: 'my-profile',
-		URL_PAYROLL: 'payroll'
+		URL_LOGIN: 'login',
+		URL_REFRESH_TOKEN: 'refresh-token',
+		URL_REGISTER: 'register',
+		URL_ITINERARY: 'itineraries',
+		URL_ACTIVITY: 'activities',
+		URL_UPLOAD_COVER_PHOTO: 'upload-thumbnail',
+		URL_UPLOAD_PHOTO: 'upload-photo',
+		URL_PUBLISH: 'publish',
+		URL_BY_PUBLISHER: 'by-author',
+		URL_SOCIAL_LOGIN: 'social-login'
 	}
 };
 
 Constants.STATUS = {
 	STATUS: {
-		OK: 'OK'
+		OK: 'OK',
+		SUCCESS: 200
 	}
 };
 
 Constants.PARAMS = {
-	PARAMS: {
+	BASIC_PARAMS: {
+		PLATFORM: 'platform',
+		APP_VERSION: 'appVersion',
+		DEVICE_TOKEN: 'deviceToken'
+	},
+	GOOGLE_API_PARAMS: {
 		PLACE_ID: 'place_id',
 		API_KEY: 'key',
 		FIELDS: 'fields',
 		INPUT: 'input'
 	},
-	FIELDS_NAME: {
+	GOOGLE_API_FIELDS_NAME: {
 		NAME: 'name',
 		COMPONENT: 'address_component',
 		ADDRESS: 'formatted_address',
 		GEOMETRY: 'geometry',
 		TYPE: 'type',
 		URL: 'url'
+	},
+	PARAMS_AUTH: {
+		SOCIAL_ID: 'socialId',
+		EMAIL_ADDRESS: 'email',
+		PASSWORD: 'password',
+		LOGIN_TYPE: 'loginType',
+		USERNAME: 'username',
+		FACEBOOK_ID: 'facebookId',
+		GOOGLE_ID: 'googleId',
+		PHOTO_URL: 'photoUrl'
+	},
+	PARAMS_ITINERARY: {
+		ITINERARY_ID: 'itineraryId',
+		USER_ID: 'userId',
+		TITLE: 'title',
+		DESTINATION: 'destination',
+		QUOTE: 'quote',
+		TOTAL_DAYS: 'totalDays',
+		START_DATE: 'startDate',
+		END_DATE: 'endDate',
+		PUBLISH_STATUS: 'status'
+	},
+	PARAMS_DAY: {
+		IDENTIFIER: 'identifier',
+		DATE: 'date',
+		DAY: 'day'
+	},
+	PARAMS_ACTIVITY: {
+		TITLE: 'title',
+		DESCRIPTION: 'description',
+		PHOTOS: 'photos',
+		BUDGET: 'budget',
+		CURRENCY: 'currency',
+		RATE: 'rating',
+		LOCATION: 'location'
+	},
+	PARAMS_LOCATION: {
+		STATE: 'state',
+		COUNTRY: 'country',
+		POSTCODE: 'postcode',
+		LATITUDE: 'latitude',
+		LONGITUDE: 'longitude',
+		NAME: 'name',
+		TYPES: 'types',
+		LOCATION_URL: 'url'
 	}
+};
+
+Constants.VERSION = {
+	AUTH_API_VERSION: 'v1',
+	ITINERARY_API_VERSION: 'v1',
+	ACTIVITY_API_VERSION: 'v1'
 };
 
 Constants.Spinner = {

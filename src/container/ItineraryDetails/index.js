@@ -6,14 +6,12 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 import { CircleBack, ViewImages } from '../../navigation/IconNav';
 
-import { DraftItinerary } from '@container';
 import { Styles, Languages, Color, Device, Constants } from '@common';
 import { TravellerInfoHolder, Timeline, Spinner } from '@components';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
-const STICKY_HEADER_HEIGHT = Device.isIphoneX ? 90 : 70;
 const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 450 : 350;
 const backTop = Device.isIphoneX ? 35 : 20;
 const { Mode, Sizes } = Constants.Spinner;
@@ -62,7 +60,7 @@ class ItineraryDetails extends Component {
 
 		navigation.navigate('ViewImages', {
 			images: images,
-			itineraryName: itinerary.itineraryName
+			title: itinerary.title
 		});
 	};
 
@@ -150,7 +148,7 @@ class ItineraryDetails extends Component {
 		});
 
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={Styles.Common.FullFlex}>
 				<View style={{ position: 'absolute', top: 0 }}>{this.renderLoading()}</View>
 				<ParallaxScrollView
 					style={styles.scrollViewContainer}
