@@ -3,11 +3,12 @@ import { View, Text, ScrollView, ImageBackground, Image } from 'react-native';
 // import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import { NavigationActions } from 'react-navigation';
 
-import { ItineraryList, MemoryList, PictureList } from '@container';
-import { UserProfileHeader, UserProfileItem, ProfileCenterItem } from '@components';
-import { Images, Languages, toCapitalized, Color, Constants } from '@common';
-
 import { connect } from 'react-redux';
+import { getProfile, getFollowers, getFollowing } from '@actions';
+
+import { ProfileItineraryList, MemoryList, PictureList } from '@container';
+import { UserProfileHeader } from '@components';
+import { Images, Languages, Color, Constants } from '@common';
 
 import styles from './styles';
 
@@ -16,35 +17,28 @@ class Profile extends Component {
 	//super (props)
 	//}
 
-	componentDidMount() {}
+	componentDidMount = async () => {
+		const { userId, token } = this.props.user;
+		try {
+			let followersResponse = await this.props.getFollowers(token);
+			let followingResponse = await this.props.getFollowing(token);
 
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
-
-	_getName = (user) => {
-		if (user != null) {
-			if (typeof user.last_name != 'undefined' || typeof user.first_name != 'undefined') {
-				let first = user.first_name != null ? user.first_name : '';
-				let last = user.last_name != null ? user.last_name : '';
-				return first + ' ' + last;
-			} else if (typeof user.username != 'undefined' && user.username != null) {
-				return toCapitalized(user.username);
-			} else {
-				return 'Guest';
-			}
-		}
-		return 'Guest';
+			Promise.all([ followersResponse, followingResponse ]).then((values) => {
+				// console.log(values);
+				// console.log(values);
+			});
+		} catch (error) {}
+		// console.log(this.props.profile);
 	};
 
 	navigateToFollowers = () => {
-		const { user } = this.props;
+		const { profile } = this.props;
 
 		this.props.navigation.dispatch(
 			NavigationActions.navigate({
-				routeName: 'TravellerListScreen',
+				routeName: 'ProfileFollower',
 				params: {
-					username: user.username
+					username: profile.username
 				},
 				action: NavigationActions.navigate({ routeName: 'Followers' })
 			})
@@ -52,13 +46,13 @@ class Profile extends Component {
 	};
 
 	navigateToFollowing = () => {
-		const { user } = this.props;
+		const { profile } = this.props;
 
 		this.props.navigation.dispatch(
 			NavigationActions.navigate({
-				routeName: 'TravellerListScreen',
+				routeName: 'ProfileFollowing',
 				params: {
-					username: user.username
+					username: profile.username
 				},
 				action: NavigationActions.navigate({ routeName: 'Following' })
 			})
@@ -68,23 +62,21 @@ class Profile extends Component {
 	navigateToItineraries = () => {};
 
 	onEditProfilePress = () => {
-		const { user } = this.props;
+		const { profile } = this.props;
 
-		this.props.navigation.navigate('EditProfileScreen', { user });
+		this.props.navigation.navigate('EditProfile', { profile });
 	};
 
 	render() {
-		const { user, isMe, navigation } = this.props;
+		const { profile, navigation } = this.props;
 
-		const itineraries = [];
-
-		const name = this._getName(user);
+		const { itineraries } = this.props.profile;
 
 		return (
 			<ScrollView ref="scrollView" contentContainerStyle={styles.container}>
 				<UserProfileHeader
-					user={user}
-					isMe={isMe}
+					user={profile}
+					isMe={true}
 					onEditProfilePress={this.onEditProfilePress}
 					onViewFollowersPress={this.navigateToFollowers}
 					onViewFollowingPress={this.navigateToFollowing}
@@ -95,9 +87,9 @@ class Profile extends Component {
 					<View>
 						<View style={styles.sectionContainer}>
 							<Text style={styles.sectionTitle}>{Languages.Collections}</Text>
-							<ItineraryList
+							<ProfileItineraryList
 								itineraries={itineraries}
-								user={user}
+								user={profile}
 								navigation={navigation}
 								type={'carousel'}
 							/>
@@ -107,7 +99,8 @@ class Profile extends Component {
 					<View style={styles.noItinerariesContainer}>
 						<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
 						<Text style={styles.noItinerariesText}>
-							{name} {Languages.NoItineraries}
+							{profile.username}
+							{Languages.NoItineraries}
 						</Text>
 					</View>
 				)}
@@ -115,4 +108,10 @@ class Profile extends Component {
 		);
 	}
 }
-export default Profile;
+
+const mapStateToProps = ({ user, profile }) => ({
+	user,
+	profile
+});
+
+export default connect(mapStateToProps, { getProfile, getFollowers, getFollowing })(Profile);

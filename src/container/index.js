@@ -55,6 +55,12 @@ export const ViewImages = _ViewImages;
 import _Traveller from './Traveller';
 export const Traveller = _Traveller;
 
+import _Follower from './Follower';
+export const Follower = _Follower;
+
+import _Following from './Following';
+export const Following = _Following;
+
 import _EditProfile from './EditProfile';
 export const EditProfile = _EditProfile;
 
@@ -69,3 +75,9 @@ export const Search = _Search;
 
 import _AddQuote from './AddQuote';
 export const AddQuote = _AddQuote;
+
+import _TravellerProfile from './TravellerProfile';
+export const TravellerProfile = _TravellerProfile;
+
+import _ProfileItineraryList from './ProfileItineraryList';
+export const ProfileItineraryList = _ProfileItineraryList;

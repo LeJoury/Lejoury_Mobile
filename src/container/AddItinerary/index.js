@@ -12,8 +12,8 @@ import { Spinner, Button } from '@components';
 
 import styles from './styles';
 
-const { width, height } = Dimensions.get('window');
 const { Action } = Constants.Action;
+const { Mode } = Constants.Spinner;
 
 const MONTHS = getMonths();
 
@@ -27,36 +27,18 @@ class AddItinerary extends Component {
 			title: '',
 			isJourneyInputFocus: false,
 			greetingTitle: Languages.PastJourneyDesc,
-			backgroundAnim: new Animated.Value(0)
+			backgroundAnim: new Animated.Value(0),
+			isLoading: false
 		};
 
 		this.onDateChange = this.onDateChange.bind(this);
 	}
 
-	componentDidMount() {}
-
-	componentDidUpdate() {}
-
-	componentWillUnmount() {}
-
-	getTotalDays() {
-		const { selectedStartDate, selectedEndDate } = this.state;
-
-		if (selectedEndDate === null) {
-			return;
-		}
-
-		const dateFrom = new Date(selectedStartDate);
-		const dateTo = new Date(selectedEndDate);
-
-		return calculateDays(dateFrom, dateTo);
-	}
-
 	onNextPressHandle = () => {
 		const { selectedStartDate, selectedEndDate, title } = this.state;
 
-		const startDate = moment(selectedStartDate).format('DD-MMM-YYYY');
-		const endDate = moment(selectedEndDate).format('DD-MMM-YYYY');
+		const startDate = moment(new Date(selectedStartDate)).format('DD-MMM-YYYY');
+		const endDate = moment(new Date(selectedEndDate)).format('DD-MMM-YYYY');
 		const { token, userId } = this.props.user;
 
 		let newItinerary = {
@@ -68,17 +50,23 @@ class AddItinerary extends Component {
 		this.props
 			.createItinerary(newItinerary, token, userId)
 			.then((response) => {
-				if (response.OK) {
-					this.props.navigation.navigate('AddItineraryDetail', {
-						draftItinerary: newItinerary,
-						itineraryId: response.itineraryId,
-						action: Action.ADD
-					});
-				} else {
-					// TODO: SELF-DEFINED ERROR
-				}
+				setTimeout(() => {
+					this.setState({ isLoading: false });
+
+					if (response.OK) {
+						this.props.navigation.navigate('AddItineraryDetail', {
+							draftItinerary: newItinerary,
+							itineraryId: response.itineraryId,
+							action: Action.ADD
+						});
+					} else {
+						// TODO: SELF-DEFINED ERROR
+					}
+				}, 1000);
 			})
 			.catch((error) => {
+				this.setState({ isLoading: false });
+
 				//TODO: show fail system fail message
 				console.log('CREATING IN SERVER', error);
 			});
@@ -112,22 +100,6 @@ class AddItinerary extends Component {
 		}
 	}
 
-	renderTotalDays() {
-		const days = this.getTotalDays();
-
-		if (days > 0) {
-			return (
-				<View style={styles.rowWrapper}>
-					<Text style={styles.noOfDaysTextStyle}>
-						{Languages.TotalDays} : {days}
-					</Text>
-				</View>
-			);
-		}
-
-		return null;
-	}
-
 	renderNextButton() {
 		const { selectedStartDate, selectedEndDate, title } = this.state;
 
@@ -153,10 +125,20 @@ class AddItinerary extends Component {
 					text={Languages.Next}
 					textStyle={styles.nextButtonTextStyle}
 					containerStyle={styles.nextButton}
-					onPress={this.onNextPressHandle}
+					onPress={() => this.setState({ isLoading: true }, () => this.onNextPressHandle())}
 				/>
 			</Animated.View>
 		);
+	}
+
+	renderLoading() {
+		const { isLoading } = this.state;
+
+		if (!isLoading) {
+			return;
+		}
+
+		return <Spinner mode={Mode.createItinerary} />;
 	}
 
 	render() {
@@ -214,6 +196,7 @@ class AddItinerary extends Component {
 							</View>
 						</View>
 					</ScrollView>
+					{this.renderLoading()}
 				</KeyboardAwareScrollView>
 				{this.renderNextButton()}
 			</View>

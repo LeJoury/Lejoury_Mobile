@@ -1,34 +1,31 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
-
 import { Settings, Title } from './IconNav';
+
+import { connect } from 'react-redux';
 
 import { Profile } from '@container';
 
-import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
-const user = {
-	userId: '622dcef6-2e6e-4009-b810-6f39b557c79d',
-	name: 'Leanne Graham',
-	username: 'Bret',
-	emailAddress: 'Sincere@april.biz',
-	bio: 'Travellers, photographers, storytellers, and dreamers.',
-	gender: 'male',
-	followers: 100,
-	following: 50,
-	countries: 8,
-	itineraries: 8
-};
+const KEY_USERNAME = 'USERNAME';
 
 class ProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(user.username, Color.headerTitleColor),
+		headerTitle: Title(navigation.getParam(KEY_USERNAME), Color.headerTitleColor),
 		headerRight: Settings(navigation, Color.lightGrey3)
 	});
 
+	componentWillMount() {
+		this.props.navigation.setParams({ [KEY_USERNAME]: this.props.user.username });
+	}
+
 	render() {
-		return <Profile navigation={this.props.navigation} user={user} isMe={true} />;
+		return <Profile navigation={this.props.navigation}/>;
 	}
 }
-export default ProfileScreen;
+
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, null)(ProfileScreen);

@@ -5,16 +5,17 @@ import { SearchBar } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 
-import { getDraftItineraries } from '@actions';
+import { getDraftItineraries, getProfile, getPublishedItineraries, getTravellers, getCountryList } from '@actions';
 
-import { ItineraryHolder, CountryHolder, TravellerHolder, Section } from '@components';
+import { ItineraryHolder, CountryHolder, TravellerHolder, Section, Spinner } from '@components';
 import { Search } from '@container';
-import { Images, Languages, Device, Color, Styles } from '@common';
+import { Images, Languages, Device, Color, Styles, Constants } from '@common';
 import { Bugsnag } from '@services';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
+const { Mode, Sizes } = Constants.Spinner;
 
 const countries = [
 	{
@@ -496,53 +497,6 @@ const itineraries = [
 	}
 ];
 
-const travellers = [
-	{
-		travellerID: 'traveller_1',
-		travellerName: 'Tina',
-		thumbnails: 'https://randomuser.me/api/portraits/women/59.jpg'
-	},
-	{
-		travellerID: 'traveller_2',
-		travellerName: 'Bryan',
-		thumbnails: 'https://randomuser.me/api/portraits/men/60.jpg'
-	},
-	{
-		travellerID: 'traveller_3',
-		travellerName: 'Xiao Li',
-		thumbnails: 'https://randomuser.me/api/portraits/women/60.jpg'
-	},
-	{
-		travellerID: 'traveller_4',
-		travellerName: 'Bond',
-		thumbnails: 'https://randomuser.me/api/portraits/men/10.jpg'
-	},
-	{
-		travellerID: 'traveller_5',
-		travellerName: 'Zac',
-		thumbnails: 'https://randomuser.me/api/portraits/men/2.jpg'
-	},
-	{
-		travellerID: 'traveller_6',
-		travellerName: 'Janice',
-		thumbnails: 'https://randomuser.me/api/portraits/women/10.jpg'
-	}
-];
-
-const thisUser = {
-	userId: '622dcef6-2e6e-4009-b810-6f39b557c79d',
-	name: 'Leanne Graham',
-	username: 'Bret',
-	userProfilePicture: 'https://randomuser.me/api/portraits/women/57.jpg',
-	emailAddress: 'Sincere@april.biz',
-	bio: 'Travellers, photographers, storytellers, and dreamers.',
-	gender: 'male',
-	followers: 100,
-	following: 50,
-	countries: 8,
-	itineraries: 8
-};
-
 class Home extends Component {
 	constructor(props) {
 		super(props);
@@ -551,19 +505,45 @@ class Home extends Component {
 			searchWidth: new Animated.Value(width - 18),
 			showCancel: false,
 			searchViewOpacity: new Animated.Value(0),
-			showSearchView: false
+			showSearchView: false,
+			isLoading: false
 		};
 	}
 	_keyExtractor_Itinerary = (item) => item.itineraryId.toString();
 
 	_keyExtractor_Country = (item) => item.countryID.toString();
 
-	_keyExtractor_Traveller = (item) => item.travellerID.toString();
+	_keyExtractor_Traveller = (item) => item.userId.toString();
 
-	componentDidMount() {
+	componentDidMount = async () => {
 		const { token, userId } = this.props.user;
-		this.props.getDraftItineraries(token, userId);
-	}
+
+		this.setState({ isLoading: true });
+
+		try {
+			let draftResponse = await this.props.getDraftItineraries(token, userId);
+
+			let profileResponse = await this.props.getProfile(userId, token);
+
+			let homeResponse = await this.props.getPublishedItineraries(token, userId);
+
+			let travellerResponse = await this.props.getTravellers(token, 1);
+
+			let countryResponse = await this.props.getCountryList(token);
+
+			Promise.all([
+				draftResponse,
+				profileResponse,
+				homeResponse,
+				travellerResponse,
+				countryResponse
+			]).then((values) => {
+				// console.log(values);
+				this.setState({ isLoading: false });
+				// console.log(this.props);
+			});
+		} catch (error) {}
+	};
 
 	componentDidUpdate() {}
 
@@ -640,6 +620,10 @@ class Home extends Component {
 		});
 	};
 
+	navigateToTravellerList = () => {
+		this.props.navigation.navigate('TravellerList');
+	};
+
 	renderFamousPlaces = ({ item }) => (
 		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressFamous(item)} type="main" />
 	);
@@ -649,12 +633,7 @@ class Home extends Component {
 	);
 
 	renderTraveller = ({ item }) => (
-		<TravellerHolder
-			traveller={item}
-			key={item.travellerID}
-			onPress={() => this.onPressTraveller(item)}
-			type="main"
-		/>
+		<TravellerHolder traveller={item} key={item.userId} onPress={() => this.onPressTraveller(item)} type="main" />
 	);
 
 	renderSearchBar = () => {
@@ -703,7 +682,7 @@ class Home extends Component {
 						{Languages.Destination}
 					</Text>
 					<Text style={[ styles.smallSectionTitle, { marginTop: 8 } ]}>
-						{Languages.Hello}, {thisUser.username}
+						{Languages.Hello}, {this.props.user.username}
 					</Text>
 					<Text style={[ styles.smallSectionTitle, { marginTop: 4 } ]}>
 						{Languages.WhereWouldYouLikeToExplore}
@@ -723,7 +702,7 @@ class Home extends Component {
 					containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
 					isHorizontalList={true}
 					showHorizontalIndicator={false}
-					data={travellers}
+					data={this.props.traveller.travellers}
 					keyExtractor={this._keyExtractor_Traveller}
 					renderHolder={this.renderTraveller}
 					flatListStyle={{ paddingLeft: 10 }}
@@ -732,7 +711,7 @@ class Home extends Component {
 						<View style={{ flex: 2 }}>
 							<Text style={styles.sectionTitle}>{Languages.TopTraveller}</Text>
 						</View>
-						<TouchableOpacity style={styles.seeMoreContainer}>
+						<TouchableOpacity style={styles.seeMoreContainer} onPress={this.navigateToTravellerList}>
 							<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
 						</TouchableOpacity>
 					</View>
@@ -740,6 +719,15 @@ class Home extends Component {
 			</ScrollView>
 		);
 	}
+
+	renderLoading = () => {
+		const { isLoading } = this.state;
+
+		if (!isLoading) {
+			return;
+		}
+		return <Spinner mode={Mode.overlay} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
+	};
 
 	render() {
 		const { searchViewOpacity, showSearchView } = this.state;
@@ -777,14 +765,23 @@ class Home extends Component {
 						<Search navigation={this.props.navigation} />
 					</Animated.View>
 				)}
+				{this.renderLoading()}
 			</View>
 		);
 	}
 }
 
-const mapStateToProps = ({ draft, user }) => ({
+const mapStateToProps = ({ draft, user, profile, traveller }) => ({
 	draft,
-	user
+	user,
+	profile,
+	traveller
 });
 
-export default connect(mapStateToProps, { getDraftItineraries })(Home);
+export default connect(mapStateToProps, {
+	getDraftItineraries,
+	getProfile,
+	getPublishedItineraries,
+	getTravellers,
+	getCountryList
+})(Home);

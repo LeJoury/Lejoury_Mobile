@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { StatusBar, SafeAreaView, View } from 'react-native';
 
-import { Back, Title } from './IconNav';
+import { connect } from 'react-redux';
+import { getItineraryById } from '@actions';
 
 import { ItineraryDetails } from '@container';
 
@@ -17,14 +18,19 @@ class ItineraryDetailsScreen extends PureComponent {
 
 	render() {
 		const { navigation } = this.props;
-		const itinerary = navigation.getParam('itinerary');
+		const { itinerary } =  this.props.navigation.state.params;
 
 		return (
 			<View style={Styles.Common.FullFlex}>
-				<ItineraryDetails navigation={this.props.navigation} itinerary={itinerary} />
+				<ItineraryDetails navigation={navigation} itinerary={itinerary} />
 				<NoInternetNotice />
 			</View>
 		);
 	}
 }
-export default ItineraryDetailsScreen;
+
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, { getItineraryById })(ItineraryDetailsScreen);

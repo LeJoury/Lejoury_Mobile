@@ -5,13 +5,18 @@ import {
 	CREATE_ACTIVITY,
 	DELETE_ITINERARY_BY_ID,
 	DELETE_ACTIVITY_BY_ID,
+	DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID,
 	UPDATE_ITINERARY_BY_ID,
 	PUBLISH_ITINERARY_BY_ID,
 	UPLOAD_COVER_PHOTO,
 	UPLOAD_ACTIVITY_PHOTOS,
+	UPDATE_ACTIVITY,
 	GET_DRAFT_ITINERARY_DETAILS,
 	GET_DRAFT_ITINERARIES,
-	GET_DRAFT_ACTIVITY_DETAILS
+	GET_DRAFT_ACTIVITY_DETAILS,
+	GET_PUBLISHED_ITINERARIES,
+	GET_COUNTRIES,
+	GET_PUBLISHED_ITINERARY_DETAILS
 } from '@services';
 
 const { STATUS } = Constants.STATUS;
@@ -52,13 +57,11 @@ const createItinerary = (itinerary, token, userId) => async (dispatch) => {
 
 // ----------------------------------- update itinerary by id ----------------------------------- //
 const updateItineraryByID = (itineraryId, itinerary, token, userId) => async (dispatch) => {
-	console.log(itinerary);
 	return new Promise((resolve, reject) => {
 		UPDATE_ITINERARY_BY_ID(itineraryId, itinerary, token, userId)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
-					console.log(response);
 
 					// dispatch({
 					// 	type: Types.ADD_UPDATE_ITINERARY,
@@ -128,12 +131,33 @@ const deleteActivityByID = (activityId, token) => async (dispatch) => {
 	});
 };
 
+// ----------------------------------- get itinerary by id ----------------------------------- //
+const getItineraryById = (token, itineraryId) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_PUBLISHED_ITINERARY_DETAILS(token, itineraryId)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true, itinerary: result.data };
+
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
 // ----------------------------------- publish itinerary by id ----------------------------------- //
 const publishItineraryByID = (itineraryId, token) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		PUBLISH_ITINERARY_BY_ID(itineraryId, token)
 			.then((result) => {
-				console.log(result);
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
 
@@ -181,14 +205,15 @@ const createActivity = (activity, token, itineraryId, date, identifier) => async
 				if (result.statusCode === STATUS.SUCCESS) {
 					UPLOAD_ACTIVITY_PHOTOS(result.data.id, token, activity.photos)
 						.then((photo_result) => {
-							let createdActivity = { ...activity, id: result.data.id };
+							let createdActivity = { ...activity, id: result.data.id, photos: photo_result.data};
 							let response = { OK: true, newActivity: createdActivity };
 
+							// console.log(response);
 							resolve(response);
 						})
 						.catch((photo_error) => {
 							// TODO: reupload
-							// console.log(photo_error);
+							console.log(photo_error);
 						});
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -205,7 +230,65 @@ const createActivity = (activity, token, itineraryId, date, identifier) => async
 	});
 };
 
-// ----------------------------------- TODO: get itinerary details ----------------------------------- //
+// ----------------------------------- create activity ----------------------------------- //
+const updateActivity = (activityId, activity, token, itineraryId, date, identifier) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		UPDATE_ACTIVITY(activityId, activity, token, itineraryId, date, identifier)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					UPLOAD_ACTIVITY_PHOTOS(activityId, token, activity.photos)
+						.then((photo_result) => {
+							let createdActivity = { ...activity, id: activityId, photos: photo_result.data};
+							let response = { OK: true, newActivity: createdActivity };
+
+							// console.log(response);
+							resolve(response);
+						})
+						.catch((photo_error) => {
+							// TODO: reupload
+							console.log(photo_error);
+						});
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				// TODO: return system error message
+				console.log(error);
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- delete photos ----------------------------------- //
+const deleteActivityPhoto = (photoId, token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID(photoId, token)
+			.then((result) => {
+				console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
+
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				// TODO: return system error message
+				console.log(error);
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get draft itineraries ----------------------------------- //
 const getDraftItineraries = (token, userId) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_DRAFT_ITINERARIES(token, userId)
@@ -233,12 +316,11 @@ const getDraftItineraries = (token, userId) => async (dispatch) => {
 	});
 };
 
-// ----------------------------------- get itinerary details ----------------------------------- //
+// ----------------------------------- get draft itinerary details ----------------------------------- //
 const getDraftItineraryDetails = (token, itineraryId) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_DRAFT_ITINERARY_DETAILS(token, itineraryId)
 			.then((result) => {
-				console.log(result);
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true, token: result.token };
 					resolve(response);
@@ -255,7 +337,7 @@ const getDraftItineraryDetails = (token, itineraryId) => async (dispatch) => {
 	});
 };
 
-// ----------------------------------- GET activity ----------------------------------- //
+// ----------------------------------- get draft activity ----------------------------------- //
 const getDraftActivityDetails = (token, itineraryId, day) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_DRAFT_ACTIVITY_DETAILS(token, itineraryId, day)
@@ -277,15 +359,79 @@ const getDraftActivityDetails = (token, itineraryId, day) => async (dispatch) =>
 	});
 };
 
+// ----------------------------------- get published itinerary ----------------------------------- //
+const getPublishedItineraries = (token, userId, isMe = true) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_PUBLISHED_ITINERARIES(token, userId)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					if (isMe) {
+						let response = { OK: true };
+						const { content } = result.data;
+						dispatch({
+							type: Types.SETUP_PUBLISHED_ITINERARIES,
+							payload: content
+						});
+
+						resolve(response);
+					} else {
+						const { content } = result.data;
+
+						// console.log(content);
+
+						let response = { OK: true, itineraries: content };
+						resolve(response);
+					}
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get country list ----------------------------------- //
+const getCountryList = (token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_COUNTRIES(token)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { content } = result.data;
+
+					let response = { OK: true, countries: content };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
 export {
 	createItinerary,
 	createActivity,
 	deleteItineraryByID,
 	deleteActivityByID,
+	deleteActivityPhoto,
 	updateItineraryByID,
 	uploadCoverPhoto,
+	updateActivity,
+	publishItineraryByID,
 	getDraftItineraryDetails,
 	getDraftActivityDetails,
 	getDraftItineraries,
-	publishItineraryByID
+	getPublishedItineraries,
+	getCountryList,
+	getItineraryById
 };

@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { reducer as NetInfoReducer } from './NetInfoRedux';
 import { reducer as AuthReducer } from './AuthRedux';
 import { reducer as DraftReducer } from './DraftRedux';
+import { reducer as ProfileReducer } from './ProfileRedux';
+import { reducer as TravellerRedux } from './TravellerRedux';
 
 const saveSubsetFilter = createFilter('user', [ 'username', 'userId', 'token' ]);
 
@@ -26,5 +28,7 @@ const config = {
 export default persistCombineReducers(config, {
 	netInfo: NetInfoReducer,
 	user: AuthReducer,
-	draft: DraftReducer
+	draft: DraftReducer,
+	profile: ProfileReducer,
+	traveller: TravellerRedux
 });

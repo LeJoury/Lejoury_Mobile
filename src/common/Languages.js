@@ -119,7 +119,7 @@ export default {
 	Details: 'Details',
 
 	//filter panel
-	Loading: 'LOADING...',
+	Loading: 'Loading...',
 	welcomeBack: 'Welcome back! ',
 	seeMore: 'See More',
 
@@ -149,6 +149,7 @@ export default {
 	Username: 'Username',
 	Bio: 'Bio',
 	NoItineraries: ' has no itineraries yet.',
+	AddBio: 'Add Bio',
 
 	//Crop Image
 	MoveScale: 'Move and Scale',
@@ -265,7 +266,7 @@ export default {
 	CoverPhotoNeededMessage: 'Please upload a cover photo for your beloved itinerary thumbnail ',
 	SuccessfullyPublishedTitle: 'Congratulation !',
 	SuccessfullyPublishedMessage: 'You have successfully published your itinerary !',
-	
+
 	// Add Itinerary
 	TotalDays: 'Total Days',
 	SelectDate: 'Select Date',
@@ -305,5 +306,11 @@ export default {
 
 	//Activity Detail
 	Bookmark: 'Bookmark',
-	ReadMore: 'Read More'
+	ReadMore: 'Read More',
+
+	//Itinerary Detail
+	ViewImage: 'View',
+
+	//Traveller
+	AreYouSureToUnfollow: 'Are you sure you want to unfollow '
 };

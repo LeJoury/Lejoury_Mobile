@@ -25,7 +25,7 @@ class ItineraryList extends Component {
 	//super (props)
 	//}
 
-	_keyExtractor = (item, index) => item.itineraryId;
+	_keyExtractor = (item, index) => item.itineraryId.toString();
 
 	componentDidMount() {}
 
@@ -33,16 +33,10 @@ class ItineraryList extends Component {
 
 	componentWillUnmount() {}
 
-	onPressItinerary = (itinerary) => {
+	onPressItinerary = (selectedItinerary) => {
 		// updater functions are preferred for transactional updates
-		this.props.navigation.navigate('ProfileItineraryDetails', {
-			itinerary
-		});
-	};
-
-	onPressCountryItinerary = (itinerary) => {
 		this.props.navigation.navigate('ItineraryDetails', {
-			itinerary
+			itinerary: selectedItinerary
 		});
 	};
 
@@ -56,15 +50,21 @@ class ItineraryList extends Component {
 		);
 	}
 
-	renderItem = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressItinerary(item)} />
-	);
+	renderItem = ({ item }) => {
+		return (
+			<ItineraryHolder
+				itinerary={item}
+				key={item.itineraryId}
+				onPress={(itinerary) => this.onPressItinerary(itinerary)}
+			/>
+		);
+	};
 
 	renderItineraryBasedOnCountry = ({ item }) => (
 		<ItineraryHolder
 			itinerary={item}
 			key={item.itineraryId}
-			onPress={() => this.onPressCountryItinerary(item)}
+			onPress={() => this.onPressItinerary(item)}
 			type="country"
 		/>
 	);

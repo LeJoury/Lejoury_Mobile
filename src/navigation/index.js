@@ -30,6 +30,9 @@ import AddQuoteScreen from './AddQuoteScreen';
 import EditProfileScreen from './EditProfileScreen';
 
 import ProfileScreen from './ProfileScreen';
+import ProfileFollowerScreen from './ProfileFollowerScreen';
+import ProfileFollowingScreen from './ProfileFollowingScreen';
+
 import SettingsScreen from './SettingsScreen';
 
 import LandingScreen from './LandingScreen';
@@ -107,12 +110,6 @@ const HomeStack = createStackNavigator({
 			header: null
 		}
 	},
-	TravellerProfile: {
-		screen: TravellerProfileScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar
-		}
-	},
 	ItineraryList: {
 		screen: ItineraryListScreen,
 		navigationOptions: {
@@ -161,7 +158,7 @@ const AddItineraryStack = createStackNavigator(
 				headerStyle: Styles.Common.toolbar
 			}
 		},
-		AddNewItineraryScreen: {
+		AddNewItinerary: {
 			screen: AddNewItineraryScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
@@ -212,8 +209,8 @@ const BucketListStack = createStackNavigator({
 
 const FollowerTopTabbar = createMaterialTopTabNavigator(
 	{
-		Followers: { screen: TravellerListScreen },
-		Following: { screen: TravellerListScreen }
+		Followers: { screen: ProfileFollowerScreen },
+		Following: { screen: ProfileFollowingScreen }
 	},
 	{
 		navigationOptions: ({ navigation }) => ({
@@ -250,7 +247,10 @@ const ProfileStack = createStackNavigator({
 			headerStyle: Styles.Common.toolbar
 		}
 	},
-	TravellerListScreen: {
+	ProfileFollower: {
+		screen: FollowerTopTabbar
+	},
+	ProfileFollowing: {
 		screen: FollowerTopTabbar
 	}
 });
@@ -350,8 +350,20 @@ const MainNavigator = createStackNavigator(
 				headerStyle: Styles.Common.toolbar
 			}
 		},
-		EditProfileScreen: {
+		EditProfile: {
 			screen: EditProfileScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		TravellerList: {
+			screen: TravellerListScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		TravellerProfile: {
+			screen: TravellerProfileScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
 			}

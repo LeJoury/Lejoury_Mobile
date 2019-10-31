@@ -12,13 +12,15 @@
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
-//#import <GoogleMaps/GoogleMaps.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 @import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyCmchwro-pp7__PMW3BV1lmtb3vbi8PHxA"];
+
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"LeJoury"
@@ -34,7 +36,6 @@
   
   [FIRApp configure];
   [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
-//  [GMSServices provideAPIKey:@"AIzaSyCmchwro-pp7__PMW3BV1lmtb3vbi8PHxA"];
   return YES;
 }
 

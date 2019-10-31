@@ -37,25 +37,9 @@ target 'LeJoury' do
 
   pod 'Firebase/Analytics'
 
-  # pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
-  # pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  # pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
-  # pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
-  # pod 'react-native-maps', path: rn_maps_path
-  # pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-  # pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-  # pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
-
-  # pod 'react-native-image-picker', :path => 'node_modules/react-native-image-picker'
-
-  # target 'LeJoury-tvOSTests' do
-  #   inherit! :search_paths
-  #   # Pods for testing
-  # end
-
-  # pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
-
-  # pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
 
   target 'LeJouryTests' do
     inherit! :search_paths

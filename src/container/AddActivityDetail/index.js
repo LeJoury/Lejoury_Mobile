@@ -18,6 +18,9 @@ import StarRating from 'react-native-star-rating';
 import ImageResizer from 'react-native-image-resizer';
 import Bugsnag from '@services';
 
+import { connect } from 'react-redux';
+import { deleteActivityPhoto } from '@actions';
+
 import { QUERY_PLACES, GET_PLACE_DETAILS } from '../../services/GooglePlaceService';
 import { Languages, Color, Styles, showOkAlert } from '@common';
 import { ImageHolder, Button, CurrencyPicker } from '@components';
@@ -25,7 +28,7 @@ import { ImageHolder, Button, CurrencyPicker } from '@components';
 import styles from './styles';
 
 const numColumns = 3;
-const defaultRate = 4;
+const DEFAULT_RATE = 4;
 const { width, height } = Dimensions.get('window');
 const TAG = 'AddActivityDetail';
 
@@ -297,7 +300,7 @@ const AddActivityDetail = (props) => {
 	const [ description, setDescription ] = useState('');
 	const [ isDescriptionFocus, setDescriptionFocus ] = useState(false);
 
-	const [ rate, setRate ] = useState(defaultRate);
+	const [ rate, setRate ] = useState(DEFAULT_RATE);
 
 	const [ locationResults, setLocationResults ] = useState([]);
 
@@ -309,25 +312,17 @@ const AddActivityDetail = (props) => {
 		this.timer = null;
 
 		if (type === 'edit') {
-			const {
-				title,
-				location,
-				photos,
-				description,
-				currency,
-				budget,
-				rate
-			} = navigation.state.params.selectedActivity;
+			const { selectedActivity } = navigation.state.params;
 
-			let currentPhotos = photos.length < 6 ? photos.concat('empty') : photos;
+			let currentPhotos = selectedActivity.photos.length < 6 ? selectedActivity.photos.concat('empty') : selectedActivity.photos;
 
-			setTitle(title);
-			setLocation(location);
+			setTitle(selectedActivity.title);
+			setLocation(selectedActivity.location);
 			setPhotos(currentPhotos);
-			setBudget(budget);
-			setCurrency(currency);
-			setDescription(description);
-			setRate(rate);
+			setBudget(selectedActivity.budget);
+			setCurrency(selectedActivity.currency);
+			setDescription(selectedActivity.description);
+			setRate(selectedActivity.rating);
 		}
 
 		return () => {
@@ -402,19 +397,44 @@ const AddActivityDetail = (props) => {
 		}
 	};
 
-	const onRemoveImage = (removedPhoto) => {
-		let currentPhotos = photos.filter((photo) => {
-			return photo !== removedPhoto;
-		});
+	const onRemoveImage = async (removedPhoto) => {
+		if (photos.length === 2) {
+			showOkAlert(Languages.NoPhotos, Languages.Min1Image);
+		} else {
+			if (removedPhoto.id) {
+				try {
+					let response = await props.deleteActivityPhoto(removedPhoto.id, props.user.token);
 
-		currentPhotos = currentPhotos.length < 6 ? Array.from(new Set(currentPhotos.concat('empty'))) : currentPhotos;
+					if (response.OK) {
+						let currentPhotos = photos.filter((photo) => {
+							return photo.id !== removedPhoto.id;
+						});
 
-		setPhotos(currentPhotos);
+						currentPhotos =
+							currentPhotos.length < 6
+								? Array.from(new Set(currentPhotos.concat('empty')))
+								: currentPhotos;
+
+						setPhotos(currentPhotos);
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			} else {
+				let currentPhotos = photos.filter((photo) => {
+					return photo !== removedPhoto;
+				});
+
+				currentPhotos =
+					currentPhotos.length < 6 ? Array.from(new Set(currentPhotos.concat('empty'))) : currentPhotos;
+
+				setPhotos(currentPhotos);
+			}
+		}
 	};
 
 	const onSaveActivity = () => {
 		if (photos.length === 1) {
-			//empty
 			showOkAlert(Languages.NoPhotos, Languages.Min1Image);
 			return;
 		}
@@ -453,8 +473,8 @@ const AddActivityDetail = (props) => {
 			<ImageHolder
 				containerStyle={styles.imageHolder}
 				imageStyle={styles.imageThumbnail}
-				imageUri={item.path}
-				onRemovePress={onRemoveImage}
+				imageUri={item.link ? item.link : item.path}
+				onRemovePress={() => onRemoveImage(item)}
 			/>
 		);
 	};
@@ -517,9 +537,7 @@ const AddActivityDetail = (props) => {
 
 		this.timer = setTimeout(() => {
 			if (value.length >= 3) {
-				QUERY_PLACES(value)
-				.then((results) => setLocationResults(results))
-				.catch((error) => {
+				QUERY_PLACES(value).then((results) => setLocationResults(results)).catch((error) => {
 					//TODO: recall search bugsnag this issue
 					console.log(error);
 				});
@@ -647,7 +665,7 @@ const AddActivityDetail = (props) => {
 						<TextInput
 							underlineColorAndroid="transparent"
 							selectionColor={Color.textSelectionColor}
-							value={budget}
+							value={budget && String(budget)}
 							keyboardType={'numeric'}
 							onFocus={() => setBudgetFocus(true)}
 							onBlur={() => setBudgetFocus(false)}
@@ -776,4 +794,10 @@ const AddActivityDetail = (props) => {
 	);
 };
 
-export default AddActivityDetail;
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, {
+	deleteActivityPhoto
+})(AddActivityDetail);

@@ -18,7 +18,19 @@ Constants.Actions = {
 		ADD_ITINERARIES: 'ADD_ITINERARIES',
 		ADD_UPDATE_ITINERARY: 'ADD_UPDATE_ITINERARY',
 		ADD_UPDATE_DAY: 'ADD_UPDATE_DAY',
-		DELETE_UPDATE_ITINERARY: 'DELETE_UPDATE_ITINERARY'
+		DELETE_UPDATE_ITINERARY: 'DELETE_UPDATE_ITINERARY',
+		SETUP_PROFILE: 'SETUP_PROFILE',
+		CLEAR_PROFILE: 'CLEAR_PROFILE',
+		SETUP_PUBLISHED_ITINERARIES: 'SETUP_PUBLISHED_ITINERARIES',
+		SETUP_TRAVELLERS: 'SETUP_TRAVELLERS',
+		FOLLOW_TRAVELLER: 'FOLLOW_TRAVELLER',
+		UNFOLLOW_TRAVELLER: 'UNFOLLOW_TRAVELLER',
+		UPDATE_PROFILE: 'UPDATE_PROFILE',
+		UPDATE_PROFILE_PHOTO: 'UPDATE_PROFILE_PHOTO',
+		UPDATE_FOLLOWERS: 'UPDATE_FOLLOWERS',
+		UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
+		UPDATE_FOLLOWERS_LIST: 'UPDATE_FOLLOWERS_LIST',
+		UPDATE_FOLLOWING_LIST: 'UPDATE_FOLLOWING_LIST'
 	}
 };
 
@@ -33,13 +45,21 @@ Constants.URL = {
 		URL_LOGIN: 'login',
 		URL_REFRESH_TOKEN: 'refresh-token',
 		URL_REGISTER: 'register',
-		URL_ITINERARY: 'itineraries',
+		URL_ITINERARIES: 'itineraries',
 		URL_ACTIVITY: 'activities',
 		URL_UPLOAD_COVER_PHOTO: 'upload-thumbnail',
 		URL_UPLOAD_PHOTO: 'upload-photo',
+		URL_PHOTO: 'photo',
 		URL_PUBLISH: 'publish',
 		URL_BY_PUBLISHER: 'by-author',
-		URL_SOCIAL_LOGIN: 'social-login'
+		URL_SOCIAL_LOGIN: 'social-login',
+		URL_TRAVELLER: 'travellers',
+		URL_FOLLOWER: 'followers',
+		URL_FOLLOWING: 'following',
+		URL_ITINERARY: 'itinerary',
+		URL_LIKE: 'like',
+		URL_PROFILE: 'profile',
+		URL_COUNTRY_LIST: 'country-list'
 	}
 };
 
@@ -114,13 +134,19 @@ Constants.PARAMS = {
 		NAME: 'name',
 		TYPES: 'types',
 		LOCATION_URL: 'url'
+	},
+	PARAMS_TRAVELLER: {
+		TRAVELLER_ID: 'travellerId',
+		TYPE: 'type',
+		ITINERARY_ID: 'itineraryId'
 	}
 };
 
 Constants.VERSION = {
 	AUTH_API_VERSION: 'v1',
 	ITINERARY_API_VERSION: 'v1',
-	ACTIVITY_API_VERSION: 'v1'
+	ACTIVITY_API_VERSION: 'v1',
+	TRAVELLER_API_VERSION: 'v1'
 };
 
 Constants.Spinner = {
@@ -128,7 +154,10 @@ Constants.Spinner = {
 		normal: 'normal',
 		full: 'full',
 		overlay: 'overlay',
-		overlayLogin: 'overlayLogin'
+		overlayLogin: 'overlayLogin',
+		createItinerary: 'createItinerary',
+		createActivity: 'createActivity',
+		publishItinerary: 'publishItinerary'
 	},
 	Sizes: {
 		SMALL: 'small',

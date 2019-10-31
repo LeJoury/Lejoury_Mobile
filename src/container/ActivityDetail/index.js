@@ -13,11 +13,11 @@ import {
 	Image
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Swiper from 'react-native-swiper';
 import StarRating from 'react-native-star-rating';
 
-import { Back, AddBucket } from '../../navigation/IconNav';
+import { CircleBack, AddBookmark } from '../../navigation/IconNav';
 
 import { Constants, Styles, Languages, Color, Device, formatImages } from '@common';
 
@@ -112,24 +112,24 @@ const ActivityDetail = (props) => {
 				loadMinimalLoader={<ActivityIndicator />}
 				loadMinimal={true}
 			>
-				{photos.map((uri, index) => {
+				{photos.map((photo, index) => {
 					return (
 						<TouchableOpacity
 							key={index}
-							onPress={() => {
-								setPreviewModalVisible(true);
-								setSelectedIndex(index);
-							}}
+							// onPress={() => {
+							// 	setPreviewModalVisible(true);
+							// 	setSelectedIndex(index);
+							// }}
 						>
 							<ImageBackground
-								source={{ uri: uri }}
+								source={{ uri: photo.link }}
 								style={styles.image}
 								resizeMode="cover"
 								blurRadius={100}
 							>
 								<Image
 									source={{
-										uri: uri
+										uri: photo.link
 										// cache: 'only-if-cached'
 									}}
 									style={styles.image}
@@ -169,8 +169,8 @@ const ActivityDetail = (props) => {
 
 		return (
 			<View style={styles.navButtonWrapper}>
-				<View style={[ styles.backButton, { top: backTop } ]}>{Back(navigation, Color.white)}</View>
-				{/* <View style={[ styles.bucketButton, { top: backTop } ]}>{AddBucket(navigation, Color.white)}</View> */}
+				<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
+				<View style={[ styles.bucketButton, { top: backTop } ]}>{AddBookmark(navigation, Color.white)}</View>
 			</View>
 		);
 	};
@@ -197,8 +197,9 @@ const ActivityDetail = (props) => {
 					</Text>
 				</View>
 
-				<View style={styles.contentWrapper}>
+				{/* <View style={styles.contentWrapper}>
 					<MapView
+						provider={PROVIDER_GOOGLE} // remove if not using Google Maps
 						onMapReady={onMapReady}
 						style={styles.mapStyle}
 						initialRegion={region}
@@ -209,7 +210,7 @@ const ActivityDetail = (props) => {
 					>
 						<Marker coordinate={{ latitude: locationLat, longitude: locationLng }} title={locationName} />
 					</MapView>
-				</View>
+				</View> */}
 
 				<View style={styles.contentWrapper}>
 					<Text style={styles.labelStyle}>{Languages.Budget}</Text>

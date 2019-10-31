@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Animated, TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { TouchableWithoutFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import { Icon } from 'react-native-elements';
@@ -7,20 +7,18 @@ import { Icon } from 'react-native-elements';
 import { Color, Styles } from '@common';
 
 const Heart = (props) => {
-	const [ isLike, setLike ] = useState(props.isLike);
-
 	const handleViewRef = (ref) => (this.view = ref);
 
 	const onPress = () => {
-		setLike(!isLike);
 		this.view.bounceIn(500);
+		props.onPress();
 	};
 
 	return (
-		<TouchableWithoutFeedback onPress={onPress}>
+		<TouchableWithoutFeedback onPress={onPress} disabled={props.disabled ? props.disabled : false}>
 			<Animatable.View ref={handleViewRef}>
 				<Icon
-					name={isLike ? 'heart' : 'heart-o'}
+					name={props.liked ? 'heart' : 'heart-o'}
 					type={'font-awesome'}
 					size={props.heartIconSize === undefined ? Styles.IconSize.Small : props.heartIconSize}
 					color={Color.red2}

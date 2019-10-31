@@ -14,9 +14,23 @@ const login = (email, password) => async (dispatch) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					const { profile, token } = result.data;
 					let response = { OK: true, token: token };
+
 					dispatch({
 						type: Types.LOGIN_SUCCESS,
 						payload: { token: token, username: profile.username, id: profile.userId }
+					});
+
+					dispatch({
+						type: Types.SETUP_PROFILE,
+						payload: {
+							username: profile.username,
+							id: profile.userId,
+							bio: profile.bio,
+							photo: profile.photo,
+							totalFollowers: profile.totalFollowers,
+							totalFollowing: profile.totalFollowing,
+							totalItineraries: profile.totalItineraries
+						}
 					});
 
 					resolve(response);
@@ -37,7 +51,6 @@ const register = (username, email, password) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		REGISTER_WITH_EMAIL(username, email, password)
 			.then((result) => {
-				console.log(result);
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
 
@@ -86,7 +99,6 @@ const refreshToken = (currentToken) => async (dispatch) => {
 	});
 };
 
-
 // ----------------------------------- login by social ----------------------------------- //
 const loginBySocial = (username, email, socialId, photoUrl, loginType) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
@@ -95,8 +107,7 @@ const loginBySocial = (username, email, socialId, photoUrl, loginType) => async 
 				if (result.statusCode === STATUS.SUCCESS) {
 					const { profile, token } = result.data;
 					let response = { OK: true, token: token };
-					console.log(response);
-
+					
 					dispatch({
 						type: Types.LOGIN_SUCCESS,
 						payload: { token: token, username: profile.username, id: profile.userId }
@@ -122,6 +133,8 @@ const logout = () => (dispatch) => {
 		let response = { OK: true };
 
 		dispatch({ type: Types.LOGOUT });
+
+		dispatch({ type: Types.CLEAR_PROFILE });
 
 		resolve(response);
 	});

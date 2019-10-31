@@ -5,55 +5,76 @@ import {
 	FlatList,
 	Image,
 	TouchableOpacity,
-	Platform,
+	Alert,
 	ScrollView,
 	TouchableWithoutFeedback
 } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 
-import { Color, Languages } from '@common';
+import { connect } from 'react-redux';
+import { getTravellers, followTraveller, getProfile } from '@actions';
+
+import { Images, Color, Languages } from '@common';
 
 import styles from './styles';
 
-const travellers = [
-	{
-		travellerID: '1',
-		travellerName: 'Alex',
-		travellerThumbnails: 'https://randomuser.me/api/portraits/men/57.jpg',
-		following: true
-	},
-	{
-		travellerID: '2',
-		travellerName: 'Lily',
-		travellerThumbnails: 'https://randomuser.me/api/portraits/women/57.jpg',
-		following: false
-	},
-	{
-		travellerID: '3',
-		travellerName: 'Daniel',
-		travellerThumbnails: 'https://randomuser.me/api/portraits/men/7.jpg',
-		following: false
-	},
-	{
-		travellerID: '4',
-		travellerName: 'Alice',
-		travellerThumbnails: 'https://randomuser.me/api/portraits/women/7.jpg',
-		following: true
-	}
-];
+const UNFOLLOW = 'UNFOLLOW';
+const FOLLOW = 'FOLLOW';
 
 const Traveller = (props) => {
-	const [ search, setSearch ] = useState('');
+	useEffect(() => {
+		console.log(props);
+		// const { token } = props.user;
+		// try {
+		// 	let response = props.getTravellers(token, 1);
 
-	const _keyExtractor = (item) => item.travellerID;
+		// 	if (response.OK) {
+		// 	} else {
+		// 	}
+		// } catch (error) {}
+	}, []);
 
-	const updateSearch = (value) => {
-		setSearch(value);
+	const _keyExtractor = (item) => item.userId.toString();
+
+	const navigateToSelectedTraveller = (selectedUser) => {
+		//TODO: GO TO TRAVELLER PROFILE
+		props.navigation.navigate('TravellerProfile', {
+			user: selectedUser
+		});
 	};
 
-	const navigateToSelectedTraveller = () => {
-		//TODO: GO TO TRAVELLER PROFILE
-		console.log('pressed');
+	const onHandleFollow = async (token, travellerId, following) => {
+		const { userId } = props.user;
+
+		try {
+			let response = await props.followTraveller(token, travellerId, following ? UNFOLLOW : FOLLOW);
+
+			if (response.OK) {
+				await props.getProfile(userId, token);
+			}
+		} catch (error) {}
+	};
+
+	const onFollowClick = async (item) => {
+		const { token } = props.user;
+		const { following, userId, username } = item;
+
+		if (following) {
+			let message = `${Languages.AreYouSureToUnfollow}${username} ?`;
+
+			Alert.alert('', message, [
+				{
+					text: Languages.Cancel,
+					onPress: null
+				},
+				{
+					text: Languages.Confirm,
+					onPress: () => onHandleFollow(token, userId, following),
+					style: 'destructive'
+				}
+			]);
+		} else {
+			onHandleFollow(token, userId, following);
+		}
 	};
 
 	const renderTravellerHolder = ({ item }) => {
@@ -63,19 +84,25 @@ const Traveller = (props) => {
 
 		return (
 			<View style={styles.travellerContainer}>
-				<Image style={styles.travellerThumbnails} source={{ uri: item.travellerThumbnails }} />
+				<Image
+					style={styles.travellerThumbnails}
+					source={item.photo ? { uri: item.photo } : Images.defaultAvatar}
+				/>
 				<View style={styles.travellerSubcontainer}>
 					<TouchableWithoutFeedback
 						style={styles.travellerNameContainer}
-						onPress={navigateToSelectedTraveller}
+						onPress={() => navigateToSelectedTraveller(item)}
 					>
 						<View style={styles.travellerNameContainer}>
-							<Text style={styles.travellerUsernameTextStyle}>{item.travellerName}</Text>
-							<Text style={styles.travellerNameTextStyle}>{item.travellerName}</Text>
+							<Text style={styles.travellerUsernameTextStyle}>{item.username}</Text>
+							<Text style={styles.travellerNameTextStyle}>{item.bio ? item.bio : item.username}</Text>
 						</View>
 					</TouchableWithoutFeedback>
 
-					<TouchableOpacity style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}>
+					<TouchableOpacity
+						style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}
+						onPress={() => onFollowClick(item)}
+					>
 						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
 							{functionText}
 						</Text>
@@ -84,28 +111,11 @@ const Traveller = (props) => {
 			</View>
 		);
 	};
-
-	const renderSearchBar = () => (
-		<SearchBar
-			placeholder={Languages.Search}
-			onChangeText={updateSearch}
-			value={search}
-			lightTheme={true}
-			platform={Platform.OS}
-			showCancel={false}
-			containerStyle={styles.searchBarContainerStyle}
-			inputContainerStyle={styles.searchBarInputContainerStyle}
-			inputStyle={styles.searchBarInputStyle}
-			leftIconContainerStyle={{ paddingLeft: 6 }}
-		/>
-	);
-
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContentContainerStyle}>
-			{renderSearchBar()}
 			<FlatList
-				data={travellers}
-				// ListHeaderComponent={_renderSearchBar}
+				data={props.traveller.travellers}
+				extraData={props.traveller}
 				keyExtractor={_keyExtractor}
 				renderItem={renderTravellerHolder}
 			/>
@@ -113,4 +123,10 @@ const Traveller = (props) => {
 	);
 };
 
-export default Traveller;
+const mapStateToProps = ({ user, profile, traveller }) => ({
+	user,
+	profile,
+	traveller
+});
+
+export default connect(mapStateToProps, { getTravellers, followTraveller, getProfile })(Traveller);

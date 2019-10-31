@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 
 import { Images, Color, Languages, Styles } from '@common';
-import { Button, TravellerInfoHolder } from '@components';
+import { Button, TravellerInfoHolder, Heart } from '@components';
 
 import styles from './styles';
 
@@ -67,8 +67,8 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 	const imageBgStyle = hasImage ? styles.draft_ImageBg : styles.draft_DefaultImageBg;
 	const textColor = hasImage ? Color.white : Color.primary;
 
-	const startDate = moment(itinerary.startDate).format('DD-MMM-YYYY');
-	const endDate = moment(itinerary.endDate).format('DD-MMM-YYYY');
+	const startDate = moment(new Date(itinerary.startDate)).format('DD-MMM-YYYY');
+	const endDate = moment(new Date(itinerary.endDate)).format('DD-MMM-YYYY');
 
 	const buttonStyle = hasImage
 		? {
@@ -132,27 +132,44 @@ const MainItinerary = ({ itinerary, onPress }) => (
 	</View>
 );
 
-const ProfileItinerary = ({ itinerary, onPress }) => (
-	<Card containerStyle={styles.profile_Card}>
-		<TouchableOpacity onPress={() => onPress(itinerary)}>
-			<ImageBackground source={itinerary.coverPhoto} style={styles.profile_ImageBackground} resizeMode="stretch">
-				<LinearGradient
-					style={styles.profile_ItineraryContainer}
-					colors={[ Color.transparent1, Color.black50T, Color.black50T, Color.black90T, Color.black ]}
+const ProfileItinerary = ({ itinerary, onPress }) => {
+	const end = moment(new Date(itinerary.endDate)).format('MMM-YYYY');
+	return (
+		<Card containerStyle={styles.profile_Card} key={itinerary.itineraryId}>
+			<TouchableOpacity onPress={() => onPress(itinerary)}>
+				<ImageBackground
+					source={{ uri: itinerary.coverPhoto }}
+					style={styles.profile_ImageBackground}
+					resizeMode="stretch"
 				>
-					<Text style={styles.profile_TitleItinerary} numberOfLines={1} ellipsizeMode={'tail'}>
-						{itinerary.title}
-					</Text>
-					<View style={styles.profile_UserContainer}>
-						<Text style={styles.profile_DateText}>
-							{itinerary.dateStart} - {itinerary.dateEnd}
+					<LinearGradient
+						style={styles.profile_ItineraryContainer}
+						colors={[
+							Color.transparent1,
+							Color.black10T,
+							Color.black30T,
+							Color.black50T,
+							Color.black70T,
+							Color.black70T
+						]}
+					>
+						<Text style={styles.profile_TitleItinerary} numberOfLines={1} ellipsizeMode={'tail'}>
+							{itinerary.title}
 						</Text>
-					</View>
-				</LinearGradient>
-			</ImageBackground>
-		</TouchableOpacity>
-	</Card>
-);
+						<View style={styles.profile_UserContainer}>
+							<View style={Styles.Common.RowCenterRight}>
+								<Heart heartIconSize={Styles.IconSize.Small} isLike={true} disabled={true} />
+								<Text style={styles.profile_noOfLikesText}>{itinerary.totalLikes}</Text>
+							</View>
+
+							<Text style={styles.profile_DateText}>{end}</Text>
+						</View>
+					</LinearGradient>
+				</ImageBackground>
+			</TouchableOpacity>
+		</Card>
+	);
+};
 
 const CountryItinerary = ({ itinerary, onPress }) => (
 	<TouchableOpacity style={styles.countryRow} onPress={() => onPress(itinerary)}>

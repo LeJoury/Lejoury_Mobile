@@ -27,6 +27,7 @@
 		6B9C3D77EEE64C9E9950CCAC /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 516D8E6B6504412EB8D41854 /* libc++.tbd */; };
 		732E308ECD804C2D9958D829 /* Quicksand-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BDE64CAAD7F467D9F08C674 /* Quicksand-Medium.ttf */; };
 		AA1A66DF92A34B3EAE22B6D2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A238A7B33AE4AF7B65AD17C /* libz.tbd */; };
+		BE94D64D235AFC560019B74D /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE94D64C235AFC560019B74D /* dummy.swift */; };
 		BED56806234F7CD700D2081E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BED567E2234F7CD700D2081E /* GoogleService-Info.plist */; };
 		BEF33E232331247700B96E06 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		BEF33E242331247D00B96E06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -375,6 +376,8 @@
 		B28298EFC31849688EA5A230 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		B9C37280C9064386BCBF2035 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJoury.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury.debug.xcconfig"; sourceTree = "<group>"; };
+		BE94D64B235AFC550019B74D /* LeJoury-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LeJoury-Bridging-Header.h"; sourceTree = "<group>"; };
+		BE94D64C235AFC560019B74D /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		BE96796922F337F500DC3D1D /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE96796D22F337FC00DC3D1D /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BED567E2234F7CD700D2081E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -615,6 +618,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				BE94D64C235AFC560019B74D /* dummy.swift */,
 				BE96796D22F337FC00DC3D1D /* QBImagePicker.framework */,
 				BE96796922F337F500DC3D1D /* RSKImageCropper.framework */,
 				13B07FAE1A68108700A75B9A /* LeJoury */,
@@ -625,6 +629,7 @@
 				83F2C0AC1FD34AA69CE7DD0E /* Resources */,
 				BE96790D22F3376500DC3D1D /* Recovered References */,
 				F6000D4D14717375B80AC8F5 /* Pods */,
+				BE94D64B235AFC550019B74D /* LeJoury-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -799,6 +804,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = MZ9RFFNPAZ;
+						LastSwiftMigration = 1110;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1255,6 +1261,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
@@ -1278,6 +1285,7 @@
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
@@ -1319,6 +1327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				BE94D64D235AFC560019B74D /* dummy.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1372,6 +1381,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F59CB720202688C51719130 /* Pods-LeJouryTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1402,6 +1412,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 57CEFCAA21945577BF0C64AC /* Pods-LeJouryTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				HEADER_SEARCH_PATHS = (
@@ -1430,6 +1441,7 @@
 			baseConfigurationReference = BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = MZ9RFFNPAZ;
@@ -1439,6 +1451,7 @@
 				);
 				INFOPLIST_FILE = LeJoury/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1446,6 +1459,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = LeJoury;
+				SWIFT_OBJC_BRIDGING_HEADER = "LeJoury-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1455,6 +1471,7 @@
 			baseConfigurationReference = FAE890E58B0EDE38F0ACB6AC /* Pods-LeJoury.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MZ9RFFNPAZ;
 				HEADER_SEARCH_PATHS = (
@@ -1463,6 +1480,7 @@
 				);
 				INFOPLIST_FILE = LeJoury/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1470,6 +1488,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = LeJoury;
+				SWIFT_OBJC_BRIDGING_HEADER = "LeJoury-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1702,6 +1722,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

@@ -1,18 +1,25 @@
 import { StyleSheet, Platform, Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
 import { Color, Config, Constants, Device, Styles } from '@common';
 
+const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
-	outerContainer: {
-		position: 'absolute',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
 	container: {
 		backgroundColor: 'transparent',
 		height: null,
 		width: null
+	},
+	container_center: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		width: width,
+		height: height,
+		alignItems: 'center',
+		justifyContent: 'center',
+		zIndex: 999999
 	},
 	container_full_stretch: {
 		flexGrow: 1,
@@ -51,5 +58,37 @@ export default StyleSheet.create({
 	wrapper: {
 		backgroundColor: 'transparent',
 		zIndex: 1000000
+	},
+	transparent_Container: {
+		position: 'absolute',
+		top: -100,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		width: width,
+		height: height + 100,
+		alignItems: 'center',
+		justifyContent: 'center',
+		zIndex: 999999
+	},
+	centerWrapper: {
+		...Styles.Common.ColumnCenterEvenly,
+		width: 120,
+		height: 120,
+	},
+	loadingMessage: {
+		fontSize: 14,
+		paddingBottom: 12,
+		color: Color.white,
+		fontFamily: 'Quicksand-Medium'
+	},
+	lottieLoader: {
+		width: 120,
+		height: 120
+	},
+	creatingActivityBar: {
+		width: width,
+		height: 3,
+		backgroundColor: Color.black30T
 	}
 });

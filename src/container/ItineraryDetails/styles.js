@@ -23,8 +23,32 @@ export default StyleSheet.create({
 		right: 0,
 		zIndex: 99999
 	},
+	viewImageWrapper: {
+		...Styles.Common.RowCenterEvenly,
+		position: 'absolute',
+		width: width / 3.2,
+		top: PARALLAX_HEADER_HEIGHT / 1.4,
+		right: 12,
+		zIndex: 99999,
+		backgroundColor: Color.black50T,
+		borderRadius: 6,
+		borderWidth: 0.5,
+		borderColor: Color.lightGrey3,
+		paddingHorizontal: 10,
+		paddingVertical: 8
+	},
+	viewImageButton: {
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	viewImageTextStyle: {
+		color: Color.lightGrey6,
+		fontSize: 14,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Bold'
+	},
 	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
-	imageButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
+	bookmarkButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
 	image: {
 		height: PARALLAX_HEADER_HEIGHT,
 		width: width

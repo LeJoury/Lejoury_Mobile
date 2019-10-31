@@ -15,7 +15,7 @@ const DraftItineraryDay = ({ activity }) => {
 	return (
 		<View style={styles.draftContainer}>
 			<Image
-				source={{ uri: activity.photos[0].path ? activity.photos[0].path : activity.photos[0] }}
+				source={{ uri: activity.photos[0].link ? activity.photos[0].link : activity.photos[0] }}
 				style={styles.draftImageWrapper}
 				// loadingIndicatorSource={<ActivityIndicator />}
 			/>

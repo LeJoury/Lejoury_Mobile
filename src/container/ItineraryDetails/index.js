@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import { View, Animated, Text, Dimensions, ScrollView, Image, ActivityIndicator } from 'react-native';
-import { Icon } from 'react-native-elements';
-import LinearGradient from 'react-native-linear-gradient';
+import { View, Animated, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import { Icon } from 'react-native-elements';
 
-import { CircleBack, ViewImages } from '../../navigation/IconNav';
+import { CircleBack, AddBookmark } from '../../navigation/IconNav';
+
+import { connect } from 'react-redux';
+import { getItineraryById, likeItinerary } from '@actions';
 
 import { Styles, Languages, Color, Device, Constants } from '@common';
-import { TravellerInfoHolder, Timeline, Spinner } from '@components';
+import { TravellerInfoHolder, Timeline, Spinner, Button } from '@components';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
+
+const TYPE_LIKE = 'LIKE';
+const TYPE_UNLIKE = 'UNLIKE';
+
 const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 450 : 350;
 const backTop = Device.isIphoneX ? 35 : 20;
 const { Mode, Sizes } = Constants.Spinner;
@@ -19,16 +25,32 @@ const { Mode, Sizes } = Constants.Spinner;
 class ItineraryDetails extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			scrollY: new Animated.Value(backTop),
-			// height: PARALLAX_HEADER_HEIGHT,
-			// width: width,
-			isLoading: false
+			isLoading: false,
+			itinerary: this.props.itinerary
 		};
 	}
 	_keyExtractor = (item) => item.id.toString();
 
-	componentDidMount() {}
+	componentDidMount = async () => {
+		this.setState({ isLoading: true });
+		try {
+			const { itinerary } = this.state;
+
+			let response = await this.props.getItineraryById(this.props.user.token, itinerary.itineraryId);
+
+			if (response.OK) {
+				this.setState({
+					isLoading: false,
+					itinerary: response.itinerary
+				});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	componentDidUpdate() {}
 
@@ -49,7 +71,7 @@ class ItineraryDetails extends Component {
 
 	onGoToViewImages = () => {
 		const { navigation } = this.props;
-		const { itinerary } = this.props;
+		const { itinerary } = this.state;
 		let images = [ itinerary.coverPhoto ];
 
 		for (let day = 0; day < itinerary.days.length; day++) {
@@ -64,8 +86,25 @@ class ItineraryDetails extends Component {
 		});
 	};
 
+	onLikePress = async () => {
+		const { itinerary } = this.state;
+
+		try {
+			let type = !itinerary.liked === true ? TYPE_LIKE : TYPE_UNLIKE;
+			let response = await this.props.likeItinerary(this.props.user.token, itinerary.itineraryId, type);
+
+			if (response.OK) {
+				this.setState({
+					itinerary: { ...itinerary, liked: !itinerary.liked }
+				});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	renderDayTimeline() {
-		const { itinerary } = this.props;
+		const { itinerary } = this.state;
 		const { days } = itinerary;
 
 		return (
@@ -97,7 +136,7 @@ class ItineraryDetails extends Component {
 	}
 
 	renderBackground = () => {
-		const { itinerary } = this.props;
+		const { itinerary } = this.state;
 
 		return (
 			<View style={styles.imageWrapper}>
@@ -117,11 +156,22 @@ class ItineraryDetails extends Component {
 		const { navigation } = this.props;
 
 		return (
-			<View style={styles.navButtonWrapper}>
-				<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
-				<View style={[ styles.imageButton, { top: backTop } ]}>
-					{ViewImages(navigation, Color.white, this.onGoToViewImages)}
+			<View style={Styles.Common.ColumnCenterBetween}>
+				<View style={styles.navButtonWrapper}>
+					<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
+					<View style={[ styles.bookmarkButton, { top: backTop } ]}>
+						{AddBookmark(navigation, Color.white)}
+					</View>
 				</View>
+				<TouchableOpacity style={styles.viewImageWrapper} onPress={this.onGoToViewImages}>
+					<Icon name="image" type="feather" color={Color.lightGrey6} size={16} />
+					<Button
+						text={Languages.ViewImage}
+						textStyle={styles.viewImageTextStyle}
+						containerStyle={styles.viewImageButton}
+						onPress={this.onGoToViewImages}
+					/>
+				</TouchableOpacity>
 			</View>
 		);
 	};
@@ -131,11 +181,11 @@ class ItineraryDetails extends Component {
 
 		if (!isLoading) return;
 
-		return <Spinner mode={Mode.overlay} size={Sizes.LARGE} color={Color.lightTextPrimary} />;
+		return <Spinner mode={Mode.overlay} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
 	}
 
 	render() {
-		const { itinerary } = this.props;
+		const { itinerary } = this.state;
 
 		const backgroundColorInterpolate = this.state.scrollY.interpolate({
 			inputRange: [ 0, 180, 181 ],
@@ -192,13 +242,20 @@ class ItineraryDetails extends Component {
 								travellerNameSize={16}
 								travellerWrapperMarginTop={12}
 								heartIconSize={Styles.IconSize.Medium}
+								onLikePress={() => this.onLikePress()}
 							/>
 						</Animated.View>
 						<View style={styles.timelineContainer}>{this.renderDayTimeline()}</View>
 					</View>
 				</ParallaxScrollView>
+				{this.renderLoading()}
 			</View>
 		);
 	}
 }
-export default ItineraryDetails;
+
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, { getItineraryById, likeItinerary })(ItineraryDetails);

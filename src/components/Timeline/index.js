@@ -31,11 +31,13 @@ export default class Timeline extends PureComponent {
 			width: 0
 		};
 	}
+	_keyExtractor = (item, index) => index.toString();
 
 	render() {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
 				<FlatList
+					keyExtractor={this._keyExtractor}
 					style={[ styles.listview, this.props.listViewStyle ]}
 					data={this.state.dataSource}
 					renderItem={this.renderRow}
@@ -125,11 +127,11 @@ export default class Timeline extends PureComponent {
 						loadMinimalLoader={<ActivityIndicator />}
 						loadMinimal={true}
 					>
-						{photos.map((uri, index) => {
+						{photos.map((photo, index) => {
 							return (
 								<LoadImage
 									source={{
-										uri: uri
+										uri: photo.link
 										// cache: 'only-if-cached'
 									}}
 									style={styles.image}
@@ -170,7 +172,6 @@ export default class Timeline extends PureComponent {
 		var circleColor = this.props.circleColor ? this.props.circleColor : defaultCircleColor;
 		var lineWidth = this.props.lineWidth ? this.props.lineWidth : defaultLineWidth;
 		const isLast = this.state.data.slice(-1)[0] === item;
-		console.log(this.state.x);
 
 		var circleStyle = null;
 		circleStyle = {

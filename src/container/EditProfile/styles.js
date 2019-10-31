@@ -20,9 +20,9 @@ export default StyleSheet.create({
 		...Styles.Common.ColumnCenter
 	},
 	profileImage: {
-		width: 110,
-		height: 110,
-		borderRadius: 55
+		width: 90,
+		height: 90,
+		borderRadius: 45
 	},
 	profileImageText: {
 		color: Color.blue1,

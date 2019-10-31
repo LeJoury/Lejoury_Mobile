@@ -11,10 +11,28 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ActionButton from 'react-native-action-button';
+import _ from 'lodash';
 
 import { Color } from '@common';
-
 const { width, height } = Dimensions.get('window');
+
+
+const withPreventDoubleClick = (WrappedComponent) => {
+	class PreventDoubleClick extends React.PureComponent {
+		debouncedOnPress = () => {
+			this.props.onPress && this.props.onPress();
+		};
+
+		onPress = _.debounce(this.debouncedOnPress, 300, { leading: true, trailing: false });
+
+		render() {
+			return <WrappedComponent {...this.props} onPress={this.onPress} />;
+		}
+	}
+
+	PreventDoubleClick.displayName = `withPreventDoubleClick(${WrappedComponent.displayName || WrappedComponent.name})`;
+	return PreventDoubleClick;
+};
 
 const Button = (props) => {
 	if (props.type === 'gradient') {
@@ -110,4 +128,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Button;
+export default withPreventDoubleClick(Button);

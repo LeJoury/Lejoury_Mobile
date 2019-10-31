@@ -97,9 +97,9 @@ const REGISTER_WITH_EMAIL = async (username, email, password) => {
 const REFRESH_TOKEN = async (token) => {
 	return await new Promise((resolve, reject) => {
 		base
-			.get(`${AUTH_API_VERSION}/${URL_AUTH}/${URL_REFRESH_TOKEN}`, {
+			.post(`${AUTH_API_VERSION}/${URL_AUTH}/${URL_REFRESH_TOKEN}`, '', {
 				headers: {
-					'Content-Type': 'application/json',
+					'Content-Type': 'application/x-www-form-urlencoded',
 					Authorization: `Bearer ${token}`
 				}
 			})

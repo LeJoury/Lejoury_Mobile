@@ -87,9 +87,9 @@ const Add = (navigation, color = Color.white, onPress = undefined) => (
 	</TouchableOpacity>
 );
 
-const AddBucket = (navigation, color = Color.white, onPress = undefined) => (
+const AddBookmark = (navigation, color = Color.white, onPress = undefined) => (
 	<TouchableOpacity
-		style={{ paddingHorizontal: 15, paddingVertical: 10 }}
+		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -101,7 +101,7 @@ const AddBucket = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="bookmark" type="feather" color={color} />
+		<Icon name="bookmark" type="feather" color={color} size={18} />
 	</TouchableOpacity>
 );
 
@@ -153,13 +153,19 @@ const Cancel = (navigation, color = Color.white) => (
 	</TouchableOpacity>
 );
 
-const Save = (navigation, color = Color.white) => (
+const Save = (navigation, color = Color.white, onPress = undefined) => (
 	<TouchableOpacity
 		style={{ padding: 15 }}
 		hitSlop={hitSlop}
-		onPress={() => {
-			navigation.goBack(null);
-		}}
+		onPress={
+			onPress === undefined ? (
+				() => {
+					navigation.goBack(null);
+				}
+			) : (
+				onPress
+			)
+		}
 	>
 		<Text
 			style={{
@@ -184,7 +190,7 @@ export {
 	Settings,
 	TransparentHeader,
 	Add,
-	AddBucket,
+	AddBookmark,
 	ViewImages,
 	Save
 };

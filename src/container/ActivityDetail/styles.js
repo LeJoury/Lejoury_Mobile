@@ -23,7 +23,7 @@ export default StyleSheet.create({
 		zIndex: 99999
 	},
 	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
-	bucketButton: { top: 0, right: 6, position: 'absolute', zIndex: 99999 },
+	bucketButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
 	image: {
 		height: '100%',
 		width: width,

@@ -16,4 +16,7 @@ export const Languages = _Languages;
 import _Constants from './Constants';
 export const Constants = _Constants;
 
+import _Lottie from './Lottie';
+export const Lottie = _Lottie;
+
 export * from './Utilize';

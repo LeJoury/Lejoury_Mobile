@@ -44,8 +44,8 @@ const AddItineraryDetail = (props) => {
 	const [ top ] = useState(new Animated.Value(20));
 	const [ isTitleFocus, setIsTitleFocus ] = useState(false);
 
-	const [ startDate, setStartDate ] = useState(moment(draftItinerary.startDate).format('DD-MMM-YYYY'));
-	const [ endDate, setEndDate ] = useState(moment(draftItinerary.endDate).format('DD-MMM-YYYY'));
+	const [ startDate, setStartDate ] = useState(moment(new Date(draftItinerary.startDate)).format('DD-MMM-YYYY'));
+	const [ endDate, setEndDate ] = useState(moment(new Date(draftItinerary.endDate)).format('DD-MMM-YYYY'));
 	const [ title, setTitle ] = useState(draftItinerary.title);
 
 	const [ coverPhoto, setCoverPhoto ] = useState(draftItinerary.coverPhoto);
@@ -67,7 +67,6 @@ const AddItineraryDetail = (props) => {
 			// }
 			setSelectedItinerary(props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId));
 
-			// console.log(props.draft.itineraries);
 			return () => {
 				ImagePicker.clean();
 			};
@@ -95,7 +94,7 @@ const AddItineraryDetail = (props) => {
 			itineraryId: itineraryId,
 			days: tmpDays,
 			type: Action.ADD,
-			publishedDate: moment(startDate, 'DD-MMM-YYYY').add(day - 1, 'd').format('DD-MMM-YYYY')
+			publishedDate: moment(new Date(startDate), 'DD-MMM-YYYY').add(day - 1, 'd').format('DD-MMM-YYYY')
 		});
 	};
 
@@ -190,7 +189,7 @@ const AddItineraryDetail = (props) => {
 				{
 					text: Languages.SaveAsDraft,
 					onPress: () => {
-						props.onUpdateHandle();
+						onUpdateHandle();
 						onGoBack();
 					}
 				},

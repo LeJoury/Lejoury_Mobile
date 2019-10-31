@@ -3,6 +3,8 @@ import { View, Platform, StyleSheet, TouchableWithoutFeedback, Dimensions } from
 import * as Animatable from 'react-native-animatable';
 import posed from 'react-native-pose';
 
+import { connect } from 'react-redux';
+
 import { NoInternetNotice } from '@components';
 import { Device, Styles, Color } from '@common';
 
@@ -119,4 +121,7 @@ class TabBar extends PureComponent {
 	}
 }
 
-export default TabBar;
+const mapStateToProps = ({ user }) => ({
+	user
+});
+export default connect(mapStateToProps, null)(TabBar);

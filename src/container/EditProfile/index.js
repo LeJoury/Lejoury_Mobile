@@ -8,42 +8,66 @@ import {
 	Image,
 	TextInput,
 	Alert,
-	Animated,
 	Dimensions
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 
-import { Styles, Languages, Color, Device } from '@common';
+import { connect } from 'react-redux';
+import { getProfile, uploadProfilePhoto, editProfile } from '@actions';
+
+import { Styles, Languages, Color, Images, Constants, Device } from '@common';
+import { Spinner } from '@components';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
+const { Mode, Sizes } = Constants.Spinner;
 
 const EditProfile = (props) => {
 	const [ isDirty, setIsDirty ] = useState(false);
 
-	const [ profilePhoto, setProfilePhoto ] = useState('');
+	const [ profilePhoto, setProfilePhoto ] = useState(props.profile.photo);
 
 	const [ name, setName ] = useState('');
 	const [ isNameFocus, setNameFocus ] = useState(false);
 
-	const [ username, setUsername ] = useState('');
+	const [ username, setUsername ] = useState(props.profile.username);
 	const [ isUsernameFocus, setUsernameFocus ] = useState(false);
 
-	const [ bio, setBio ] = useState('');
+	const [ bio, setBio ] = useState(props.profile.bio);
 	const [ isBioFocus, setBioFocus ] = useState(false);
 
+	const [ isLoading, setIsLoading ] = useState(false);
+
 	useEffect(() => {
+		props.onRef(this);
+
 		return () => {
+			props.onRef(undefined);
 			ImagePicker.clean();
 		};
 	}, []);
 
-	const onConfirmSave = () => {};
+	//parent called
+	onConfirmSave = async () => {
+		let newProfile = {
+			bio: bio,
+			username: username
+		};
+		setIsLoading(true);
 
-	const showAlert = () => {
+		let response = await props.editProfile(props.user.token, newProfile);
+
+		if (response.OK) {
+			setIsLoading(false);
+			setIsDirty(false);
+			props.navigation.goBack(null);
+		}
+	};
+
+	//parent called
+	showDiscardAlert = () => {
 		const { navigation } = props;
-
 		if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
@@ -69,11 +93,22 @@ const EditProfile = (props) => {
 			cropperCircleOverlay: true,
 			cropperToolbarTitle: Languages.MoveScale,
 			cropperChooseText: Languages.Done
-		}).then((image) => {
-			setIsDirty(true);
-			// TODO: RESIZE AND UPLOAD
-			setProfilePhoto(image.path);
+		}).then(async (image) => {
+			setIsLoading(true);
+			let response = await props.uploadProfilePhoto(props.user.token, image);
+
+			if (response.OK) {
+				setIsLoading(false);
+				setProfilePhoto(image.path);
+			}
 		});
+	};
+
+	const renderLoading = () => {
+		if (!isLoading) {
+			return;
+		}
+		return <Spinner mode={Mode.overlay} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
 	};
 
 	return (
@@ -86,12 +121,7 @@ const EditProfile = (props) => {
 				<View style={styles.subContain}>
 					<View style={styles.profileImageContainer}>
 						<Image
-							source={{
-								uri:
-									profilePhoto === ''
-										? 'https://randomuser.me/api/portraits/women/47.jpg'
-										: profilePhoto
-							}}
+							source={profilePhoto ? { uri: profilePhoto } : Images.defaultAvatar}
 							style={styles.profileImage}
 						/>
 						<TouchableOpacity style={Styles.Common.FullFlex} onPress={onPressUploadProfilePhoto}>
@@ -165,7 +195,14 @@ const EditProfile = (props) => {
 					</View>
 				</View>
 			</ScrollView>
+			{renderLoading()}
 		</KeyboardAvoidingView>
 	);
 };
-export default EditProfile;
+
+const mapStateToProps = ({ user, profile }) => ({
+	user,
+	profile
+});
+
+export default connect(mapStateToProps, { getProfile, uploadProfilePhoto, editProfile })(EditProfile);

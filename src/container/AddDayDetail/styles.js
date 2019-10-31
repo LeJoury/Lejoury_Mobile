@@ -20,7 +20,7 @@ export default StyleSheet.create({
 	dateWrapper: {
 		paddingHorizontal: 12,
 		paddingVertical: 10,
-		marginVertical: 8,
+		marginTop: 8,
 		borderColor: Color.lightGrey4,
 		borderTopWidth: 0,
 		borderBottomWidth: 1,
@@ -38,16 +38,6 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Bold',
 		color: Color.darkGrey1,
 		fontSize: 16
-	},
-	separatorWrapper: {
-		...Styles.Common.ColumnCenter,
-		marginVertical: 18
-	},
-	straightSeparator: {
-		width: 1,
-		height: 30,
-		borderRadius: 5,
-		backgroundColor: Color.lightGrey3
 	},
 	addMoreButtonWrapper: {
 		...Styles.Common.ColumnCenter
@@ -83,5 +73,15 @@ export default StyleSheet.create({
 		paddingBottom: Device.isIphoneX ? 14 : 0,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
-	}
+	},
+	separatorWrapper: {
+		...Styles.Common.ColumnCenter,
+		marginVertical: 18
+	},
+	straightSeparator: {
+		width: 1,
+		height: 30,
+		borderRadius: 5,
+		backgroundColor: Color.lightGrey3
+	},
 });

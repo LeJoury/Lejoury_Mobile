@@ -36,7 +36,7 @@ class DraftItinerary extends Component {
 	};
 
 	onPressAddNewItinerary = () => {
-		this.props.navigation.navigate('AddNewItineraryScreen');
+		this.props.navigation.navigate('AddNewItinerary');
 	};
 
 	onRemoveDraft = (itineraryId) => {

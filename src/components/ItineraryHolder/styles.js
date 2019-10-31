@@ -28,7 +28,13 @@ export default StyleSheet.create({
 	},
 	profile_DateText: {
 		color: Color.white,
-		fontSize: 12,
+		fontSize: 14,
+		fontFamily: 'Quicksand-Bold'
+	},
+	profile_noOfLikesText: {
+		marginLeft: 8,
+		fontSize: 14,
+		color: Color.red1,
 		fontFamily: 'Quicksand-Medium'
 	},
 	profile_ItineraryContainer: {
@@ -43,8 +49,9 @@ export default StyleSheet.create({
 		paddingTop: 8,
 		paddingBottom: 4,
 		fontSize: 20,
-		fontFamily: 'Quicksand-Medium'
+		fontFamily: 'Quicksand-Bold'
 	},
+	
 	//draft:
 	draft_CardContainer: {
 		borderRadius: 8,

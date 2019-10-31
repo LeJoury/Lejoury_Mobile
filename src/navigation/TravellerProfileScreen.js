@@ -1,35 +1,49 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
 
 import { Title, Back } from './IconNav';
 
-import { Profile } from '@container';
+import { connect } from 'react-redux';
+import { getTravellerProfile } from '@actions';
 
-import { NoInternetNotice } from '@components';
+import { TravellerProfile } from '@container';
+
 import { Color, Styles } from '@common';
-
-const user = {
-	userId: '622dcef6-2e6e-4009-b810-6f39b557c70c',
-	name: 'Alex Brand',
-	username: 'Brand',
-	emailAddress: 'Sincere@april.biz',
-	bio: 'Travellers, photographers, storytellers, and dreamers.',
-	gender: 'male',
-	followers: 100,
-	following: 50,
-	countries: 8,
-	itineraries: 8,
-	isFollow: true
-};
 
 class TravellerProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(user.username, Color.headerTitleColor),
+		headerTitle: Title(navigation.state.params.user.username, Color.headerTitleColor),
 		headerLeft: Back(navigation, Color.primary)
 	});
 
+	state = {
+		selectedUser: this.props.navigation.state.params.user
+	};
+
+	componentDidMount = async () => {
+		try {
+			const { userId } = this.props.navigation.state.params.user;
+			const { token } = this.props.user;
+
+			let response = await this.props.getTravellerProfile(userId, token);
+
+			if (response.OK) {
+				this.setState({
+					selectedUser: response.user
+				});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	render() {
-		return <Profile navigation={this.props.navigation} user={user} isMe={false} />;
+		return (
+			<TravellerProfile navigation={this.props.navigation} selectedUser={this.state.selectedUser} isMe={false} />
+		);
 	}
 }
-export default TravellerProfileScreen;
+
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, { getTravellerProfile })(TravellerProfileScreen);

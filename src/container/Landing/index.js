@@ -157,14 +157,7 @@ class Landing extends Component {
 			}
 		);
 	};
-
-	// 	email: "lejoury.my@gmail.com"
-	// familyName: null
-	// givenName: "lejoury"
-	// id: "115603408340880260293"
-	// name: "lejoury"
-	// photo: "https://lh4.googleusercontent.com/-Sv6e8t5bUC4/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3reJNnEGmC6sCqk1XzVJgMtzNlXucw/s120/photo.jpg"
-
+	
 	// GOOGLE LOGIN
 	onGoogleLogin = async () => {
 		try {
