@@ -9,6 +9,22 @@ Constants.Action = {
 	}
 };
 
+Constants.Follow_Type = {
+	Follow_Type: {
+		FOLLOW: 'FOLLOW',
+		UNFOLLOW: 'UNFOLLOW'
+	}
+};
+
+
+Constants.Bucket_Type = {
+	Bucket_Type: {
+		ITINERARY: 'ITINERARY',
+		ACTIVITY: 'ACTIVITY'
+	}
+};
+
+
 Constants.Actions = {
 	Types: {
 		UPDATE_CONNECTION_STATUS: 'UPDATE_CONNECTION_STATUS',
@@ -30,7 +46,8 @@ Constants.Actions = {
 		UPDATE_FOLLOWERS: 'UPDATE_FOLLOWERS',
 		UPDATE_FOLLOWING: 'UPDATE_FOLLOWING',
 		UPDATE_FOLLOWERS_LIST: 'UPDATE_FOLLOWERS_LIST',
-		UPDATE_FOLLOWING_LIST: 'UPDATE_FOLLOWING_LIST'
+		UPDATE_FOLLOWING_LIST: 'UPDATE_FOLLOWING_LIST',
+		REMOVE_PHOTO: 'REMOVE_PHOTO'
 	}
 };
 
@@ -59,7 +76,8 @@ Constants.URL = {
 		URL_ITINERARY: 'itinerary',
 		URL_LIKE: 'like',
 		URL_PROFILE: 'profile',
-		URL_COUNTRY_LIST: 'country-list'
+		URL_COUNTRY_LIST: 'country-list',
+		URL_BOOKMARK: 'bookmarks'
 	}
 };
 
@@ -139,6 +157,11 @@ Constants.PARAMS = {
 		TRAVELLER_ID: 'travellerId',
 		TYPE: 'type',
 		ITINERARY_ID: 'itineraryId'
+	},
+	PARAMS_BOOKMARK: {
+		ID: 'id',
+		TYPE: 'type',
+		ACTION: 'action'
 	}
 };
 
@@ -146,7 +169,8 @@ Constants.VERSION = {
 	AUTH_API_VERSION: 'v1',
 	ITINERARY_API_VERSION: 'v1',
 	ACTIVITY_API_VERSION: 'v1',
-	TRAVELLER_API_VERSION: 'v1'
+	TRAVELLER_API_VERSION: 'v1',
+	BOOKMARK_API_VERSION: 'v1'
 };
 
 Constants.Spinner = {

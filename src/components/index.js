@@ -22,6 +22,9 @@ export const UserProfileItem = userProfileItem;
 import profileCenterItem from './ProfileCenterItem';
 export const ProfileCenterItem = profileCenterItem;
 
+import profileItineraryList from './ProfileItineraryList';
+export const ProfileItineraryList = profileItineraryList;
+
 import profileNumber from './ProfileNumber';
 export const ProfileNumber = profileNumber;
 

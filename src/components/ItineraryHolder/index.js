@@ -140,29 +140,50 @@ const ProfileItinerary = ({ itinerary, onPress }) => {
 				<ImageBackground
 					source={{ uri: itinerary.coverPhoto }}
 					style={styles.profile_ImageBackground}
-					resizeMode="stretch"
+					resizeMode="cover"
 				>
 					<LinearGradient
 						style={styles.profile_ItineraryContainer}
 						colors={[
 							Color.transparent1,
+							Color.transparent1,
+							Color.transparent1,
+							Color.transparent1,
+							Color.transparent1,
 							Color.black10T,
 							Color.black30T,
 							Color.black50T,
-							Color.black70T,
 							Color.black70T
 						]}
 					>
-						<Text style={styles.profile_TitleItinerary} numberOfLines={1} ellipsizeMode={'tail'}>
-							{itinerary.title}
-						</Text>
-						<View style={styles.profile_UserContainer}>
-							<View style={Styles.Common.RowCenterRight}>
-								<Heart heartIconSize={Styles.IconSize.Small} isLike={true} disabled={true} />
-								<Text style={styles.profile_noOfLikesText}>{itinerary.totalLikes}</Text>
+						{/* <View style={styles.profile_DateContainer}>
+							<Text style={styles.profile_DateText}>{end}</Text>
+						</View> */}
+
+						<View style={styles.profile_ContentWrapper}>
+							<View style={styles.profile_DetailsContainer}>
+								<Text style={styles.profile_TitleItinerary} numberOfLines={1} ellipsizeMode={'tail'}>
+									{itinerary.title}
+								</Text>
+								{itinerary.quote && (
+									<Text
+										style={styles.profile_QuoteItinerary}
+										numberOfLines={2}
+										ellipsizeMode={'tail'}
+									>
+										{itinerary.quote}
+									</Text>
+								)}
+
+								<View style={styles.profile_LikesContainer}>
+									<Heart heartIconSize={Styles.IconSize.Small} isLike={true} disabled={true} />
+									<Text style={styles.profile_noOfLikesText}>{itinerary.totalLikes}</Text>
+								</View>
 							</View>
 
-							<Text style={styles.profile_DateText}>{end}</Text>
+							<View style={styles.profile_ReadMoreContainer}>
+								<Icon color={Color.white} type="feather" size={22} name="arrow-right" />
+							</View>
 						</View>
 					</LinearGradient>
 				</ImageBackground>

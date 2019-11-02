@@ -42,6 +42,8 @@ export default {
 	Title: 'Title',
 	FillUpBothField: 'Please fill up everything.',
 	SystemError: 'Sorry, our system might having some problems. Please try again later.',
+	ReadMore: 'Read More',
+	ReadLess: 'Read Less',
 
 	//MONTHS
 	Jan: 'Jan',
@@ -141,7 +143,6 @@ export default {
 	Profile: 'Profile',
 	Following: 'Following',
 	Followers: 'Followers',
-	Countries: 'Countries',
 	ButtonFollow: 'Follow',
 	ButtonFollowing: 'Following',
 	EditProfile: 'Edit Profile',
@@ -150,6 +151,11 @@ export default {
 	Bio: 'Bio',
 	NoItineraries: ' has no itineraries yet.',
 	AddBio: 'Add Bio',
+	Collections: 'Collections',
+	Memories: 'Memories',
+	Pictures: 'Pictures',
+	Countries: 'Countries',
+	Experiences: 'Experiences',
 
 	//Crop Image
 	MoveScale: 'Move and Scale',
@@ -232,12 +238,6 @@ export default {
 	TrendingCountries: 'Trending Countries',
 	WhereWouldYouLikeToExplore: 'Where would you like to explore ? ',
 
-	// Profile
-	Collections: 'Collections',
-	Memories: 'Memories',
-	Pictures: 'Pictures',
-	Countries: 'Countries',
-
 	// Search
 	TopPhotos: 'Top Photos',
 	PopularJourneys: 'Popular Journeys',
@@ -306,7 +306,6 @@ export default {
 
 	//Activity Detail
 	Bookmark: 'Bookmark',
-	ReadMore: 'Read More',
 
 	//Itinerary Detail
 	ViewImage: 'View',

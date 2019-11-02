@@ -43,7 +43,7 @@ const formatImages = (images) => {
 
 	for (let i = 0; i < images.length; i++) {
 		let formatted = {
-			url: images[i]
+			url: images[i].link
 		};
 		formattedImages.push(formatted);
 	}

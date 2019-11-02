@@ -15,12 +15,11 @@ import { SearchBar } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { getFollowing, followTraveller, getProfile } from '@actions';
 
-import { Color, Languages, Images } from '@common';
+import { Color, Languages, Images, Constants } from '@common';
 
 import styles from './styles';
 
-const UNFOLLOW = 'UNFOLLOW';
-const FOLLOW = 'FOLLOW';
+const { Follow_Type } = Constants.Follow_Type;
 
 const Following = (props) => {
 	const [ search, setSearch ] = useState('');
@@ -46,7 +45,7 @@ const Following = (props) => {
 			let response = await props.followTraveller(
 				token,
 				travellerId,
-				following ? UNFOLLOW : FOLLOW,
+				following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW,
 				'FollowingList'
 			);
 

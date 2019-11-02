@@ -17,7 +17,10 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Swiper from 'react-native-swiper';
 import StarRating from 'react-native-star-rating';
 
-import { CircleBack, AddBookmark } from '../../navigation/IconNav';
+import { connect } from 'react-redux';
+import { addBookmark, removeBookmark } from '@actions';
+
+import { CircleBack, AddBookmark, RemoveBookmark } from '../../navigation/IconNav';
 
 import { Constants, Styles, Languages, Color, Device, formatImages } from '@common';
 
@@ -27,6 +30,7 @@ import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
 const backTop = Device.isIphoneX ? 35 : 20;
+const { Bucket_Type } = Constants.Bucket_Type;
 
 const ActivityDetail = (props) => {
 	//location details
@@ -43,6 +47,7 @@ const ActivityDetail = (props) => {
 	const [ description, setDescription ] = useState('');
 	const [ rate, setRate ] = useState(0);
 	const [ selectedIndex, setSelectedIndex ] = useState(0);
+	const [ isBookmark, setBookmark ] = useState(false);
 
 	//map
 	const [ region, setRegion ] = useState();
@@ -67,6 +72,7 @@ const ActivityDetail = (props) => {
 		setBudget(selectedActivity.budget);
 		setDescription(selectedActivity.description);
 		setRate(selectedActivity.rate);
+		setBookmark(selectedActivity.bookmarked);
 
 		return () => {};
 	}, []);
@@ -100,6 +106,27 @@ const ActivityDetail = (props) => {
 			};
 			onRegionChange(region);
 		}
+	};
+
+	const onActivityBookmarkPress = async () => {
+		const { token } = props.user;
+		const { selectedActivity } = props.navigation.state.params;
+
+		try {
+			if (!selectedActivity.bookmarked) {
+				let response = await props.addBookmark(token, selectedActivity.id, Bucket_Type.ACTIVITY);
+
+				if (response.OK) {
+					setBookmark(true);
+				}
+			} else {
+				let response = await props.removeBookmark(token, selectedActivity.id, Bucket_Type.ACTIVITY);
+
+				if (response.OK) {
+					setBookmark(false);
+				}
+			}
+		} catch (error) {}
 	};
 
 	const renderSliderBox = () => {
@@ -170,7 +197,13 @@ const ActivityDetail = (props) => {
 		return (
 			<View style={styles.navButtonWrapper}>
 				<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
-				<View style={[ styles.bucketButton, { top: backTop } ]}>{AddBookmark(navigation, Color.white)}</View>
+				<View style={[ styles.bucketButton, { top: backTop } ]}>
+					{isBookmark ? (
+						RemoveBookmark(navigation, Color.white, onActivityBookmarkPress)
+					) : (
+						AddBookmark(navigation, Color.white, onActivityBookmarkPress)
+					)}
+				</View>
 			</View>
 		);
 	};
@@ -235,4 +268,8 @@ const ActivityDetail = (props) => {
 	);
 };
 
-export default ActivityDetail;
+const mapStateToProps = ({ user }) => ({
+	user
+});
+
+export default connect(mapStateToProps, { addBookmark, removeBookmark })(ActivityDetail);

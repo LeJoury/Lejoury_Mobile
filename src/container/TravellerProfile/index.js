@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, ImageBackground, Image } from 'react-native';
-// import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
+import { View, Text, ScrollView, Easing, Animated, RefreshControl, Image } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+
+import { Back } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
 import { followTraveller, getProfile, getPublishedItineraries, getTravellerProfile } from '@actions';
 
-import { ItineraryList, MemoryList, PictureList } from '@container';
-import { UserProfileHeader, UserProfileItem, ProfileCenterItem, Spinner } from '@components';
-import { Images, Languages, toCapitalized, Color, Constants } from '@common';
+import { UserProfileHeader, Spinner, ProfileItineraryList } from '@components';
+import { Images, Languages, Color, Constants } from '@common';
 
 import styles from './styles';
 const { Mode, Sizes } = Constants.Spinner;
@@ -19,7 +20,9 @@ class TravellerProfile extends Component {
 		this.state = {
 			itineraries: [],
 			isLoading: false,
-			selectedUser: this.props.selectedUser
+			selectedUser: this.props.selectedUser,
+			top: new Animated.Value(20),
+			pullToRefresh: false
 		};
 	}
 
@@ -43,6 +46,29 @@ class TravellerProfile extends Component {
 			console.log(error);
 			this.setState({
 				isLoading: false
+			});
+		}
+	};
+
+	refreshProfile = async () => {
+		const { userId } = this.state.selectedUser;
+		const { token } = this.props.user;
+		try {
+			this.setState({ pullToRefresh: true });
+			let response = await this.props.getPublishedItineraries(token, userId, false);
+			if (response.OK) {
+				this.setState({
+					pullToRefresh: false,
+					itineraries: response.itineraries
+				});
+			} else {
+				this.setState({
+					pullToRefresh: false
+				});
+			}
+		} catch (error) {
+			this.setState({
+				pullToRefresh: false
 			});
 		}
 	};
@@ -79,6 +105,14 @@ class TravellerProfile extends Component {
 
 	navigateToItineraries = () => {};
 
+	setBackButtonHide = (hide) => {
+		Animated.timing(this.state.top, {
+			duration: 50,
+			toValue: hide ? -100 : 20,
+			easing: Easing.linear
+		}).start();
+	};
+
 	onFollow = async (action) => {
 		const { userId } = this.state.selectedUser;
 		const { token } = this.props.user;
@@ -99,6 +133,11 @@ class TravellerProfile extends Component {
 		} catch (error) {}
 	};
 
+	onScrollHandle = (event) => {
+		var currentOffset = event.nativeEvent.contentOffset.y;
+		this.setBackButtonHide(currentOffset > 64);
+	};
+
 	renderLoading = () => {
 		const { isLoading } = this.state;
 
@@ -112,37 +151,45 @@ class TravellerProfile extends Component {
 		const { itineraries, selectedUser } = this.state;
 
 		return (
-			<ScrollView ref="scrollView" contentContainerStyle={styles.container}>
-				<UserProfileHeader
-					user={selectedUser}
-					isMe={false}
-					onFollowClick={(action) => this.onFollow(action)}
-					onViewItinerariesPress={this.navigateToItineraries}
-				/>
-				<View style={styles.separator} />
-				{itineraries.length > 0 ? (
-					<View>
-						<View style={styles.sectionContainer}>
-							<Text style={styles.sectionTitle}>{Languages.Collections}</Text>
-							<ItineraryList
-								itineraries={itineraries}
-								user={selectedUser}
-								navigation={navigation}
-								type={'carousel'}
-							/>
+			<LinearGradient colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}>
+				<Animated.View style={[ styles.backButton, { top: this.state.top } ]}>
+					{Back(navigation, Color.darkGrey2)}
+				</Animated.View>
+				<ScrollView
+					ref="scrollView"
+					refreshControl={
+						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
+					}
+					scrollEventThrottle={16}
+					onScroll={(e) => this.onScrollHandle(e)}
+					contentContainerStyle={[ styles.container, { backgroundColor: Color.white } ]}
+				>
+					<UserProfileHeader
+						user={selectedUser}
+						isMe={false}
+						onFollowClick={(action) => this.onFollow(action)}
+						onViewItinerariesPress={this.navigateToItineraries}
+					/>
+					<View style={styles.separator} />
+					{itineraries.length > 0 ? (
+						<View>
+							<View style={styles.sectionContainer}>
+								<Text style={styles.sectionTitle}>{Languages.Collections}</Text>
+								<ProfileItineraryList itineraries={itineraries} navigation={navigation} />
+							</View>
 						</View>
-					</View>
-				) : (
-					<View style={styles.noItinerariesContainer}>
-						<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
-						<Text style={styles.noItinerariesText}>
-							{selectedUser.username}
-							{Languages.NoItineraries}
-						</Text>
-					</View>
-				)}
-				{this.renderLoading()}
-			</ScrollView>
+					) : (
+						<View style={styles.noItinerariesContainer}>
+							<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
+							<Text style={styles.noItinerariesText}>
+								{selectedUser.username}
+								{Languages.NoItineraries}
+							</Text>
+						</View>
+					)}
+					{this.renderLoading()}
+				</ScrollView>
+			</LinearGradient>
 		);
 	}
 }

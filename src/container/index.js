@@ -64,8 +64,11 @@ export const Following = _Following;
 import _EditProfile from './EditProfile';
 export const EditProfile = _EditProfile;
 
-import _BucketList from './BucketList';
-export const BucketList = _BucketList;
+import _BucketActivity from './BucketActivity';
+export const BucketActivity = _BucketActivity;
+
+import _BucketItinerary from './BucketItinerary';
+export const BucketItinerary = _BucketItinerary;
 
 import _ForgotPassword from './ForgotPassword';
 export const ForgotPassword = _ForgotPassword;
@@ -78,6 +81,3 @@ export const AddQuote = _AddQuote;
 
 import _TravellerProfile from './TravellerProfile';
 export const TravellerProfile = _TravellerProfile;
-
-import _ProfileItineraryList from './ProfileItineraryList';
-export const ProfileItineraryList = _ProfileItineraryList;

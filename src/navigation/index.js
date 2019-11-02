@@ -7,7 +7,7 @@ import { createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-n
 
 import { Back, Title } from './IconNav';
 
-import { Color, Device, Styles } from '@common';
+import { Color, Device, Styles, Languages } from '@common';
 import { TabBar, TopTabBar } from '@components';
 
 import HomeScreen from './HomeScreen';
@@ -18,7 +18,9 @@ import ViewImagesScreen from './ViewImagesScreen';
 
 import NotificationScreen from './NoticationScreen';
 
-import BucketListScreen from './BucketListScreen';
+import BucketActivityScreen from './BucketActivityScreen';
+import BucketItineraryScreen from './BucketItineraryScreen';
+
 
 import AddItineraryScreen from './AddItineraryScreen';
 import AddNewItineraryScreen from './AddNewItineraryScreen';
@@ -45,7 +47,6 @@ import ItineraryListScreen from './ItineraryListScreen';
 
 import SplashScreen from './SplashScreen';
 
-import { NoInternetNotice } from '@components';
 
 const FadeTransition = (index, position) => {
 	const sceneRange = [ index - 1, index ];
@@ -57,19 +58,6 @@ const FadeTransition = (index, position) => {
 
 	return {
 		opacity: transition
-	};
-};
-
-const BottomTransition = (index, position, height) => {
-	let sceneRange = [ index - 1, index ];
-	let outputHeight = [ height, 0 ];
-
-	let transition = position.interpolate({
-		inputRange: sceneRange,
-		outputRange: outputHeight
-	});
-	return {
-		transform: [ { translateY: transition } ]
 	};
 };
 
@@ -198,9 +186,35 @@ const AddItineraryStack = createStackNavigator(
 	}
 );
 
+const BucketListTopTabbar = createMaterialTopTabNavigator(
+	{
+		Itinerary: { screen: BucketItineraryScreen },
+		Activity: { screen: BucketActivityScreen }
+	},
+	{
+		navigationOptions: ({ navigation }) => ({
+			headerTitle: Title(Languages.BucketList, Color.headerTitleColor),
+			headerStyle: Styles.Common.toolbar
+		}),
+		initialRouteName: 'Itinerary',
+		tabBarPosition: 'top',
+		animationEnabled: true,
+		lazy: true,
+		swipeEnabled: true,
+		tabBarComponent: TopTabBar,
+		tabBarOptions: {
+			activeTintColor: Color.tabbarTint,
+			inactiveTintColor: Color.tabbarInActiveColor,
+			style: {
+				backgroundColor: Color.transparent
+			}
+		}
+	}
+);
+
 const BucketListStack = createStackNavigator({
 	BucketList: {
-		screen: BucketListScreen,
+		screen: BucketListTopTabbar,
 		navigationOptions: {
 			headerStyle: Styles.Common.toolbar
 		}
@@ -238,7 +252,8 @@ const ProfileStack = createStackNavigator({
 	Profile: {
 		screen: ProfileScreen,
 		navigationOptions: {
-			headerStyle: Styles.Common.toolbar
+			headerStyle: Styles.Common.toolbar,
+			header: null
 		}
 	},
 	ProfileItineraryDetails: {
@@ -266,7 +281,7 @@ const AppNavigator = createBottomTabNavigator(
 		BucketListStack: {
 			screen: BucketListStack,
 			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => <Icon name="heart" type="feather" color={tintColor} />
+				tabBarIcon: ({ tintColor }) => <Icon name="bookmark" type="feather" color={tintColor} />
 			}
 		},
 		AddItinerary: {
@@ -365,7 +380,8 @@ const MainNavigator = createStackNavigator(
 		TravellerProfile: {
 			screen: TravellerProfileScreen,
 			navigationOptions: {
-				headerStyle: Styles.Common.toolbar
+				headerStyle: Styles.Common.toolbar,
+				header: null
 			}
 		}
 	},

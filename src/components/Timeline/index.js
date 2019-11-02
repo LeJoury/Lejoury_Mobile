@@ -21,16 +21,11 @@ const defaultDotColor = Color.white;
 const defaultInnerCircle = 'none';
 
 export default class Timeline extends PureComponent {
-	constructor(props, context) {
-		super(props, context);
+	state = {
+		x: 0,
+		width: 0
+	};
 
-		this.state = {
-			data: this.props.data,
-			dataSource: this.props.data,
-			x: 0,
-			width: 0
-		};
-	}
 	_keyExtractor = (item, index) => index.toString();
 
 	render() {
@@ -39,7 +34,8 @@ export default class Timeline extends PureComponent {
 				<FlatList
 					keyExtractor={this._keyExtractor}
 					style={[ styles.listview, this.props.listViewStyle ]}
-					data={this.state.dataSource}
+					data={this.props.data}
+					extraData={this.props.data}
 					renderItem={this.renderRow}
 					automaticallyAdjustContentInsets={false}
 					{...this.props.options}
@@ -65,7 +61,7 @@ export default class Timeline extends PureComponent {
 	renderEvent = (item) => {
 		const lineWidth = this.props.lineWidth;
 
-		const isLast = this.state.data.slice(-1)[0] === item;
+		const isLast = this.props.data.slice(-1)[0] === item;
 		const lineColor = isLast ? Color.timelineLastLine : defaultLineColor;
 
 		let opStyle = null;
@@ -95,8 +91,12 @@ export default class Timeline extends PureComponent {
 				>
 					<View style={styles.detail}>{this.renderDetail(item)}</View>
 					<View style={Styles.Common.RowCenterBetween}>
-						<TouchableOpacity>
-							<Bookmark isBookmark={false} wrapperStyle={styles.readMoreWrapper}>
+						<TouchableOpacity onPress={() => this.props.onBookmarkPress(item)}>
+							<Bookmark
+								isBookmark={item.bookmarked}
+								onBookmarkPress={() => this.props.onBookmarkPress(item)}
+								wrapperStyle={styles.readMoreWrapper}
+							>
 								<Text style={styles.addToBookmark}>{Languages.Bookmark}</Text>
 							</Bookmark>
 						</TouchableOpacity>
@@ -130,10 +130,8 @@ export default class Timeline extends PureComponent {
 						{photos.map((photo, index) => {
 							return (
 								<LoadImage
-									source={{
-										uri: photo.link
-										// cache: 'only-if-cached'
-									}}
+									key={index.toString()}
+									source={{ uri: photo.link }}
 									style={styles.image}
 									resizeMode={FastImage.resizeMode.cover}
 								/>
@@ -171,7 +169,7 @@ export default class Timeline extends PureComponent {
 		var circleSize = this.props.circleSize ? this.props.circleSize : defaultCircleSize;
 		var circleColor = this.props.circleColor ? this.props.circleColor : defaultCircleColor;
 		var lineWidth = this.props.lineWidth ? this.props.lineWidth : defaultLineWidth;
-		const isLast = this.state.data.slice(-1)[0] === item;
+		const isLast = this.props.data.slice(-1)[0] === item;
 
 		var circleStyle = null;
 		circleStyle = {

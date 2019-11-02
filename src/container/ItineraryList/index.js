@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, FlatList } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 
 import { ItineraryHolder } from '@components';
 import { Languages, Color } from '@common';
@@ -50,16 +49,6 @@ class ItineraryList extends Component {
 		);
 	}
 
-	renderItem = ({ item }) => {
-		return (
-			<ItineraryHolder
-				itinerary={item}
-				key={item.itineraryId}
-				onPress={(itinerary) => this.onPressItinerary(itinerary)}
-			/>
-		);
-	};
-
 	renderItineraryBasedOnCountry = ({ item }) => (
 		<ItineraryHolder
 			itinerary={item}
@@ -74,9 +63,9 @@ class ItineraryList extends Component {
 	renderEmpty = () => <Text>{Languages.Empty}</Text>;
 
 	render() {
-		const { itineraries, type } = this.props;
+		const { itineraries } = this.props;
 
-		return type === 'flatlist' ? (
+		return (
 			<FlatList
 				data={itineraries}
 				style={{ paddingTop: 6 }}
@@ -84,19 +73,6 @@ class ItineraryList extends Component {
 				ItemSeparatorComponent={this.renderSeparator}
 				renderItem={this.renderItineraryBasedOnCountry}
 				ListEmptyComponent={this.renderEmpty}
-			/>
-		) : (
-			<Carousel
-				data={itineraries}
-				layout={'default'}
-				keyExtractor={this._keyExtractor}
-				renderItem={this.renderItem}
-				sliderWidth={sliderWidth}
-				itemWidth={itemWidth}
-				enableMomentum={true}
-				activeSlideAlignment={'start'}
-				inactiveSlideScale={0.9}
-				inactiveSlideOpacity={0.5}
 			/>
 		);
 	}

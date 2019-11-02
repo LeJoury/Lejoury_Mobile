@@ -10,8 +10,15 @@ const PUBLISH_STATUS_PUBLISHED = 'PUBLISHED';
 
 const { URL } = Constants.URL;
 const { STATUS } = Constants.STATUS;
-const { BASIC_PARAMS, PARAMS_ITINERARY, PARAMS_ACTIVITY, PARAMS_LOCATION, PARAMS_DAY } = Constants.PARAMS;
-const { ITINERARY_API_VERSION, ACTIVITY_API_VERSION } = Constants.VERSION;
+const {
+	BASIC_PARAMS,
+	PARAMS_ITINERARY,
+	PARAMS_ACTIVITY,
+	PARAMS_LOCATION,
+	PARAMS_DAY,
+	PARAMS_BOOKMARK
+} = Constants.PARAMS;
+const { ITINERARY_API_VERSION, ACTIVITY_API_VERSION, BOOKMARK_API_VERSION } = Constants.VERSION;
 
 const {
 	URL_ITINERARIES,
@@ -21,7 +28,8 @@ const {
 	URL_PUBLISH,
 	URL_BY_PUBLISHER,
 	URL_COUNTRY_LIST,
-	URL_PHOTO
+	URL_PHOTO,
+	URL_BOOKMARK
 } = URL;
 const { PLATFORM, APP_VERSION } = BASIC_PARAMS;
 
@@ -70,8 +78,6 @@ const CREATE_ITINERARY = async (itinerary, token, userId) => {
 const UPDATE_ITINERARY_BY_ID = async (itineraryId, itinerary, token, userId) => {
 	const { USER_ID, TITLE, START_DATE, END_DATE, QUOTE } = PARAMS_ITINERARY;
 	const { title, startDate, endDate, quote } = itinerary;
-
-	// DESTINATION, QUOTE, TOTAL_DAYS,
 
 	let version = '';
 	try {
@@ -510,6 +516,56 @@ const GET_COUNTRIES = async (token) => {
 	});
 };
 
+const BOOKMARK = async (token, id, type, action) => {
+	const { ID, TYPE, ACTION } = PARAMS_BOOKMARK;
+
+	let params = JSON.stringify({
+		[ID]: id,
+		[TYPE]: type,
+		[ACTION]: action
+	});
+
+	return await new Promise((resolve, reject) => {
+		base
+			.post(`${BOOKMARK_API_VERSION}/${URL_BOOKMARK}`, params, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_COUNTRIES - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
+const GET_BOOKMARKS = async (token, type) => {
+	const { TYPE } = PARAMS_BOOKMARK;
+
+	return await new Promise((resolve, reject) => {
+		base
+			.get(`${BOOKMARK_API_VERSION}/${URL_BOOKMARK}?${TYPE}=${type}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_COUNTRIES - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
 export {
 	CREATE_ITINERARY,
 	CREATE_ACTIVITY,
@@ -526,5 +582,7 @@ export {
 	GET_DRAFT_ACTIVITY_DETAILS,
 	GET_PUBLISHED_ITINERARIES,
 	GET_COUNTRIES,
-	GET_PUBLISHED_ITINERARY_DETAILS
+	GET_PUBLISHED_ITINERARY_DETAILS,
+	GET_BOOKMARKS,
+	BOOKMARK
 };

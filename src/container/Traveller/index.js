@@ -13,16 +13,14 @@ import {
 import { connect } from 'react-redux';
 import { getTravellers, followTraveller, getProfile } from '@actions';
 
-import { Images, Color, Languages } from '@common';
+import { Images, Color, Languages, Constants } from '@common';
 
 import styles from './styles';
 
-const UNFOLLOW = 'UNFOLLOW';
-const FOLLOW = 'FOLLOW';
+const { Follow_Type } = Constants.Follow_Type;
 
 const Traveller = (props) => {
 	useEffect(() => {
-		console.log(props);
 		// const { token } = props.user;
 		// try {
 		// 	let response = props.getTravellers(token, 1);
@@ -46,7 +44,7 @@ const Traveller = (props) => {
 		const { userId } = props.user;
 
 		try {
-			let response = await props.followTraveller(token, travellerId, following ? UNFOLLOW : FOLLOW);
+			let response = await props.followTraveller(token, travellerId, following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW);
 
 			if (response.OK) {
 				await props.getProfile(userId, token);

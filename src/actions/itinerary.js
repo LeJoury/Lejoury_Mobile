@@ -16,11 +16,15 @@ import {
 	GET_DRAFT_ACTIVITY_DETAILS,
 	GET_PUBLISHED_ITINERARIES,
 	GET_COUNTRIES,
-	GET_PUBLISHED_ITINERARY_DETAILS
+	GET_PUBLISHED_ITINERARY_DETAILS,
+	GET_BOOKMARKS,
+	BOOKMARK
 } from '@services';
 
 const { STATUS } = Constants.STATUS;
 const { Types } = Constants.Actions;
+const { Action } = Constants.Action;
+const { Bucket_Type } = Constants.Bucket_Type;
 
 // ----------------------------------- create itinerary ----------------------------------- //
 const createItinerary = (itinerary, token, userId) => async (dispatch) => {
@@ -205,7 +209,7 @@ const createActivity = (activity, token, itineraryId, date, identifier) => async
 				if (result.statusCode === STATUS.SUCCESS) {
 					UPLOAD_ACTIVITY_PHOTOS(result.data.id, token, activity.photos)
 						.then((photo_result) => {
-							let createdActivity = { ...activity, id: result.data.id, photos: photo_result.data};
+							let createdActivity = { ...activity, id: result.data.id, photos: photo_result.data };
 							let response = { OK: true, newActivity: createdActivity };
 
 							// console.log(response);
@@ -238,7 +242,7 @@ const updateActivity = (activityId, activity, token, itineraryId, date, identifi
 				if (result.statusCode === STATUS.SUCCESS) {
 					UPLOAD_ACTIVITY_PHOTOS(activityId, token, activity.photos)
 						.then((photo_result) => {
-							let createdActivity = { ...activity, id: activityId, photos: photo_result.data};
+							let createdActivity = { ...activity, id: activityId, photos: photo_result.data };
 							let response = { OK: true, newActivity: createdActivity };
 
 							// console.log(response);
@@ -264,13 +268,21 @@ const updateActivity = (activityId, activity, token, itineraryId, date, identifi
 };
 
 // ----------------------------------- delete photos ----------------------------------- //
-const deleteActivityPhoto = (photoId, token) => async (dispatch) => {
+const deleteActivityPhoto = (photoId, activityId, itineraryId, token) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID(photoId, token)
 			.then((result) => {
-				console.log(result);
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
+
+					dispatch({
+						type: Types.REMOVE_PHOTO,
+						payload: {
+							activityId,
+							itineraryId,
+							photoId
+						}
+					});
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -418,6 +430,98 @@ const getCountryList = (token) => async (dispatch) => {
 	});
 };
 
+// ----------------------------------- add bookmark ----------------------------------- //
+const addBookmark = (token, id, type) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		BOOKMARK(token, id, type, Action.ADD)
+			.then((result) => {
+				// console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- remove bookmark ----------------------------------- //
+const removeBookmark = (token, id, type) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		BOOKMARK(token, id, type, Action.REMOVE)
+			.then((result) => {
+				// console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get Activity bookmark ----------------------------------- //
+const getActivityBookmark = (token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_BOOKMARKS(token, Bucket_Type.ACTIVITY)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { content } = result.data;
+					console.log(content);
+
+					let response = { OK: true };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get Itinerary bookmark ----------------------------------- //
+const getItineraryBookmark = (token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_BOOKMARKS(token, Bucket_Type.ITINERARY)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { content } = result.data;
+					console.log(content);
+
+					let response = { OK: true };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
 export {
 	createItinerary,
 	createActivity,
@@ -433,5 +537,9 @@ export {
 	getDraftItineraries,
 	getPublishedItineraries,
 	getCountryList,
-	getItineraryById
+	getItineraryById,
+	addBookmark,
+	removeBookmark,
+	getActivityBookmark,
+	getItineraryBookmark
 };

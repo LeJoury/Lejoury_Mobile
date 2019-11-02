@@ -3,10 +3,10 @@ import { View, Animated, Text, Dimensions, Image, TouchableOpacity } from 'react
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { Icon } from 'react-native-elements';
 
-import { CircleBack, AddBookmark } from '../../navigation/IconNav';
-
 import { connect } from 'react-redux';
-import { getItineraryById, likeItinerary } from '@actions';
+import { getItineraryById, likeItinerary, addBookmark, removeBookmark } from '@actions';
+
+import { CircleBack, AddBookmark, RemoveBookmark } from '../../navigation/IconNav';
 
 import { Styles, Languages, Color, Device, Constants } from '@common';
 import { TravellerInfoHolder, Timeline, Spinner, Button } from '@components';
@@ -21,6 +21,7 @@ const TYPE_UNLIKE = 'UNLIKE';
 const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 450 : 350;
 const backTop = Device.isIphoneX ? 35 : 20;
 const { Mode, Sizes } = Constants.Spinner;
+const { Bucket_Type } = Constants.Bucket_Type;
 
 class ItineraryDetails extends Component {
 	constructor(props) {
@@ -56,6 +57,78 @@ class ItineraryDetails extends Component {
 
 	componentWillUnmount() {}
 
+	onActivityBookmarkPress = async (activity) => {
+		const { token } = this.props.user;
+		const { id } = activity;
+
+		try {
+			if (!activity.bookmarked) {
+				let response = await this.props.addBookmark(token, id, Bucket_Type.ACTIVITY);
+
+				if (response.OK) {
+					var tmpItinerary = this.state.itinerary;
+					for (let i = 0; i < tmpItinerary.days.length; i++) {
+						let tmpActivity = tmpItinerary.days[i].activities.find((act) => act.id === id);
+						tmpActivity.bookmarked = true;
+						break;
+					}
+
+					this.setState({
+						itinerary: tmpItinerary
+					});
+				}
+			} else {
+				let response = await this.props.removeBookmark(token, id, Bucket_Type.ACTIVITY);
+
+				if (response.OK) {
+					var tmpItinerary = this.state.itinerary;
+					for (let i = 0; i < tmpItinerary.days.length; i++) {
+						let tmpActivity = tmpItinerary.days[i].activities.find((act) => act.id === id);
+						tmpActivity.bookmarked = false;
+					}
+
+					this.setState({
+						itinerary: tmpItinerary
+					});
+				}
+			}
+		} catch (error) {}
+	};
+
+	onItineraryBookmarkPress = async () => {
+		const { itinerary } = this.state;
+		const { itineraryId } = itinerary;
+		const { token } = this.props.user;
+
+		try {
+			if (!itinerary.bookmarked) {
+				let response = await this.props.addBookmark(token, itineraryId, Bucket_Type.ITINERARY);
+
+				if (response.OK) {
+					this.setState({
+						itinerary: {
+							...this.state.itinerary,
+							bookmarked: true
+						}
+					});
+				}
+			} else {
+				let response = await this.props.removeBookmark(token, itineraryId, Bucket_Type.ITINERARY);
+
+				if (response.OK) {
+					this.setState({
+						itinerary: {
+							...this.state.itinerary,
+							bookmarked: false
+						}
+					});
+				}
+			}
+
+			// console.log(this.state.itinerary);
+		} catch (error) {}
+	};
+
 	onActivityPress = (activity) => {
 		const { navigation } = this.props;
 
@@ -72,13 +145,20 @@ class ItineraryDetails extends Component {
 	onGoToViewImages = () => {
 		const { navigation } = this.props;
 		const { itinerary } = this.state;
-		let images = [ itinerary.coverPhoto ];
+		let coverPhoto = {
+			link: itinerary.coverPhoto,
+			id: -1
+		};
+
+		let images = [ coverPhoto ];
 
 		for (let day = 0; day < itinerary.days.length; day++) {
 			for (let activity = 0; activity < itinerary.days[day].activities.length; activity++) {
 				images.push(...itinerary.days[day].activities[activity].photos);
 			}
 		}
+
+		console.log(images);
 
 		navigation.navigate('ViewImages', {
 			images: images,
@@ -126,6 +206,7 @@ class ItineraryDetails extends Component {
 										style: { marginTop: 10 }
 									}}
 									onEventPress={this.onActivityPress}
+									onBookmarkPress={this.onActivityBookmarkPress}
 								/>
 							</View>
 						</View>
@@ -154,13 +235,18 @@ class ItineraryDetails extends Component {
 
 	renderForeground = () => {
 		const { navigation } = this.props;
+		const { itinerary } = this.state;
 
 		return (
 			<View style={Styles.Common.ColumnCenterBetween}>
 				<View style={styles.navButtonWrapper}>
 					<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
 					<View style={[ styles.bookmarkButton, { top: backTop } ]}>
-						{AddBookmark(navigation, Color.white)}
+						{itinerary.bookmarked ? (
+							RemoveBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
+						) : (
+							AddBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
+						)}
 					</View>
 				</View>
 				<TouchableOpacity style={styles.viewImageWrapper} onPress={this.onGoToViewImages}>
@@ -258,4 +344,6 @@ const mapStateToProps = ({ user }) => ({
 	user
 });
 
-export default connect(mapStateToProps, { getItineraryById, likeItinerary })(ItineraryDetails);
+export default connect(mapStateToProps, { getItineraryById, likeItinerary, addBookmark, removeBookmark })(
+	ItineraryDetails
+);

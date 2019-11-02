@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, ActivityIndicator, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { View, FlatList, ActivityIndicator, Image, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { ScaledImage, Spinner } from '@components';
@@ -26,7 +26,7 @@ const ViewImages = ({ images }) => {
 					setSelectedIndex(index);
 				}}
 			>
-				<ScaledImage uri={item} key={index} width={width - 16} />
+				<ScaledImage uri={item.link} key={index} width={width - 16} />
 			</TouchableOpacity>
 		);
 	};

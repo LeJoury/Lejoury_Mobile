@@ -9,27 +9,29 @@ export default StyleSheet.create({
 		marginBottom: 10,
 		borderRadius: 10,
 		borderWidth: 0,
-		width: width / 1.3,
+		flex: 1,
 		...Styles.Common.ShadowBox
 	},
 	profile_ImageBackground: {
 		width: undefined,
-		flex: 1,
-		height: undefined,
+		height: 240,
 		alignSelf: 'stretch',
-		aspectRatio: 1,
-		borderRadius: 10,
+		borderRadius: 5,
 		overflow: 'hidden'
 	},
-	profile_UserContainer: {
-		...Styles.Common.RowCenterBetween,
-		paddingHorizontal: 18,
-		paddingBottom: 8
+	profile_ContentWrapper: {
+		...Styles.Common.RowBetween,
+		paddingHorizontal: 16,
+		paddingBottom: 14
 	},
-	profile_DateText: {
-		color: Color.white,
-		fontSize: 14,
-		fontFamily: 'Quicksand-Bold'
+	profile_DetailsContainer: {
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start'
+	},
+	profile_LikesContainer: {
+		...Styles.Common.RowCenterRight,
+		paddingLeft: 4,
+		paddingTop: 4
 	},
 	profile_noOfLikesText: {
 		marginLeft: 8,
@@ -39,19 +41,40 @@ export default StyleSheet.create({
 	},
 	profile_ItineraryContainer: {
 		flex: 1,
-		position: 'absolute',
-		width: '100%',
-		bottom: 0
+		justifyContent: 'flex-end',
+		width: '100%'
 	},
 	profile_TitleItinerary: {
 		color: Color.white,
-		paddingHorizontal: 12,
 		paddingTop: 8,
-		paddingBottom: 4,
-		fontSize: 20,
+		fontSize: 22,
 		fontFamily: 'Quicksand-Bold'
 	},
-	
+	profile_QuoteItinerary: {
+		color: Color.white,
+		marginVertical: 4,
+		fontSize: 14,
+		fontStyle: 'italic',
+		fontWeight: '300'
+	},
+	profile_DateContainer: {
+		alignItems: 'flex-end',
+		flex: 1,
+		borderBottomLeftRadius: 5
+	},
+	profile_DateText: {
+		color: Color.darkGrey2,
+		fontSize: 16,
+		backgroundColor: Color.white30T,
+		paddingHorizontal: 8,
+		paddingVertical: 6,
+		fontFamily: 'Quicksand-Bold'
+	},
+	profile_ReadMoreContainer: {
+		...Styles.Common.ColumnCenterRight,
+		justifyContent: 'flex-end'
+	},
+
 	//draft:
 	draft_CardContainer: {
 		borderRadius: 8,

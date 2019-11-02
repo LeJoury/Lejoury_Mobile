@@ -28,7 +28,6 @@ class EditProfileScreen extends PureComponent {
 	};
 
 	_onConfirmSave = () => {
-		console.log('pressed');
 		this.child.onConfirmSave();
 	}
 

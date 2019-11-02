@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Alert, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ReadMore from 'react-native-read-more-text';
 
 import { ProfileNumber, Button } from '@components';
-import { Images, Languages, Color } from '@common';
+import { Images, Languages, Color, Constants } from '@common';
 
 import styles from './styles';
 
-import _ from 'lodash';
-
-const UNFOLLOW = 'UNFOLLOW';
-const FOLLOW = 'FOLLOW';
+const { Follow_Type } = Constants.Follow_Type;
 
 const UserProfileHeader = ({
 	user,
@@ -29,7 +28,7 @@ const UserProfileHeader = ({
 	}, []);
 
 	const onFollowPress = (action) => {
-		if (action === UNFOLLOW) {
+		if (action === Follow_Type.UNFOLLOW) {
 			let message = `${Languages.AreYouSureToUnfollow}${user.username} ?`;
 
 			Alert.alert('', message, [
@@ -41,8 +40,8 @@ const UserProfileHeader = ({
 					text: Languages.Confirm,
 					onPress: () => {
 						if (!isMe) {
-							setIsFollow(action === FOLLOW);
-							onFollowClick(action === FOLLOW ? FOLLOW : UNFOLLOW);
+							setIsFollow(action === Follow_Type.FOLLOW);
+							onFollowClick(action === Follow_Type.FOLLOW ? Follow_Type.FOLLOW : Follow_Type.UNFOLLOW);
 						}
 					},
 					style: 'destructive'
@@ -50,37 +49,69 @@ const UserProfileHeader = ({
 			]);
 		} else {
 			if (!isMe) {
-				setIsFollow(action === FOLLOW);
-				onFollowClick(action === FOLLOW ? FOLLOW : UNFOLLOW);
+				setIsFollow(action === Follow_Type.FOLLOW);
+				onFollowClick(action === Follow_Type.FOLLOW ? Follow_Type.FOLLOW : Follow_Type.UNFOLLOW);
 			}
 		}
 	};
 
+	const renderTruncatedFooter = (handlePress) => {
+		return (
+			<Text style={styles.bioMoreLess} onPress={handlePress}>
+				{Languages.ReadMore}
+			</Text>
+		);
+	};
+
+	const renderRevealedFooter = (handlePress) => {
+		return (
+			<Text style={styles.bioMoreLess} onPress={handlePress}>
+				{Languages.ReadLess}
+			</Text>
+		);
+	};
+
 	const avatar = user && user.photo ? { uri: user.photo } : Images.defaultAvatar;
 
+	// !isMe show Back button
 	return (
-		<View style={styles.container}>
+		<LinearGradient
+			style={styles.container}
+			colors={[
+				Color.splashScreenBg1,
+				Color.splashScreenBg2,
+				Color.splashScreenBg3,
+				Color.splashScreenBg4,
+				Color.transparent,
+				Color.transparent
+			]}
+		>
 			<View style={styles.header}>
 				<View style={styles.avatarWrapper}>
-					<Image
-						source={avatar}
-						style={styles.avatar}
-						//  PlaceholderContent={<ActivityIndicator />}
-					/>
+					<Image source={avatar} style={styles.avatar} PlaceholderContent={<ActivityIndicator />} />
 				</View>
 
 				<View style={styles.userInfoWrapper}>
 					<View style={styles.textContainer}>
 						<Text style={styles.fullName}>{user.username}</Text>
-						{isMe ? (
-							<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
-								<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
-							</TouchableOpacity>
-						) : (
-							<Text style={styles.bio}>{user ? user.bio : ''}</Text>
-						)}
+						<Text style={styles.name}>{user.name ? user.name : user.username}</Text>
 					</View>
 
+					<View style={styles.textContainer}>
+						{isMe ? (
+							<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
+								<ReadMore
+									numberOfLines={5}
+									renderTruncatedFooter={renderTruncatedFooter}
+									renderRevealedFooter={renderRevealedFooter}
+								>
+									<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
+								</ReadMore>
+							</TouchableOpacity>
+						) : (
+							user.bio && <Text style={styles.bio}>{user ? user.bio : ''}</Text>
+						)}
+					</View>
 					{isMe ? (
 						<Button
 							text={Languages.EditProfile}
@@ -96,7 +127,7 @@ const UserProfileHeader = ({
 							text={Languages.ButtonFollowing}
 							textStyle={styles.followButtonText}
 							containerStyle={styles.followButton}
-							onPress={() => onFollowPress(UNFOLLOW)}
+							onPress={() => onFollowPress(Follow_Type.UNFOLLOW)}
 						/>
 					) : (
 						<Button
@@ -106,7 +137,7 @@ const UserProfileHeader = ({
 							containerStyle={styles.unFollowButton}
 							gradientColors={[ Color.secondPrimary, Color.primary ]}
 							type="gradientBorder"
-							onPress={() => onFollowPress(FOLLOW)}
+							onPress={() => onFollowPress(Follow_Type.FOLLOW)}
 						/>
 					)}
 				</View>
@@ -128,7 +159,7 @@ const UserProfileHeader = ({
 					number={user.totalFollowing}
 				/>
 			</View>
-		</View>
+		</LinearGradient>
 	);
 };
 

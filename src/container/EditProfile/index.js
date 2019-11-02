@@ -28,7 +28,7 @@ const EditProfile = (props) => {
 
 	const [ profilePhoto, setProfilePhoto ] = useState(props.profile.photo);
 
-	const [ name, setName ] = useState('');
+	const [ name, setName ] = useState(props.profile.name);
 	const [ isNameFocus, setNameFocus ] = useState(false);
 
 	const [ username, setUsername ] = useState(props.profile.username);
@@ -52,7 +52,8 @@ const EditProfile = (props) => {
 	onConfirmSave = async () => {
 		let newProfile = {
 			bio: bio,
-			username: username
+			username: username,
+			name: name
 		};
 		setIsLoading(true);
 
@@ -71,7 +72,7 @@ const EditProfile = (props) => {
 		if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
-					text: Languages.SaveAsDraft,
+					text: Languages.Save,
 					onPress: onConfirmSave
 				},
 				{

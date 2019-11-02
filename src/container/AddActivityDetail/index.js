@@ -304,6 +304,9 @@ const AddActivityDetail = (props) => {
 
 	const [ locationResults, setLocationResults ] = useState([]);
 
+	const [ itineraryId, setItineraryId ] = useState();
+	const [ activityId, setActivityId ] = useState();
+
 	useEffect(() => {
 		const { navigation } = props;
 		const { type } = navigation.state.params;
@@ -312,9 +315,11 @@ const AddActivityDetail = (props) => {
 		this.timer = null;
 
 		if (type === 'edit') {
+			const { itineraryId, activityId } = navigation.state.params;
 			const { selectedActivity } = navigation.state.params;
 
-			let currentPhotos = selectedActivity.photos.length < 6 ? selectedActivity.photos.concat('empty') : selectedActivity.photos;
+			let currentPhotos =
+				selectedActivity.photos.length < 6 ? selectedActivity.photos.concat('empty') : selectedActivity.photos;
 
 			setTitle(selectedActivity.title);
 			setLocation(selectedActivity.location);
@@ -323,6 +328,8 @@ const AddActivityDetail = (props) => {
 			setCurrency(selectedActivity.currency);
 			setDescription(selectedActivity.description);
 			setRate(selectedActivity.rating);
+			setItineraryId(itineraryId);
+			setActivityId(activityId);
 		}
 
 		return () => {
@@ -403,7 +410,12 @@ const AddActivityDetail = (props) => {
 		} else {
 			if (removedPhoto.id) {
 				try {
-					let response = await props.deleteActivityPhoto(removedPhoto.id, props.user.token);
+					let response = await props.deleteActivityPhoto(
+						removedPhoto.id,
+						activityId,
+						itineraryId,
+						props.user.token
+					);
 
 					if (response.OK) {
 						let currentPhotos = photos.filter((photo) => {

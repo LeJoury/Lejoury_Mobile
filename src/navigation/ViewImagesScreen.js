@@ -16,8 +16,8 @@ class ViewImagesScreen extends PureComponent {
 
 	render() {
 		const { navigation } = this.props;
-		const images = navigation.getParam('images');
-
+		const images = navigation.state.params.images;
+		
 		return (
 			<View style={Styles.Common.FullFlex}>
 				<ViewImages navigation={navigation} images={images} />

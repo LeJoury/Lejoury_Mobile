@@ -224,7 +224,7 @@ class AddDayDetail extends Component {
 	};
 
 	onNavigateToEditActivityDetail = (index) => {
-		const { activities } = this.state;
+		const { activities,itineraryId } = this.state;
 		const { navigation } = this.props;
 
 		let selectedActivity = activities[index];
@@ -234,6 +234,8 @@ class AddDayDetail extends Component {
 			type: 'edit',
 			index,
 			selectedActivity,
+			itineraryId,
+			activityId: selectedActivity.id,
 			onSaved: this.onEditActivity
 		});
 	};

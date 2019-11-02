@@ -445,7 +445,7 @@ class ItineraryListScreen extends PureComponent {
 
 	render() {
 		const { navigation } = this.props;
-		return <ItineraryList itineraries={itineraries} navigation={navigation} type={'flatlist'} />;
+		return <ItineraryList itineraries={itineraries} navigation={navigation} />;
 	}
 }
 export default ItineraryListScreen;

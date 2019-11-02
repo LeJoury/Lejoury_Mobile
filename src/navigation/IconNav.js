@@ -101,7 +101,25 @@ const AddBookmark = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="bookmark" type="feather" color={color} size={18} />
+		<Icon name="bookmark-o" type={'font-awesome'} color={color} size={18} />
+	</TouchableOpacity>
+);
+
+const RemoveBookmark = (navigation, color = Color.white, onPress = undefined) => (
+	<TouchableOpacity
+		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+		hitSlop={hitSlop}
+		onPress={
+			onPress === undefined ? (
+				() => {
+					navigation.goBack(null);
+				}
+			) : (
+				onPress
+			)
+		}
+	>
+		<Icon name="bookmark" type={'font-awesome'} color={color} size={18} />
 	</TouchableOpacity>
 );
 
@@ -191,6 +209,7 @@ export {
 	TransparentHeader,
 	Add,
 	AddBookmark,
+	RemoveBookmark,
 	ViewImages,
 	Save
 };

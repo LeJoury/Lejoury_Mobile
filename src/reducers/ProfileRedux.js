@@ -1,8 +1,7 @@
 import { Constants } from '@common';
 
 const { Types } = Constants.Actions;
-const FOLLOW = 'FOLLOW';
-const UNFOLLOW = 'UNFOLLOW';
+const { Follow_Type } = Constants.Follow_Type;
 
 const INITIAL_STATE = {
 	bio: null,
@@ -23,7 +22,7 @@ const updateList = (travellers, userId, action) => {
 
 	if (index === -1) {
 	} else {
-		tmpList[index] = { ...tmpList[index], following: action === FOLLOW };
+		tmpList[index] = { ...tmpList[index], following: action === Follow_Type.FOLLOW };
 	}
 
 	return tmpList;
@@ -42,7 +41,8 @@ export const reducer = (state = INITIAL_STATE, action) => {
 				totalFollowing: action.payload.totalFollowing,
 				totalItineraries: action.payload.totalItineraries,
 				userId: action.payload.id,
-				username: action.payload.username
+				username: action.payload.username,
+				name: action.payload.name
 			};
 		case Types.CLEAR_PROFILE:
 			return {

@@ -10,34 +10,34 @@ import { TravellerProfile } from '@container';
 import { Color, Styles } from '@common';
 
 class TravellerProfileScreen extends PureComponent {
-	static navigationOptions = ({ navigation }) => ({
-		headerTitle: Title(navigation.state.params.user.username, Color.headerTitleColor),
-		headerLeft: Back(navigation, Color.primary)
-	});
+	// static navigationOptions = ({ navigation }) => ({
+	// 	headerTitle: Title(navigation.state.params.user.username, Color.headerTitleColor),
+	// 	headerLeft: Back(navigation, Color.primary)
+	// });
 
-	state = {
-		selectedUser: this.props.navigation.state.params.user
-	};
+	// state = {
+	// 	selectedUser: this.props.navigation.state.params.user
+	// };
 
-	componentDidMount = async () => {
-		try {
-			const { userId } = this.props.navigation.state.params.user;
-			const { token } = this.props.user;
+	// componentDidMount = async () => {
+	// 	try {
+	// 		const { userId } = this.props.navigation.state.params.user;
+	// 		const { token } = this.props.user;
 
-			let response = await this.props.getTravellerProfile(userId, token);
+	// 		let response = await this.props.getTravellerProfile(userId, token);
 
-			if (response.OK) {
-				this.setState({
-					selectedUser: response.user
-				});
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// 		if (response.OK) {
+	// 			this.setState({
+	// 				selectedUser: response.user
+	// 			});
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 	render() {
 		return (
-			<TravellerProfile navigation={this.props.navigation} selectedUser={this.state.selectedUser} isMe={false} />
+			<TravellerProfile navigation={this.props.navigation} selectedUser={ this.props.navigation.state.params.user} isMe={false} />
 		);
 	}
 }

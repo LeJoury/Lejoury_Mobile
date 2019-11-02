@@ -1,9 +1,7 @@
 import { Constants } from '@common';
 
 const { Types } = Constants.Actions;
-
-const FOLLOW = 'FOLLOW';
-const UNFOLLOW = 'UNFOLLOW';
+const { Follow_Type } = Constants.Follow_Type;
 
 const INITIAL_STATE = {
 	travellers: []
@@ -15,7 +13,7 @@ const updateTravellers = (travellers, userId, action) => {
 
 	if (index === -1) {
 	} else {
-		tmpTravellers[index] = { ...tmpTravellers[index], following: action === FOLLOW };
+		tmpTravellers[index] = { ...tmpTravellers[index], following: action === Follow_Type.FOLLOW };
 	}
 
 	return tmpTravellers;
@@ -33,12 +31,12 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.FOLLOW_TRAVELLER:
 			return {
 				...state,
-				travellers: updateTravellers(state.travellers, action.payload.userId, FOLLOW)
+				travellers: updateTravellers(state.travellers, action.payload.userId, Follow_Type.FOLLOW)
 			};
 		case Types.UNFOLLOW_TRAVELLER:
 			return {
 				...state,
-				travellers: updateTravellers(state.travellers, action.payload.userId, UNFOLLOW)
+				travellers: updateTravellers(state.travellers, action.payload.userId, Follow_Type.UNFOLLOW)
 			};
 		default:
 			return state;

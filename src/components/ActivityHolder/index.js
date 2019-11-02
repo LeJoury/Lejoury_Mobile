@@ -37,6 +37,7 @@ const ActivityHolder = ({ index, name, photos, description, currency, budget, ra
 							{photos.map((photo, index) => {
 								return (
 									<Image
+										key={index.toString()}
 										source={{ uri: photo.link ? photo.link : photo }}
 										style={styles.image}
 										resizeMode="cover"

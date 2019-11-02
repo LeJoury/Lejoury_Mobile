@@ -4,18 +4,14 @@ import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
 	container: {
-		flexGrow: 1,
-		paddingTop: 6
+		flexGrow: 1
 	},
 	landingBackground: {
 		width,
 		top: 0
 	},
-	backButtonWrapper: {
-		// ...Styles.Common.ColumnCenterRight,
-		backgroundColor: Color.transparent,
-		paddingTop: 15
-	},
+	backButton: { left: 0, position: 'absolute', zIndex: 99999 },
+
 	headerSection: {
 		paddingHorizontal: 20,
 		paddingVertical: 10,
@@ -25,7 +21,6 @@ export default StyleSheet.create({
 	},
 	separator: {
 		borderBottomWidth: 8,
-		marginTop: 12,
 		borderColor: Color.lightGrey2
 	},
 

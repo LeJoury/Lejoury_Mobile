@@ -13,10 +13,8 @@ import {
 
 const { STATUS } = Constants.STATUS;
 const { Types } = Constants.Actions;
+const { Follow_Type } = Constants.Follow_Type;
 const { ASYNCKEY } = Constants.ASYNCKEY;
-
-const UNFOLLOW = 'UNFOLLOW';
-const FOLLOW = 'FOLLOW';
 
 // -----------------------------  get profile ----------------------------------- //
 const getProfile = (travellerId, token) => async (dispatch) => {
@@ -36,6 +34,7 @@ const getProfile = (travellerId, token) => async (dispatch) => {
 							id: data.userId,
 							bio: data.bio,
 							photo: data.photo,
+							name: data.name,
 							totalFollowers: data.totalFollowers,
 							totalFollowing: data.totalFollowing,
 							totalItineraries: data.totalItineraries
@@ -118,7 +117,7 @@ const followTraveller = (token, travellerId, type, from = 'none') => async (disp
 					let response = { OK: true };
 
 					dispatch({
-						type: type === FOLLOW ? Types.FOLLOW_TRAVELLER : Types.UNFOLLOW_TRAVELLER,
+						type: type === Follow_Type.FOLLOW ? Types.FOLLOW_TRAVELLER : Types.UNFOLLOW_TRAVELLER,
 						payload: { userId: travellerId }
 					});
 
@@ -154,7 +153,6 @@ const likeItinerary = (token, itineraryId, type) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		LIKE_NEW_ITINERARY(token, itineraryId, type)
 			.then((result) => {
-				console.log(result);
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
 
@@ -259,7 +257,6 @@ const getTravellerProfile = (travellerId, token) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true, user: result.data };
-
 					// console.log(response);
 					resolve(response);
 				} else if (result.statusCode === 401) {
