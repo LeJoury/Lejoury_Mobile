@@ -14,6 +14,22 @@ export default StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
+	foregroundWrapper: {
+		flex: 0.8,
+		justifyContent: 'center'
+	},
+	quoteWrapper: {
+		...Styles.Common.ColumnCenterLeft,
+		borderRadius: 6,
+		backgroundColor: Color.black20T,
+		marginHorizontal: 16,
+		padding: 16
+	},
+	quoteTextStyle: {
+		color: Color.lightGrey6,
+		fontSize: 16,
+		fontFamily: 'Quicksand-Medium'
+	},
 	navButtonWrapper: {
 		flexDirection: 'row',
 		flex: 1,

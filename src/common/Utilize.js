@@ -5,6 +5,12 @@ const toCapitalized = (string) => {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+const getCountryCurrency = (name) => {
+	const currencies = require('../../assets/currency-symbols.json');
+
+	return currencies[name];
+};
+
 const getCountry = (code) => {
 	if (code === 'MY') return 'Malaysia';
 	else if (code === 'SG') return 'Singapore';
@@ -85,8 +91,7 @@ const validateEmail = (email) => {
 const validatePassword = (password) => {
 	var re = /^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).{6,12}$/;
 	return re.test(String(password).toLowerCase());
-
-}
+};
 
 const createStaggerAnimationStyle = (animation) => {
 	const translateY = animation.interpolate({
@@ -107,6 +112,7 @@ const createStaggerAnimationStyle = (animation) => {
 export {
 	toCapitalized,
 	getCountry,
+	getCountryCurrency,
 	calculateDays,
 	create_UUID,
 	realmObjectToArray,

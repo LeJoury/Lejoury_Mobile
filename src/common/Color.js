@@ -101,10 +101,15 @@ export default {
 	lightGrey6: '#f2f2f2',
 
 	grey1: '#9B9B9B',
+	grey2: '#878787',
+	grey3: '#7a7a7a',
+	grey4: '#6e6e6e',
 
 	darkGrey1: '#3d3d3d',
 	darkGrey2: '#333333',
 	darkGrey3: '#4f4f4f',
+	darkGrey4: '#696969',
+	darkGrey5: '#787878',
 
 	red1: '#e74c3c',
 	red2: '#fb3958',

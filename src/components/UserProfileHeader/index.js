@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ReadMore from 'react-native-read-more-text';
+import { Icon } from 'react-native-elements';
 
 import { ProfileNumber, Button } from '@components';
-import { Images, Languages, Color, Constants } from '@common';
+import { Images, Languages, Color, Constants, Styles } from '@common';
 
 import styles from './styles';
 
@@ -71,58 +72,11 @@ const UserProfileHeader = ({
 		);
 	};
 
-	const avatar = user && user.photo ? { uri: user.photo } : Images.defaultAvatar;
-
-	// !isMe show Back button
-	return (
-		<LinearGradient
-			style={styles.container}
-			colors={[
-				Color.splashScreenBg1,
-				Color.splashScreenBg2,
-				Color.splashScreenBg3,
-				Color.splashScreenBg4,
-				Color.transparent,
-				Color.transparent
-			]}
-		>
-			<View style={styles.header}>
-				<View style={styles.avatarWrapper}>
-					<Image source={avatar} style={styles.avatar} PlaceholderContent={<ActivityIndicator />} />
-				</View>
-
-				<View style={styles.userInfoWrapper}>
-					<View style={styles.textContainer}>
-						<Text style={styles.fullName}>{user.username}</Text>
-						<Text style={styles.name}>{user.name ? user.name : user.username}</Text>
-					</View>
-
-					<View style={styles.textContainer}>
-						{isMe ? (
-							<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
-								<ReadMore
-									numberOfLines={5}
-									renderTruncatedFooter={renderTruncatedFooter}
-									renderRevealedFooter={renderRevealedFooter}
-								>
-									<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
-								</ReadMore>
-							</TouchableOpacity>
-						) : (
-							user.bio && <Text style={styles.bio}>{user ? user.bio : ''}</Text>
-						)}
-					</View>
-					{isMe ? (
-						<Button
-							text={Languages.EditProfile}
-							textColor={Color.primaryLight}
-							textStyle={styles.editButtonText}
-							containerStyle={styles.editButton}
-							gradientColors={[ Color.secondPrimary, Color.primary ]}
-							type="gradientBorder"
-							onPress={onEditProfilePress}
-						/>
-					) : isFollow ? (
+	const renderTravellerButton = () => {
+		if (!isMe) {
+			return (
+				<View style={styles.buttonWrapper}>
+					{isFollow ? (
 						<Button
 							text={Languages.ButtonFollowing}
 							textStyle={styles.followButtonText}
@@ -132,34 +86,90 @@ const UserProfileHeader = ({
 					) : (
 						<Button
 							text={Languages.ButtonFollow}
-							textColor={Color.primaryLight}
-							textStyle={styles.unFollowButtonText}
-							containerStyle={styles.unFollowButton}
-							gradientColors={[ Color.secondPrimary, Color.primary ]}
-							type="gradientBorder"
+							textStyle={styles.followingButtonText}
+							containerStyle={styles.followingButton}
 							onPress={() => onFollowPress(Follow_Type.FOLLOW)}
 						/>
 					)}
 				</View>
+			);
+		}
+	};
+
+	const avatar = user && user.photo ? { uri: user.photo } : Images.defaultAvatar;
+
+	return (
+		<View>
+			<LinearGradient
+				style={styles.container}
+				colors={[
+					Color.splashScreenBg1,
+					Color.splashScreenBg2,
+					Color.splashScreenBg3,
+					Color.splashScreenBg4,
+					Color.transparent,
+					Color.transparent
+				]}
+			>
+				<View style={styles.header}>
+					{isMe && (
+						<TouchableOpacity style={styles.editButtonWrapper} onPress={onEditProfilePress}>
+							<Icon name="edit" type="feather" size={Styles.IconSize.Medium} color={Color.grey1} />
+						</TouchableOpacity>
+					)}
+					<View style={styles.avatarWrapper}>
+						<Image source={avatar} style={styles.avatar} PlaceholderContent={<ActivityIndicator />} />
+					</View>
+
+					<View style={styles.userInfoWrapper}>
+						<View style={styles.textContainer}>
+							<Text style={styles.fullName}>{user.username}</Text>
+							<Text style={styles.name}>{user.name ? user.name : user.username}</Text>
+						</View>
+
+						{renderTravellerButton()}
+						<View style={styles.headerColumn}>
+							<ProfileNumber
+								onPress={onViewItinerariesPress}
+								header={Languages.Itineraries}
+								number={user.totalItineraries}
+							/>
+							<ProfileNumber
+								onPress={onViewFollowersPress}
+								header={Languages.Followers}
+								number={user.totalFollowers}
+							/>
+							<ProfileNumber
+								onPress={onViewFollowingPress}
+								header={Languages.Following}
+								number={user.totalFollowing}
+							/>
+						</View>
+					</View>
+				</View>
+			</LinearGradient>
+			<View style={styles.bioContainer}>
+				{isMe ? (
+					<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
+						<Text style={styles.bioAbout}>About</Text>
+						<ReadMore
+							numberOfLines={5}
+							renderTruncatedFooter={renderTruncatedFooter}
+							renderRevealedFooter={renderRevealedFooter}
+						>
+							<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
+						</ReadMore>
+					</TouchableOpacity>
+				) : (
+					user.bio && (
+						<View>
+							<Text style={styles.bioAbout}>About</Text>
+							<Text style={styles.bio}>{user ? user.bio : ''}</Text>
+						</View>
+					)
+				)}
 			</View>
-			<View style={styles.headerColumn}>
-				<ProfileNumber
-					onPress={onViewItinerariesPress}
-					header={Languages.Itineraries}
-					number={user.totalItineraries}
-				/>
-				<ProfileNumber
-					onPress={onViewFollowersPress}
-					header={Languages.Followers}
-					number={user.totalFollowers}
-				/>
-				<ProfileNumber
-					onPress={onViewFollowingPress}
-					header={Languages.Following}
-					number={user.totalFollowing}
-				/>
-			</View>
-		</LinearGradient>
+		</View>
 	);
 };
 

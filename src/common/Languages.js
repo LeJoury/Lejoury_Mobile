@@ -306,6 +306,8 @@ export default {
 
 	//Activity Detail
 	Bookmark: 'Bookmark',
+	MyStory: 'My Story',
+	Directions: 'Directions',
 
 	//Itinerary Detail
 	ViewImage: 'View',

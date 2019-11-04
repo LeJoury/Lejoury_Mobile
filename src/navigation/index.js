@@ -294,12 +294,12 @@ const AppNavigator = createBottomTabNavigator(
 				)
 			}
 		},
-		NotificationStack: {
-			screen: NotificationStack,
-			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => <Icon name="bell" type="feather" color={tintColor} />
-			}
-		},
+		// NotificationStack: {
+		// 	screen: NotificationStack,
+		// 	navigationOptions: {
+		// 		tabBarIcon: ({ tintColor }) => <Icon name="bell" type="feather" color={tintColor} />
+		// 	}
+		// },
 		ProfileStack: {
 			screen: ProfileStack,
 			navigationOptions: {

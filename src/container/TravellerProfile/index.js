@@ -31,17 +31,32 @@ class TravellerProfile extends Component {
 		const { token } = this.props.user;
 		try {
 			this.setState({ isLoading: true });
-			let response = await this.props.getPublishedItineraries(token, userId, false);
-			if (response.OK) {
-				this.setState({
-					isLoading: false,
-					itineraries: response.itineraries
-				});
-			} else {
-				this.setState({
-					isLoading: false
-				});
-			}
+			let itineraryResponse = await this.props.getPublishedItineraries(token, userId, false);
+			let profileResponse = await this.props.getTravellerProfile(userId, token);
+
+			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
+				if (itineraryResponse.OK) {
+					this.setState({
+						isLoading: false,
+						itineraries: itineraryResponse.itineraries
+					});
+				} else {
+					this.setState({
+						isLoading: false
+					});
+				}
+
+				if (profileResponse.OK) {
+					this.setState({
+						isLoading: false,
+						selectedUser: profileResponse.user
+					});
+				} else {
+					this.setState({
+						isLoading: false
+					});
+				}
+			});
 		} catch (error) {
 			console.log(error);
 			this.setState({
@@ -55,17 +70,32 @@ class TravellerProfile extends Component {
 		const { token } = this.props.user;
 		try {
 			this.setState({ pullToRefresh: true });
-			let response = await this.props.getPublishedItineraries(token, userId, false);
-			if (response.OK) {
-				this.setState({
-					pullToRefresh: false,
-					itineraries: response.itineraries
-				});
-			} else {
-				this.setState({
-					pullToRefresh: false
-				});
-			}
+			let itineraryResponse = await this.props.getPublishedItineraries(token, userId, false);
+			let profileResponse = await this.props.getTravellerProfile(userId, token);
+
+			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
+				if (itineraryResponse.OK) {
+					this.setState({
+						isLoading: false,
+						itineraries: itineraryResponse.itineraries
+					});
+				} else {
+					this.setState({
+						isLoading: false
+					});
+				}
+
+				if (profileResponse.OK) {
+					this.setState({
+						isLoading: false,
+						selectedUser: profileResponse.user
+					});
+				} else {
+					this.setState({
+						isLoading: false
+					});
+				}
+			});
 		} catch (error) {
 			this.setState({
 				pullToRefresh: false
@@ -153,10 +183,9 @@ class TravellerProfile extends Component {
 		return (
 			<LinearGradient colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}>
 				<Animated.View style={[ styles.backButton, { top: this.state.top } ]}>
-					{Back(navigation, Color.darkGrey2)}
+					{Back(navigation, Color.white)}
 				</Animated.View>
 				<ScrollView
-					ref="scrollView"
 					refreshControl={
 						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
 					}

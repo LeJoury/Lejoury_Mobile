@@ -113,7 +113,6 @@ class Profile extends PureComponent {
 					{Settings(navigation, Color.white)}
 				</Animated.View>
 				<ScrollView
-					ref="scrollView"
 					refreshControl={
 						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
 					}

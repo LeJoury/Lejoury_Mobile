@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
 	View,
-	Animated,
 	ImageBackground,
 	Text,
 	Dimensions,
@@ -10,19 +9,22 @@ import {
 	TouchableOpacity,
 	Platform,
 	Modal,
-	Image
+	Image,
+	Linking
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Swiper from 'react-native-swiper';
 import StarRating from 'react-native-star-rating';
+import { Icon } from 'react-native-elements';
+import ReadMore from 'react-native-read-more-text';
 
 import { connect } from 'react-redux';
 import { addBookmark, removeBookmark } from '@actions';
 
 import { CircleBack, AddBookmark, RemoveBookmark } from '../../navigation/IconNav';
 
-import { Constants, Styles, Languages, Color, Device, formatImages } from '@common';
+import { Constants, Styles, Languages, Color, Device, formatImages, getCountryCurrency } from '@common';
 
 const { Sizes } = Constants.Spinner;
 
@@ -38,6 +40,10 @@ const ActivityDetail = (props) => {
 	const [ locationLat, setLocationLat ] = useState(0);
 	const [ locationLng, setLocationLng ] = useState(0);
 	const [ locationCountry, setLocationCountry ] = useState();
+	const [ locationUrl, setLocationUrl ] = useState();
+	const [ locationState, setLocationState ] = useState();
+	const [ locationPostcode, setLocationPostcode ] = useState();
+	const [ locationTypes, setLocationTypes ] = useState();
 
 	//activity details
 	const [ title, setTitle ] = useState('');
@@ -59,6 +65,7 @@ const ActivityDetail = (props) => {
 		const { navigation } = props;
 		const { selectedActivity } = navigation.state.params;
 
+		console.log(selectedActivity);
 		// props.onRef(this);
 		setTitle(selectedActivity.title);
 
@@ -66,12 +73,16 @@ const ActivityDetail = (props) => {
 		setLocationLat(selectedActivity.location.lat);
 		setLocationLng(selectedActivity.location.lng);
 		setLocationCountry(selectedActivity.location.country);
+		setLocationUrl(selectedActivity.location.url);
+		setLocationState(selectedActivity.location.state);
+		setLocationPostcode(selectedActivity.location.postcode);
+		setLocationTypes(selectedActivity.location.types);
 
 		setPhotos(selectedActivity.photos);
 		setCurrency(selectedActivity.currency);
 		setBudget(selectedActivity.budget);
 		setDescription(selectedActivity.description);
-		setRate(selectedActivity.rate);
+		setRate(selectedActivity.rating);
 		setBookmark(selectedActivity.bookmarked);
 
 		return () => {};
@@ -84,6 +95,10 @@ const ActivityDetail = (props) => {
 
 	const onRegionChange = (region) => {
 		setRegion(region);
+	};
+
+	const openGps = () => {
+		Linking.openURL(locationUrl);
 	};
 
 	const onMapReady = () => {
@@ -208,60 +223,123 @@ const ActivityDetail = (props) => {
 		);
 	};
 
+	const renderCurrency = () => {
+		let tmpCurrency = getCountryCurrency(currency);
+
+		if (tmpCurrency) {
+			return (
+				<Text style={styles.budgetTextStyle}>
+					{tmpCurrency.symbol} {budget.toFixed(2)}
+				</Text>
+			);
+		}
+	};
+
+	const renderTruncatedFooter = (handlePress) => {
+		return (
+			<Text style={styles.descriptionMoreLess} onPress={handlePress}>
+				{Languages.ReadMore}
+			</Text>
+		);
+	};
+
+	const renderRevealedFooter = (handlePress) => {
+		return (
+			<Text style={styles.descriptionMoreLess} onPress={handlePress}>
+				{Languages.ReadLess}
+			</Text>
+		);
+	};
+
 	return (
 		<ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ flexGrow: 1 }}>
 			{renderSliderBox()}
 			{renderNavButton()}
 			{renderPreviewModal()}
 			<View style={styles.subContain}>
-				<View style={[ styles.contentWrapper, { marginTop: 18 } ]}>
-					<Text
-						multiline={true}
-						numberOfLines={2}
-						ellipsizeMode={'tail'}
-						style={[ styles.contentTextStyle, styles.title ]}
-					>
+				<View style={styles.contentWrapper}>
+					<Text multiline={true} numberOfLines={2} ellipsizeMode={'tail'} style={styles.titleTextStyle}>
 						{title}
 					</Text>
+
+					<View style={styles.budgetRateContainer}>
+						<View style={styles.budgetContainer}>
+							<Icon
+								name="wallet"
+								type={'simple-line-icon'}
+								size={Styles.IconSize.Small}
+								color={Color.darkGrey2}
+							/>
+							{renderCurrency()}
+						</View>
+						<View>
+							<StarRating
+								maxStars={5}
+								rating={rate}
+								starSize={16}
+								starStyle={styles.ratingStar}
+								fullStarColor={Color.starYellow}
+								disabled
+							/>
+						</View>
+					</View>
+
+					<View style={styles.separator} />
+
+					<View style={styles.descriptionContainer}>
+						<View style={Styles.Common.ColumnCenter}>
+							<Text style={styles.descriptionLabelStyle}>{Languages.MyStory}</Text>
+						</View>
+						<ReadMore
+							numberOfLines={8}
+							renderTruncatedFooter={renderTruncatedFooter}
+							renderRevealedFooter={renderRevealedFooter}
+						>
+							<Text multiline={true} style={styles.descriptionTextStyle}>
+								{description}
+							</Text>
+						</ReadMore>
+					</View>
+
+					<View style={styles.separator} />
 				</View>
-				<View style={[ styles.contentWrapper, { marginTop: 18 } ]}>
-					<Text multiline={true} style={[ styles.contentTextStyle, styles.description ]}>
-						{description}
+
+				<View style={Styles.Common.ColumnCenter}>
+					<Text multiline={true} style={styles.locationNameTextStyle}>
+						{locationName}
 					</Text>
-				</View>
+					<View style={styles.locationMapContainer}>
+						<TouchableOpacity style={styles.mapStyle} onPress={() => openGps()}>
+							<MapView
+								provider={PROVIDER_GOOGLE}
+								onMapReady={onMapReady}
+								style={{ aspectRatio: 1 }}
+								initialRegion={region}
+								showsUserLocation={false}
+								followUserLocation={false}
+								zoomEnabled={false}
+								scrollEnabled={false}
+								onPress={() => openGps()}
+							>
+								<Marker
+									coordinate={{ latitude: locationLat, longitude: locationLng }}
+									title={locationName}
+								/>
+							</MapView>
+						</TouchableOpacity>
 
-				{/* <View style={styles.contentWrapper}>
-					<MapView
-						provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-						onMapReady={onMapReady}
-						style={styles.mapStyle}
-						initialRegion={region}
-						showsUserLocation={false}
-						followUserLocation={false}
-						zoomEnabled={true}
-						scrollEnabled={false}
-					>
-						<Marker coordinate={{ latitude: locationLat, longitude: locationLng }} title={locationName} />
-					</MapView>
-				</View> */}
-
-				<View style={styles.contentWrapper}>
-					<Text style={styles.labelStyle}>{Languages.Budget}</Text>
-					<Text style={[ styles.contentTextStyle, styles.budget ]}>
-						{currency} {budget}
-					</Text>
-				</View>
-
-				<View style={[ styles.contentWrapper, Styles.Common.RowCenterBetween ]}>
-					<Text style={styles.labelStyle}>{Languages.Reviews}</Text>
-					<StarRating
-						maxStars={5}
-						rating={rate}
-						starSize={16}
-						starStyle={styles.ratingStar}
-						fullStarColor={Color.starYellow}
-						disabled
-					/>
+						<View style={styles.locationContainer}>
+							<Text multiline={true} style={styles.locationTextStyle}>
+								{locationPostcode}, {locationState},
+							</Text>
+							<Text multiline={true} style={styles.locationTextStyle}>
+								{locationCountry}
+							</Text>
+							<TouchableOpacity onPress={() => openGps()}>
+								<Text style={styles.directionTextStyle}>{Languages.Directions}</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
 				</View>
 			</View>
 		</ScrollView>

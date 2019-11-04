@@ -86,6 +86,10 @@ Styles.Button = {
 Styles.Common = {
 	FullFlex: { flex: 1 },
 	Column: {},
+	ColumnLeft: {
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start'
+	},
 	ColumnCenter: {
 		justifyContent: 'center',
 		alignItems: 'center'
@@ -112,6 +116,9 @@ Styles.Common = {
 	ColumnCenterEvenly: {
 		alignItems: 'center',
 		justifyContent: 'space-evenly'
+	},
+	Row: {
+		flexDirection: 'row'
 	},
 	RowCenter: {
 		flexDirection: 'row',

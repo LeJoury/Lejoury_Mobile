@@ -26,52 +26,102 @@ export default StyleSheet.create({
 	bucketButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
 	image: {
 		height: '100%',
-		width: width,
+		width: width
 	},
 	subContain: {
 		backgroundColor: Color.white,
 		borderTopRightRadius: 6,
 		borderTopLeftRadius: 6,
-		height: height + 50,
+		minHeight: height / 1.2,
 		paddingBottom: 30,
+		marginTop: -15,
 		...Styles.Common.ShadowBox,
-		shadowOffset: { width: 0, height: -5 }
+		shadowOffset: { width: 0, height: -10 },
+		shadowColor: Color.black20T
 	},
 	contentWrapper: {
-		...Styles.Common.ColumnCenterLeft,
-		marginTop: 24,
+		marginTop: 18,
 		marginHorizontal: 18
 	},
-	contentTextStyle: {
-		fontSize: 14,
-		color: Color.black1,
-		fontFamily: 'Quicksand-Regular'
+	budgetRateContainer: {
+		marginTop: 12,
+		paddingHorizontal: 2,
+		...Styles.Common.RowCenterBetween
 	},
-	title: {
-		fontSize: 18,
-		color: Color.black1,
-		fontFamily: 'Quicksand-Bold'
+	budgetContainer: {
+		...Styles.Common.RowCenter
 	},
-	description: {
+	budgetTextStyle: {
+		fontSize: 16,
 		alignItems: 'flex-start',
-		color: Color.darkGrey2,
-		paddingVertical: 8
-	},
-	budget: {
-		alignItems: 'flex-start',
-		color: Color.darkGrey2,
-		paddingVertical: 8
-	},
-	labelStyle: {
-		color: Color.black1,
-		fontSize: 17,
-		fontFamily: 'Quicksand-Bold'
+		marginLeft: 12,
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Medium'
 	},
 	ratingStar: {
-		marginHorizontal: 4
+		marginLeft: 6
+	},
+	titleTextStyle: {
+		fontSize: 22,
+		color: Color.darkGrey3,
+		fontFamily: 'Quicksand-Bold'
+	},
+	separator: {
+		marginTop: 16,
+		borderBottomWidth: 0.5,
+		borderBottomColor: Color.lightGrey5
+	},
+	descriptionContainer: {
+		marginTop: 16
+	},
+	descriptionLabelStyle: {
+		fontSize: 18,
+		marginBottom: 12,
+		color: Color.darkGrey2,
+		fontFamily: 'Quicksand-Bold'
+	},
+	descriptionTextStyle: {
+		alignItems: 'flex-start',
+		fontSize: 14,
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Regular'
+	},
+	descriptionMoreLess: {
+		color: Color.lightGrey3,
+		fontSize: 13,
+		marginTop: 6,
+		fontFamily: 'Quicksand-Medium'
+	},
+	locationMapContainer: {
+		marginTop: 16,
+		marginHorizontal: 18,
+		flexDirection: 'row'
+	},
+	locationContainer: {
+		flex: 1,
+		...Styles.Common.ColumnLeft
+	},
+	locationNameTextStyle: {
+		fontSize: 18,
+		marginTop: 16,
+		color: Color.darkGrey2,
+		fontFamily: 'Quicksand-Bold'
+	},
+	locationTextStyle: {
+		fontSize: 14,
+		color: Color.grey1,
+		fontFamily: 'Quicksand-Regular',
+		paddingLeft: 12
+	},
+	directionTextStyle: {
+		fontSize: 13,
+		color: Color.blue1,
+		fontFamily: 'Quicksand-Medium',
+		marginTop: 12,
+		marginLeft: 12
 	},
 	mapStyle: {
-		width: width - 36,
-		aspectRatio: 1
+		flex: 1,
+		width: width - 36
 	}
 });

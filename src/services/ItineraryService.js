@@ -486,6 +486,7 @@ const GET_PUBLISHED_ITINERARY_DETAILS = async (token, itineraryId) => {
 				}
 			})
 			.then((response) => {
+				console.log(response.data);
 				resolve(response.data);
 			})
 			.catch((error) => {

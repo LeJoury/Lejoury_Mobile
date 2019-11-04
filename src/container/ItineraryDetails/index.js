@@ -194,7 +194,7 @@ class ItineraryDetails extends Component {
 						<View key={index}>
 							<View style={styles.dayContainer}>
 								<Text style={styles.dayTextStyle}>
-									{Languages.Day} {day.identifier}
+									{Languages.Day} {day.day}
 								</Text>
 								<Text style={styles.dayTextStyle}>{day.date}</Text>
 							</View>
@@ -238,7 +238,7 @@ class ItineraryDetails extends Component {
 		const { itinerary } = this.state;
 
 		return (
-			<View style={Styles.Common.ColumnCenterBetween}>
+			<View style={styles.foregroundWrapper}>
 				<View style={styles.navButtonWrapper}>
 					<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
 					<View style={[ styles.bookmarkButton, { top: backTop } ]}>
@@ -258,6 +258,10 @@ class ItineraryDetails extends Component {
 						onPress={this.onGoToViewImages}
 					/>
 				</TouchableOpacity>
+
+				<View style={styles.quoteWrapper}>
+					<Text style={styles.quoteTextStyle}>{itinerary.quote}</Text>
+				</View>
 			</View>
 		);
 	};
@@ -272,6 +276,8 @@ class ItineraryDetails extends Component {
 
 	render() {
 		const { itinerary } = this.state;
+
+		// console.log(itinerary);
 
 		const backgroundColorInterpolate = this.state.scrollY.interpolate({
 			inputRange: [ 0, 180, 181 ],
