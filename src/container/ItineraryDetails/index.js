@@ -259,9 +259,11 @@ class ItineraryDetails extends Component {
 					/>
 				</TouchableOpacity>
 
-				<View style={styles.quoteWrapper}>
-					<Text style={styles.quoteTextStyle}>{itinerary.quote}</Text>
-				</View>
+				{itinerary.quote && (
+					<View style={styles.quoteWrapper}>
+						<Text style={styles.quoteTextStyle}>{itinerary.quote}</Text>
+					</View>
+				)}
 			</View>
 		);
 	};

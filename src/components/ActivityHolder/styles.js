@@ -79,5 +79,60 @@ export default StyleSheet.create({
 	},
 	ratingStar: {
 		marginHorizontal: 4
+	},
+
+	//bookmark activity holder
+	bookmarkContainer: {
+		flex: 1,
+		borderRadius: 6
+	},
+	bookmarkGradientContainer: {
+		position: 'absolute',
+		height: '100%',
+		width: '100%'
+	},
+	bookmarkRowContainer: {
+		flex: 1,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		paddingBottom: 12,
+		justifyContent: 'flex-end'
+	},
+	bookmarkImageContainer: {
+		flex: 1,
+		overflow: 'hidden',
+		borderRadius: 6
+	},
+	bookmarkImageWrapper: {
+		backgroundColor: Color.white,
+		height: IMAGE_HEIGHT
+	},
+	bookmarkImage: {
+		height: '100%',
+		width: width
+	},
+	bookmarkActivityName: {
+		fontSize: 18,
+		paddingHorizontal: 12,
+		color: Color.white,
+		fontFamily: 'Quicksand-Medium'
+	},
+	bookmarkActivityDescription: {
+		fontSize: 14,
+		color: Color.lightGrey6,
+		fontFamily: 'Quicksand-Regular',
+		marginLeft: 12,
+		paddingRight: 24
+	},
+	bookmarkIconContainer: {
+		position: 'absolute',
+		right: 12,
+		top: 12
+	},
+	bookmarkReadMoreContainer: {
+		...Styles.Common.ColumnCenterRight,
+		justifyContent: 'flex-end',
+		marginRight: 12
 	}
 });

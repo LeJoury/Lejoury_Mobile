@@ -8,16 +8,16 @@ import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
 
-function wp(percentage) {
-	const value = percentage * width / 100;
-	return Math.round(value);
-}
+// function wp(percentage) {
+// 	const value = percentage * width / 100;
+// 	return Math.round(value);
+// }
 
-const slideWidth = wp(75);
-const itemHorizontalMargin = wp(2);
+// const slideWidth = wp(75);
+// const itemHorizontalMargin = wp(2);
 
-export const sliderWidth = width;
-export const itemWidth = slideWidth + itemHorizontalMargin * 2;
+// export const sliderWidth = width;
+// export const itemWidth = slideWidth + itemHorizontalMargin * 2;
 
 class ItineraryList extends Component {
 	//constructor(props) {

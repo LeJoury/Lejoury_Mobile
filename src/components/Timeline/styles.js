@@ -104,11 +104,6 @@ export default StyleSheet.create({
 		flex: 1
 	},
 	detail: { paddingBottom: 10 },
-	description: {
-		marginTop: 16,
-		fontFamily: 'Quicksand-Regular',
-		color: Color.grey1
-	},
 	readMoreWrapper: {
 		...Styles.Common.RowCenterRight,
 		marginTop: 6,

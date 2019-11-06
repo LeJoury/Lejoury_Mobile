@@ -133,7 +133,6 @@ const MainItinerary = ({ itinerary, onPress }) => (
 );
 
 const ProfileItinerary = ({ itinerary, onPress }) => {
-	const end = moment(new Date(itinerary.endDate)).format('MMM-YYYY');
 	return (
 		<Card containerStyle={styles.profile_Card} key={itinerary.itineraryId}>
 			<TouchableOpacity onPress={() => onPress(itinerary)}>

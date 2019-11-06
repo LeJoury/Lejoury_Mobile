@@ -481,9 +481,8 @@ const getActivityBookmark = (token) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					const { content } = result.data;
-					console.log(content);
 
-					let response = { OK: true };
+					let response = { OK: true, data: content };
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -505,9 +504,8 @@ const getItineraryBookmark = (token) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					const { content } = result.data;
-					console.log(content);
 
-					let response = { OK: true };
+					let response = { OK: true, data: content };
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };

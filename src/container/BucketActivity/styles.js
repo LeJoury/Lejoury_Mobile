@@ -8,9 +8,11 @@ const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 6,
-		alignItems: 'center',
-		justifyContent: 'center'
+		paddingTop: 6
+	},
+	emptyContainer: {
+		flex: 1,
+		...Styles.Common.ColumnCenter
 	},
 	emptyBucketListText: {
 		marginTop: 12,

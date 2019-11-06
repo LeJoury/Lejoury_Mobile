@@ -6,12 +6,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
 
 import { Color, Languages, Styles } from '@common';
+import { Bookmark } from '@components';
 const { width, height } = Dimensions.get('window');
 
 import styles from './styles';
 
 const ActivityHolder = ({ index, name, photos, description, currency, budget, rate = 4, onPress, onRemove }) => {
-	const [ imageIndex, setImageIndex ] = useState(0);
 	const [ fadeAnim ] = useState(new Animated.Value(0)); // Initial value for opacity: 0
 
 	useEffect(() => {
@@ -100,4 +100,62 @@ const ActivityHolder = ({ index, name, photos, description, currency, budget, ra
 	);
 };
 
-export default ActivityHolder;
+const BookmarkActivityHolder = ({ activity, onPress = undefined, onBookmark = undefined }) => {
+	const [ fadeAnim ] = useState(new Animated.Value(0)); // Initial value for opacity: 0
+
+	useEffect(() => {
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 1000
+		}).start();
+	}, []);
+
+	return (
+		<Animated.View style={[ styles.bookmarkContainer, { opacity: fadeAnim, margin: 12 } ]}>
+			<TouchableOpacity onPress={() => onPress(activity.id)}>
+				<View style={styles.bookmarkImageContainer}>
+					<Swiper
+						style={styles.bookmarkImageWrapper}
+						showsButtons={false}
+						loop={false}
+						activeDotColor={Color.white}
+						loadMinimalLoader={<ActivityIndicator />}
+						loadMinimal={true}
+					>
+						{activity.photos.map((photo, index) => {
+							return (
+								<Image
+									key={index.toString()}
+									source={{ uri: photo.link ? photo.link : photo }}
+									style={styles.bookmarkImage}
+									resizeMode="cover"
+								/>
+							);
+						})}
+					</Swiper>
+					{/* <TouchableOpacity style={styles.bookmarkIconContainer} onPress={() => onBookmark(activity.id)}>
+						<Bookmark isBookmark={activity.bookmarked} />
+					</TouchableOpacity> */}
+					<LinearGradient
+						colors={[ Color.transparent1, Color.transparent1, Color.black30T, Color.black50T ]}
+						style={styles.bookmarkGradientContainer}
+					>
+						<View style={styles.bookmarkRowContainer}>
+							<Text style={styles.bookmarkActivityName} ellipsizeMode="tail" numberOfLines={1}>
+								{activity.title}
+							</Text>
+							<View style={Styles.Common.RowCenterBetween}>
+								<Text style={styles.bookmarkActivityDescription}>{activity.description}</Text>
+								<View style={styles.bookmarkReadMoreContainer}>
+									<Icon color={Color.white} type="feather" size={22} name="arrow-right" />
+								</View>
+							</View>
+						</View>
+					</LinearGradient>
+				</View>
+			</TouchableOpacity>
+		</Animated.View>
+	);
+};
+
+export { ActivityHolder, BookmarkActivityHolder };

@@ -61,8 +61,7 @@ export const Section = section;
 import uploadImageBox from './UploadImageBox';
 export const UploadImageBox = uploadImageBox;
 
-import activityHolder from './ActivityHolder';
-export const ActivityHolder = activityHolder;
+export * from './ActivityHolder';
 
 import imageHolder from './ImageHolder';
 export const ImageHolder = imageHolder;
