@@ -5,6 +5,7 @@ import {
 	Text,
 	Dimensions,
 	ScrollView,
+	Animated,
 	ActivityIndicator,
 	TouchableOpacity,
 	Platform,
@@ -14,8 +15,9 @@ import {
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import Swiper from 'react-native-swiper';
+import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import StarRating from 'react-native-star-rating';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { Icon } from 'react-native-elements';
 import ReadMore from 'react-native-read-more-text';
 
@@ -29,6 +31,9 @@ import { Constants, Styles, Languages, Color, Device, formatImages, getCountryCu
 const { Sizes } = Constants.Spinner;
 
 import styles from './styles';
+
+const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
+const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 350 : 320;
 
 const { width, height } = Dimensions.get('window');
 const backTop = Device.isIphoneX ? 35 : 20;
@@ -65,7 +70,6 @@ const ActivityDetail = (props) => {
 		const { navigation } = props;
 		const { selectedActivity } = navigation.state.params;
 
-		console.log(selectedActivity);
 		// props.onRef(this);
 		setTitle(selectedActivity.title);
 
@@ -125,7 +129,7 @@ const ActivityDetail = (props) => {
 
 	const onActivityBookmarkPress = async () => {
 		const { token } = props.user;
-		const { selectedActivity } = props.navigation.state.params;
+		const { selectedActivity, updateBookmark } = props.navigation.state.params;
 
 		try {
 			if (!selectedActivity.bookmarked) {
@@ -133,55 +137,56 @@ const ActivityDetail = (props) => {
 
 				if (response.OK) {
 					setBookmark(true);
+					updateBookmark(true, selectedActivity.id);
 				}
 			} else {
 				let response = await props.removeBookmark(token, selectedActivity.id, Bucket_Type.ACTIVITY);
 
 				if (response.OK) {
 					setBookmark(false);
+					updateBookmark(false, selectedActivity.id);
 				}
 			}
 		} catch (error) {}
 	};
 
-	const renderSliderBox = () => {
-		return (
-			<Swiper
-				style={styles.imageWrapper}
-				showsButtons={false}
-				loop={false}
-				activeDotColor={Color.white}
-				loadMinimalLoader={<ActivityIndicator />}
-				loadMinimal={true}
-			>
-				{photos.map((photo, index) => {
-					return (
-						<TouchableOpacity
+	{
+		/* <TouchableOpacity
 							key={index}
 							// onPress={() => {
 							// 	setPreviewModalVisible(true);
 							// 	setSelectedIndex(index);
 							// }}
 						>
-							<ImageBackground
-								source={{ uri: photo.link }}
-								style={styles.image}
-								resizeMode="cover"
-								blurRadius={100}
-							>
-								<Image
-									source={{
-										uri: photo.link
-										// cache: 'only-if-cached'
-									}}
-									style={styles.image}
-									resizeMode="contain"
-								/>
-							</ImageBackground>
-						</TouchableOpacity>
-					);
-				})}
-			</Swiper>
+							
+						</TouchableOpacity> */
+	}
+
+	const renderImage = ({ item, index }, parallaxProps) => {
+		return (
+			<View style={styles.item}>
+				<ParallaxImage
+					source={{ uri: item.link }}
+					containerStyle={styles.imageContainer}
+					style={styles.image}
+					parallaxFactor={0.2}
+					{...parallaxProps}
+				/>
+			</View>
+		);
+	};
+
+	const renderSliderBox = () => {
+		return (
+			<Carousel
+				data={photos}
+				sliderWidth={width}
+				sliderHeight={IMAGE_HEIGHT}
+				itemWidth={width}
+				renderItem={renderImage}
+				hasParallaxImages={true}
+				autoplay={true}
+			/>
 		);
 	};
 
@@ -251,11 +256,8 @@ const ActivityDetail = (props) => {
 		);
 	};
 
-	return (
-		<ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ flexGrow: 1 }}>
-			{renderSliderBox()}
-			{renderNavButton()}
-			{renderPreviewModal()}
+	const renderContent = () => {
+		return (
 			<View style={styles.subContain}>
 				<View style={styles.contentWrapper}>
 					<Text multiline={true} numberOfLines={2} ellipsizeMode={'tail'} style={styles.titleTextStyle}>
@@ -288,7 +290,7 @@ const ActivityDetail = (props) => {
 
 					<View style={styles.descriptionContainer}>
 						<View style={Styles.Common.ColumnCenter}>
-							<Text style={styles.descriptionLabelStyle}>{Languages.MyStory}</Text>
+							<Text style={styles.descriptionLabelStyle}>{Languages.IStory}</Text>
 						</View>
 						<ReadMore
 							numberOfLines={8}
@@ -310,7 +312,7 @@ const ActivityDetail = (props) => {
 					</Text>
 					<View style={styles.locationMapContainer}>
 						<TouchableOpacity style={styles.mapStyle} onPress={() => openGps()}>
-							<MapView
+							{/* <MapView
 								provider={PROVIDER_GOOGLE}
 								onMapReady={onMapReady}
 								style={{ aspectRatio: 1 }}
@@ -325,7 +327,7 @@ const ActivityDetail = (props) => {
 									coordinate={{ latitude: locationLat, longitude: locationLng }}
 									title={locationName}
 								/>
-							</MapView>
+							</MapView> */}
 						</TouchableOpacity>
 
 						<View style={styles.locationContainer}>
@@ -342,7 +344,19 @@ const ActivityDetail = (props) => {
 					</View>
 				</View>
 			</View>
-		</ScrollView>
+		);
+	};
+
+	return (
+		<ParallaxScrollView
+			style={styles.scrollViewContainer}
+			parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
+			backgroundColor={Color.transparent}
+			renderBackground={renderSliderBox}
+			renderForeground={renderNavButton}
+		>
+			{renderContent()}
+		</ParallaxScrollView>
 	);
 };
 

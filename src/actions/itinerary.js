@@ -16,6 +16,7 @@ import {
 	GET_DRAFT_ACTIVITY_DETAILS,
 	GET_PUBLISHED_ITINERARIES,
 	GET_COUNTRIES,
+	GET_ITINERARY_BY_COUNTRY,
 	GET_PUBLISHED_ITINERARY_DETAILS,
 	GET_BOOKMARKS,
 	BOOKMARK
@@ -372,14 +373,16 @@ const getDraftActivityDetails = (token, itineraryId, day) => async (dispatch) =>
 };
 
 // ----------------------------------- get published itinerary ----------------------------------- //
-const getPublishedItineraries = (token, userId, isMe = true) => async (dispatch) => {
+const getUserItineraries = (token, userId, isMe = true, page = 1) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
-		GET_PUBLISHED_ITINERARIES(token, userId)
+		GET_PUBLISHED_ITINERARIES(token, userId, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					if (isMe) {
 						let response = { OK: true };
 						const { content } = result.data;
+
+						console.log(content);
 						dispatch({
 							type: Types.SETUP_PUBLISHED_ITINERARIES,
 							payload: content
@@ -411,6 +414,29 @@ const getPublishedItineraries = (token, userId, isMe = true) => async (dispatch)
 const getCountryList = (token) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_COUNTRIES(token)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { content } = result.data;
+
+					let response = { OK: true, countries: content };
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get itinerary by country id ----------------------------------- //
+const getItineraryByCountryId = (token, userId, countryId) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_ITINERARY_BY_COUNTRY(token, userId, countryId)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					const { content } = result.data;
@@ -533,8 +559,9 @@ export {
 	getDraftItineraryDetails,
 	getDraftActivityDetails,
 	getDraftItineraries,
-	getPublishedItineraries,
+	getUserItineraries,
 	getCountryList,
+	getItineraryByCountryId,
 	getItineraryById,
 	addBookmark,
 	removeBookmark,

@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import { View, Text, ScrollView, Easing, RefreshControl, Animated, Image } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, FlatList } from 'react-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Settings } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
-import { getProfile, getFollowers, getFollowing } from '@actions';
+import { getProfile, getFollowers, getFollowing, getUserItineraries } from '@actions';
 
-import { UserProfileHeader, ProfileItineraryList } from '@components';
+import { UserProfileHeader, ProfileItineraryList, ItineraryHolder } from '@components';
 import { Images, Languages, Color } from '@common';
 
 import styles from './styles';
@@ -16,8 +16,11 @@ import styles from './styles';
 class Profile extends PureComponent {
 	state = {
 		top: new Animated.Value(20),
-		pullToRefresh: false
+		pullToRefresh: false,
+		page: 1
 	};
+
+	_keyExtractor = (item, index) => item.itineraryId.toString();
 
 	componentDidMount = async () => {
 		const { token } = this.props.user;
@@ -92,6 +95,26 @@ class Profile extends PureComponent {
 		}).start();
 	};
 
+	handleLoadMore = async () => {
+		const { token, userId } = this.props.user;
+
+		this.setState(
+			(prevState) => {
+				return { page: prevState.page + 1 };
+			},
+			async () => {
+				try {
+					console.log(this.state.page);
+
+					let response = await this.props.getUserItineraries(token, userId, true, this.state.page);
+
+					if (response.OK) {
+					}
+				} catch (error) {}
+			}
+		);
+	};
+
 	onScrollHandle = (event) => {
 		var currentOffset = event.nativeEvent.contentOffset.y;
 		this.setBackButtonHide(currentOffset > 64);
@@ -103,53 +126,66 @@ class Profile extends PureComponent {
 		this.props.navigation.navigate('EditProfile', { profile });
 	};
 
+	onPressItinerary = (itinerary) => {
+		this.props.navigation.navigate('ItineraryDetails', {
+			itinerary: itinerary
+		});
+	};
+
+	renderItem = ({ item }) => {
+		return (
+			<ItineraryHolder
+				itinerary={item}
+				key={item.itineraryId.toString()}
+				onPress={(itinerary) => this.onPressItinerary(itinerary)}
+				type="profile"
+			/>
+		);
+	};
+
+	renderHeader = () => {
+		const { profile } = this.props;
+
+		return (
+			<View>
+				<UserProfileHeader
+					user={profile}
+					isMe={true}
+					onEditProfilePress={this.onEditProfilePress}
+					onViewFollowersPress={this.navigateToFollowers}
+					onViewFollowingPress={this.navigateToFollowing}
+					onViewItinerariesPress={this.navigateToItineraries}
+				/>
+				<View style={styles.separator} />
+			</View>
+		);
+	};
+
 	render() {
-		const { profile, navigation } = this.props;
+		const { navigation } = this.props;
 
 		const { itineraries } = this.props.profile;
+
 		return (
 			<LinearGradient colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}>
 				<Animated.View style={[ styles.settingsButton, { top: this.state.top } ]}>
 					{Settings(navigation, Color.white)}
 				</Animated.View>
-				<ScrollView
+				<FlatList
+					data={itineraries}
+					extraData={this.props.profile}
 					refreshControl={
 						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
 					}
 					scrollEventThrottle={16}
 					onScroll={(e) => this.onScrollHandle(e)}
-					contentContainerStyle={[ styles.container, { backgroundColor: Color.white } ]}
-				>
-					<UserProfileHeader
-						user={profile}
-						isMe={true}
-						onEditProfilePress={this.onEditProfilePress}
-						onViewFollowersPress={this.navigateToFollowers}
-						onViewFollowingPress={this.navigateToFollowing}
-						onViewItinerariesPress={this.navigateToItineraries}
-					/>
-					<View style={styles.separator} />
-					{itineraries.length > 0 ? (
-						<View>
-							<View style={styles.sectionContainer}>
-								<Text style={styles.sectionTitle}>{Languages.Experiences}</Text>
-								<ProfileItineraryList
-									itineraries={itineraries}
-									user={profile}
-									navigation={navigation}
-								/>
-							</View>
-						</View>
-					) : (
-						<View style={styles.noItinerariesContainer}>
-							<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
-							<Text style={styles.noItinerariesText}>
-								{profile.username}
-								{Languages.NoItineraries}
-							</Text>
-						</View>
-					)}
-				</ScrollView>
+					keyExtractor={this._keyExtractor}
+					renderItem={this.renderItem}
+					contentContainerStyle={{ backgroundColor: Color.white, flexGrow: 1 }}
+					ListHeaderComponent={this.renderHeader()}
+					onEndReachedThreshold={0.1}
+					onEndReached={() => this.handleLoadMore()}
+				/>
 			</LinearGradient>
 		);
 	}
@@ -160,4 +196,4 @@ const mapStateToProps = ({ user, profile }) => ({
 	profile
 });
 
-export default connect(mapStateToProps, { getProfile, getFollowers, getFollowing })(Profile);
+export default connect(mapStateToProps, { getProfile, getFollowers, getFollowing, getUserItineraries })(Profile);

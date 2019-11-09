@@ -7,7 +7,6 @@ import {
 	TouchableOpacity,
 	Alert,
 	Platform,
-	ScrollView,
 	TouchableWithoutFeedback
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
@@ -23,6 +22,7 @@ const { Follow_Type } = Constants.Follow_Type;
 
 const Following = (props) => {
 	const [ search, setSearch ] = useState('');
+	const [ page, setPage ] = useState(1);
 
 	const _keyExtractor = (item) => item.userId;
 
@@ -51,6 +51,21 @@ const Following = (props) => {
 
 			if (response.OK) {
 				await props.getProfile(userId, token);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleLoadMore = async () => {
+		const { token } = props.user;
+
+		setPage(page + 1);
+
+		try {
+			let response = await props.getFollowing(token, page);
+
+			if (response.OK) {
 			}
 		} catch (error) {
 			console.log(error);
@@ -132,15 +147,17 @@ const Following = (props) => {
 	);
 
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContentContainerStyle}>
-			{renderSearchBar()}
-			<FlatList
-				data={props.profile.following}
-				extraData={props.profile}
-				keyExtractor={_keyExtractor}
-				renderItem={renderTravellerHolder}
-			/>
-		</ScrollView>
+		<FlatList
+			ListHeaderComponent={renderSearchBar()}
+			style={styles.container}
+			contentContainerStyle={styles.scrollViewContentContainerStyle}
+			data={props.profile.following}
+			extraData={props.profile}
+			keyExtractor={_keyExtractor}
+			renderItem={renderTravellerHolder}
+			onEndReachedThreshold={0.1}
+			onEndReached={() => handleLoadMore()}
+		/>
 	);
 };
 

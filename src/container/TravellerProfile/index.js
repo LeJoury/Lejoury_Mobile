@@ -1,37 +1,36 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Easing, Animated, RefreshControl, Image } from 'react-native';
+import { View, Text, ScrollView, FlatList, Easing, Animated, RefreshControl, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Back } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
-import { followTraveller, getProfile, getPublishedItineraries, getTravellerProfile } from '@actions';
+import { followTraveller, getProfile, getUserItineraries, getTravellerProfile } from '@actions';
 
-import { UserProfileHeader, Spinner, ProfileItineraryList } from '@components';
+import { UserProfileHeader, Spinner, ItineraryHolder } from '@components';
 import { Images, Languages, Color, Constants } from '@common';
 
 import styles from './styles';
 const { Mode, Sizes } = Constants.Spinner;
 
 class TravellerProfile extends Component {
-	constructor(props) {
-		super(props);
+	state = {
+		itineraries: [],
+		isLoading: false,
+		selectedUser: this.props.selectedUser,
+		top: new Animated.Value(20),
+		pullToRefresh: false,
+		page: 1
+	};
 
-		this.state = {
-			itineraries: [],
-			isLoading: false,
-			selectedUser: this.props.selectedUser,
-			top: new Animated.Value(20),
-			pullToRefresh: false
-		};
-	}
+	_keyExtractor = (item, index) => item.itineraryId.toString();
 
 	componentDidMount = async () => {
 		const { userId } = this.state.selectedUser;
 		const { token } = this.props.user;
 		try {
 			this.setState({ isLoading: true });
-			let itineraryResponse = await this.props.getPublishedItineraries(token, userId, false);
+			let itineraryResponse = await this.props.getUserItineraries(token, userId, false);
 			let profileResponse = await this.props.getTravellerProfile(userId, token);
 
 			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
@@ -70,7 +69,7 @@ class TravellerProfile extends Component {
 		const { token } = this.props.user;
 		try {
 			this.setState({ pullToRefresh: true });
-			let itineraryResponse = await this.props.getPublishedItineraries(token, userId, false);
+			let itineraryResponse = await this.props.getUserItineraries(token, userId, false);
 			let profileResponse = await this.props.getTravellerProfile(userId, token);
 
 			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
@@ -163,6 +162,30 @@ class TravellerProfile extends Component {
 		} catch (error) {}
 	};
 
+	handleLoadMore = async () => {
+		const { userId } = this.state.selectedUser;
+		const { token } = this.props.user;
+
+		this.setState(
+			(prevState) => {
+				return { page: prevState.page + 1 };
+			},
+			async () => {
+				try {
+					console.log(this.state.page);
+
+					let response = await this.props.getUserItineraries(token, userId, false, this.state.page);
+
+					if (response.OK) {
+						this.setState((prevState) => {
+							return { itineraries: prevState.itineraries.concat(response.itineraries) };
+						});
+					}
+				} catch (error) {}
+			}
+		);
+	};
+
 	onScrollHandle = (event) => {
 		var currentOffset = event.nativeEvent.contentOffset.y;
 		this.setBackButtonHide(currentOffset > 64);
@@ -176,48 +199,59 @@ class TravellerProfile extends Component {
 		}
 		return <Spinner mode={Mode.overlay} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
 	};
+
+	renderItem = ({ item }) => {
+		return (
+			<ItineraryHolder
+				itinerary={item}
+				key={item.itineraryId.toString()}
+				onPress={(itinerary) => this.onPressItinerary(itinerary)}
+				type="profile"
+			/>
+		);
+	};
+
+	renderHeader = () => {
+		const { selectedUser } = this.state;
+
+		return (
+			<View>
+				<UserProfileHeader
+					user={selectedUser}
+					isMe={false}
+					onFollowClick={(action) => this.onFollow(action)}
+					onViewItinerariesPress={this.navigateToItineraries}
+				/>
+				<View style={styles.separator} />
+			</View>
+		);
+	};
+
 	render() {
 		const { navigation } = this.props;
-		const { itineraries, selectedUser } = this.state;
+		const { itineraries } = this.state;
 
 		return (
 			<LinearGradient colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}>
 				<Animated.View style={[ styles.backButton, { top: this.state.top } ]}>
 					{Back(navigation, Color.white)}
 				</Animated.View>
-				<ScrollView
+				<FlatList
+					data={itineraries}
+					extraData={this.props.profile}
 					refreshControl={
 						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
 					}
 					scrollEventThrottle={16}
 					onScroll={(e) => this.onScrollHandle(e)}
-					contentContainerStyle={[ styles.container, { backgroundColor: Color.white } ]}
-				>
-					<UserProfileHeader
-						user={selectedUser}
-						isMe={false}
-						onFollowClick={(action) => this.onFollow(action)}
-						onViewItinerariesPress={this.navigateToItineraries}
-					/>
-					<View style={styles.separator} />
-					{itineraries.length > 0 ? (
-						<View>
-							<View style={styles.sectionContainer}>
-								<Text style={styles.sectionTitle}>{Languages.Collections}</Text>
-								<ProfileItineraryList itineraries={itineraries} navigation={navigation} />
-							</View>
-						</View>
-					) : (
-						<View style={styles.noItinerariesContainer}>
-							<Image style={styles.noItinerariesImage} source={Images.defaultLogo} />
-							<Text style={styles.noItinerariesText}>
-								{selectedUser.username}
-								{Languages.NoItineraries}
-							</Text>
-						</View>
-					)}
-					{this.renderLoading()}
-				</ScrollView>
+					keyExtractor={this._keyExtractor}
+					renderItem={this.renderItem}
+					contentContainerStyle={{ backgroundColor: Color.white, flexGrow: 1 }}
+					ListHeaderComponent={this.renderHeader()}
+					onEndReachedThreshold={0.1}
+					onEndReached={() => this.handleLoadMore()}
+				/>
+				{this.renderLoading()}
 			</LinearGradient>
 		);
 	}
@@ -227,6 +261,6 @@ const mapStateToProps = ({ user }) => ({
 	user
 });
 
-export default connect(mapStateToProps, { followTraveller, getProfile, getPublishedItineraries, getTravellerProfile })(
+export default connect(mapStateToProps, { followTraveller, getProfile, getUserItineraries, getTravellerProfile })(
 	TravellerProfile
 );

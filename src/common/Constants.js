@@ -16,14 +16,12 @@ Constants.Follow_Type = {
 	}
 };
 
-
 Constants.Bucket_Type = {
 	Bucket_Type: {
 		ITINERARY: 'ITINERARY',
 		ACTIVITY: 'ACTIVITY'
 	}
 };
-
 
 Constants.Actions = {
 	Types: {
@@ -77,6 +75,7 @@ Constants.URL = {
 		URL_LIKE: 'like',
 		URL_PROFILE: 'profile',
 		URL_COUNTRY_LIST: 'country-list',
+		URL_BY_COUNTRY: 'by-country ',
 		URL_BOOKMARK: 'bookmarks'
 	}
 };
@@ -90,6 +89,7 @@ Constants.STATUS = {
 
 Constants.PARAMS = {
 	BASIC_PARAMS: {
+		PAGE: 'pageNumber',
 		PLATFORM: 'platform',
 		APP_VERSION: 'appVersion',
 		DEVICE_TOKEN: 'deviceToken'
@@ -121,6 +121,7 @@ Constants.PARAMS = {
 	PARAMS_ITINERARY: {
 		ITINERARY_ID: 'itineraryId',
 		USER_ID: 'userId',
+		COUNTRY_ID: 'countryId',
 		TITLE: 'title',
 		DESTINATION: 'destination',
 		QUOTE: 'quote',

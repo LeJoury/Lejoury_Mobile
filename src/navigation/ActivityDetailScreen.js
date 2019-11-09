@@ -19,4 +19,5 @@ class ActivityDetailScreen extends PureComponent {
 		);
 	}
 }
+
 export default ActivityDetailScreen;

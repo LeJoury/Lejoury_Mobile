@@ -4,10 +4,6 @@ import { connect } from 'react-redux';
 
 import { Profile } from '@container';
 
-import { Color, Styles } from '@common';
-
-const KEY_USERNAME = 'USERNAME';
-
 class ProfileScreen extends PureComponent {
 	// static navigationOptions = ({ navigation }) => ({
 	// 	headerTitle: Title(navigation.getParam(KEY_USERNAME), Color.headerTitleColor),
@@ -19,7 +15,7 @@ class ProfileScreen extends PureComponent {
 	// }
 
 	render() {
-		return <Profile navigation={this.props.navigation}/>;
+		return <Profile navigation={this.props.navigation} />;
 	}
 }
 

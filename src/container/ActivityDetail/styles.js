@@ -1,10 +1,9 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet,Platform } from 'react-native';
 import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
 const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
-
 export default StyleSheet.create({
 	scrollViewContainer: {
 		flex: 1
@@ -12,6 +11,19 @@ export default StyleSheet.create({
 	imageWrapper: {
 		backgroundColor: Color.white,
 		height: IMAGE_HEIGHT
+	},
+	item: {
+		width: width,
+		height: IMAGE_HEIGHT
+	},
+	imageContainer: {
+		flex: 1,
+		marginBottom: Platform.select({ ios: 0, android: 1 }),
+		backgroundColor: 'white',
+	},
+	image: {
+		...StyleSheet.absoluteFillObject,
+		resizeMode: 'cover'
 	},
 	navButtonWrapper: {
 		flexDirection: 'row',

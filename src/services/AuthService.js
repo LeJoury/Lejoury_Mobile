@@ -144,8 +144,6 @@ const LOGIN_BY_SOCIAL = async (username, email, socialId, photoUrl, loginType) =
 		[DEVICE_TOKEN]: '' //push notifcation
 	});
 
-	console.log(params);
-
 	return await new Promise((resolve, reject) => {
 		base
 			.post(`${AUTH_API_VERSION}/${URL_AUTH}/${URL_SOCIAL_LOGIN}`, params, {

@@ -53,9 +53,24 @@ class ItineraryDetails extends Component {
 		}
 	};
 
+	//TODO: pull to refresh
+
 	componentDidUpdate() {}
 
 	componentWillUnmount() {}
+
+	updateActivityBookmark = (result, id) => {
+		var tmpItinerary = this.state.itinerary;
+		for (let i = 0; i < tmpItinerary.days.length; i++) {
+			let tmpActivity = tmpItinerary.days[i].activities.find((act) => act.id === id);
+			tmpActivity.bookmarked = result;
+			break;
+		}
+
+		this.setState({
+			itinerary: tmpItinerary
+		});
+	};
 
 	onActivityBookmarkPress = async (activity) => {
 		const { token } = this.props.user;
@@ -133,7 +148,8 @@ class ItineraryDetails extends Component {
 		const { navigation } = this.props;
 
 		navigation.navigate('ActivityDetail', {
-			selectedActivity: activity
+			selectedActivity: activity,
+			updateBookmark: this.updateActivityBookmark
 		});
 	};
 

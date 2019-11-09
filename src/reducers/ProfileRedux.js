@@ -58,7 +58,7 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.SETUP_PUBLISHED_ITINERARIES:
 			return {
 				...state,
-				itineraries: action.payload
+				itineraries: state.itineraries.concat(action.payload)
 			};
 		case Types.UPDATE_PROFILE:
 			return {
@@ -74,12 +74,12 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.UPDATE_FOLLOWERS:
 			return {
 				...state,
-				followers: action.payload
+				followers: state.followers.concat(action.payload)
 			};
 		case Types.UPDATE_FOLLOWING:
 			return {
 				...state,
-				following: action.payload
+				following: state.following.concat(action.payload)
 			};
 		case Types.UPDATE_FOLLOWERS_LIST:
 			return {

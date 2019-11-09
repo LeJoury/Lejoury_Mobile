@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-	View,
-	Text,
-	FlatList,
-	Image,
-	TouchableOpacity,
-	Alert,
-	Platform,
-	ScrollView,
-	TouchableWithoutFeedback
-} from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, Alert, Platform, TouchableWithoutFeedback } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
 import { connect } from 'react-redux';
-import { getFollower, getProfile, followTraveller } from '@actions';
+import { getFollowers, getProfile, followTraveller } from '@actions';
 
 import { Color, Languages, Images, Constants } from '@common';
 
@@ -23,6 +13,7 @@ const { Follow_Type } = Constants.Follow_Type;
 
 const Follower = (props) => {
 	const [ search, setSearch ] = useState('');
+	const [ page, setPage ] = useState(1);
 
 	const _keyExtractor = (item) => item.userId;
 
@@ -50,6 +41,21 @@ const Follower = (props) => {
 
 			if (response.OK) {
 				await props.getProfile(userId, token);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleLoadMore = async () => {
+		const { token } = props.user;
+
+		setPage(page + 1);
+
+		try {
+			let response = await props.getFollowers(token, page);
+
+			if (response.OK) {
 			}
 		} catch (error) {
 			console.log(error);
@@ -131,22 +137,23 @@ const Follower = (props) => {
 	);
 
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContentContainerStyle}>
-			{renderSearchBar()}
-			<FlatList
-				data={props.profile.followers}
-				extraData={props.profile}
-				keyExtractor={_keyExtractor}
-				renderItem={renderTravellerHolder}
-			/>
-		</ScrollView>
+		<FlatList
+			ListHeaderComponent={renderSearchBar()}
+			style={styles.container}
+			contentContainerStyle={styles.scrollViewContentContainerStyle}
+			data={props.profile.followers}
+			extraData={props.profile}
+			keyExtractor={_keyExtractor}
+			renderItem={renderTravellerHolder}
+			onEndReachedThreshold={0.1}
+			onEndReached={() => handleLoadMore()}
+		/>
 	);
 };
 
 const mapStateToProps = ({ user, profile }) => ({
 	user,
-	profile,
-	getProfile
+	profile
 });
 
-export default connect(mapStateToProps, { getFollower, followTraveller, getProfile })(Follower);
+export default connect(mapStateToProps, { getFollowers, followTraveller, getProfile })(Follower);

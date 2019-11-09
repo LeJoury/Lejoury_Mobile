@@ -696,7 +696,7 @@ const AddActivityDetail = (props) => {
 				</View>
 
 				<View style={styles.inputWrapper}>
-					<Text style={styles.titleStyle}>{Languages.MyStory}</Text>
+					<Text style={styles.titleStyle}>{Languages.IStory}</Text>
 					<TextInput
 						multiline={true}
 						numberOfLines={4}

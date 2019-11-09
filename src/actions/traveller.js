@@ -56,11 +56,14 @@ const getProfile = (travellerId, token) => async (dispatch) => {
 
 // -----------------------------  get followers ----------------------------------- //
 const getFollowers = (token, page = 1) => async (dispatch) => {
+	console.log(token, page);
 	return new Promise((resolve, reject) => {
 		GET_TRAVELLER_FOLLOWERS(token, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
+
+					console.log(result.data.content);
 
 					dispatch({
 						type: Types.UPDATE_FOLLOWERS,

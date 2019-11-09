@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Dimensions, FlatList } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 
 import { ItineraryHolder } from '@components';
 import { Languages, Color } from '@common';
@@ -25,6 +24,8 @@ const ProfileItineraryList = (props) => {
 
 	const _keyExtractor = (item, index) => item.itineraryId.toString();
 
+	const [ endReachedCalledDuringMomentum, setEndReachedCalledDuringMomentum ] = useState(true);
+
 	const onPressItinerary = (itinerary) => {
 		props.navigation.navigate('ItineraryDetails', {
 			itinerary: itinerary
@@ -45,8 +46,20 @@ const ProfileItineraryList = (props) => {
 	return (
 		<FlatList
 			data={itineraries}
+			extraData={props}
 			keyExtractor={_keyExtractor}
 			renderItem={renderItem}
+			// onEndReachedThreshold={0.4}
+			// onEndReached={props.onLoadMore()}
+			// onEndReached={({ distanceFromEnd }) => {
+			// 	if (!endReachedCalledDuringMomentum) {
+			// 		props.onLoadMore();
+			// 		setEndReachedCalledDuringMomentum(true);
+			// 	}
+			// }}
+			// onMomentumScrollBegin={() => {
+			// 	setEndReachedCalledDuringMomentum(false);
+			// }}
 		/>
 	);
 };

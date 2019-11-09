@@ -24,14 +24,14 @@ const {
 	URL_ITINERARIES,
 	URL_ACTIVITY,
 	URL_UPLOAD_COVER_PHOTO,
-	URL_UPLOAD_PHOTO,
 	URL_PUBLISH,
 	URL_BY_PUBLISHER,
 	URL_COUNTRY_LIST,
+	URL_BY_COUNTRY,
 	URL_PHOTO,
 	URL_BOOKMARK
 } = URL;
-const { PLATFORM, APP_VERSION } = BASIC_PARAMS;
+const { PLATFORM, APP_VERSION, PAGE } = BASIC_PARAMS;
 
 const CREATE_ITINERARY = async (itinerary, token, userId) => {
 	const { USER_ID, TITLE, START_DATE, END_DATE } = PARAMS_ITINERARY;
@@ -379,7 +379,7 @@ const UPLOAD_ACTIVITY_PHOTOS = async (activityID, token, photos) => {
 			.catch((error) => {
 				console.log(error);
 				reject(error);
-				Bugsnag.leaveBreadcrumb(TAG, `UPLOAD_COVER_PHOTO - ${error}`);
+				Bugsnag.leaveBreadcrumb(TAG, `UPLOAD_ACTIVITY_PHOTOS - ${error}`);
 				Bugsnag.notify(new Error(error));
 			});
 	});
@@ -452,10 +452,10 @@ const GET_DRAFT_ACTIVITY_DETAILS = async (token, itineraryId, day) => {
 	});
 };
 
-const GET_PUBLISHED_ITINERARIES = async (token, userId) => {
+const GET_PUBLISHED_ITINERARIES = async (token, userId, page) => {
 	const { USER_ID, PUBLISH_STATUS } = PARAMS_ITINERARY;
 
-	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_PUBLISHED}`;
+	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_PUBLISHED}&${PAGE}=${page}`;
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -486,7 +486,7 @@ const GET_PUBLISHED_ITINERARY_DETAILS = async (token, itineraryId) => {
 				}
 			})
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				resolve(response.data);
 			})
 			.catch((error) => {
@@ -517,6 +517,31 @@ const GET_COUNTRIES = async (token) => {
 	});
 };
 
+const GET_ITINERARY_BY_COUNTRY = async (token, userId, countryId) => {
+	const { USER_ID, COUNTRY_ID } = PARAMS_ITINERARY;
+
+	return await new Promise((resolve, reject) => {
+		base
+			.get(
+				`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_COUNTRY}${USER_ID}=${userId}&${COUNTRY_ID}=${countryId}`,
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`
+					}
+				}
+			)
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_ITINERARY_BY_COUNTRY - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
 const BOOKMARK = async (token, id, type, action) => {
 	const { ID, TYPE, ACTION } = PARAMS_BOOKMARK;
 
@@ -539,7 +564,7 @@ const BOOKMARK = async (token, id, type, action) => {
 			})
 			.catch((error) => {
 				reject(error);
-				Bugsnag.leaveBreadcrumb(TAG, `GET_COUNTRIES - ${error}`);
+				Bugsnag.leaveBreadcrumb(TAG, `BOOKMARK - ${error}`);
 				Bugsnag.notify(new Error(error));
 			});
 	});
@@ -561,7 +586,7 @@ const GET_BOOKMARKS = async (token, type) => {
 			})
 			.catch((error) => {
 				reject(error);
-				Bugsnag.leaveBreadcrumb(TAG, `GET_COUNTRIES - ${error}`);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_BOOKMARKS - ${error}`);
 				Bugsnag.notify(new Error(error));
 			});
 	});
@@ -583,6 +608,7 @@ export {
 	GET_DRAFT_ACTIVITY_DETAILS,
 	GET_PUBLISHED_ITINERARIES,
 	GET_COUNTRIES,
+	GET_ITINERARY_BY_COUNTRY,
 	GET_PUBLISHED_ITINERARY_DETAILS,
 	GET_BOOKMARKS,
 	BOOKMARK

@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 
-import { getDraftItineraries, getProfile, getPublishedItineraries, getTravellers, getCountryList } from '@actions';
+import { getDraftItineraries, getProfile, getUserItineraries, getTravellers, getCountryList } from '@actions';
 
 import { ItineraryHolder, CountryHolder, TravellerHolder, Section, Spinner } from '@components';
 import { Search } from '@container';
@@ -525,7 +525,7 @@ class Home extends Component {
 
 			let profileResponse = await this.props.getProfile(userId, token);
 
-			let homeResponse = await this.props.getPublishedItineraries(token, userId);
+			let homeResponse = await this.props.getUserItineraries(token, userId);
 
 			let travellerResponse = await this.props.getTravellers(token, 1);
 
@@ -781,7 +781,7 @@ const mapStateToProps = ({ draft, user, profile, traveller }) => ({
 export default connect(mapStateToProps, {
 	getDraftItineraries,
 	getProfile,
-	getPublishedItineraries,
+	getUserItineraries,
 	getTravellers,
 	getCountryList
 })(Home);

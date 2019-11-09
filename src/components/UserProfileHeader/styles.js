@@ -86,8 +86,8 @@ export default StyleSheet.create({
 	},
 	editButtonWrapper: {
 		position: 'absolute',
-		top: 12,
-		right: 12
+		right: 12,
+		top: 12
 	},
 	editButton: {
 		borderRadius: 6,

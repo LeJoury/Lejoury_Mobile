@@ -112,15 +112,23 @@ const UserProfileHeader = ({
 				]}
 			>
 				<View style={styles.header}>
-					{isMe && (
-						<TouchableOpacity style={styles.editButtonWrapper} onPress={onEditProfilePress}>
-							<Icon name="edit" type="feather" size={Styles.IconSize.Medium} color={Color.grey1} />
-						</TouchableOpacity>
-					)}
 					<View style={styles.avatarWrapper}>
 						<Image source={avatar} style={styles.avatar} PlaceholderContent={<ActivityIndicator />} />
 					</View>
 
+					{isMe && (
+						<View style={styles.editButtonWrapper}>
+							<TouchableOpacity onPress={onEditProfilePress}>
+								<Icon
+									style={{ padding: 12 }}
+									name="edit"
+									type="feather"
+									size={Styles.IconSize.Medium}
+									color={Color.grey1}
+								/>
+							</TouchableOpacity>
+						</View>
+					)}
 					<View style={styles.userInfoWrapper}>
 						<View style={styles.textContainer}>
 							<Text style={styles.fullName}>{user.username}</Text>
