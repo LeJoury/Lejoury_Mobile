@@ -112,7 +112,7 @@ const BookmarkActivityHolder = ({ activity, onPress = undefined, onBookmark = un
 
 	return (
 		<Animated.View style={[ styles.bookmarkContainer, { opacity: fadeAnim, margin: 12 } ]}>
-			<TouchableOpacity onPress={() => onPress(activity.id)}>
+			<TouchableOpacity onPress={() => onPress(activity)}>
 				<View style={styles.bookmarkImageContainer}>
 					<Swiper
 						style={styles.bookmarkImageWrapper}

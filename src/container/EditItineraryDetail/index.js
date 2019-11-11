@@ -8,22 +8,28 @@ import ImageResizer from 'react-native-image-resizer';
 import Bugsnag from '@services';
 import moment from 'moment';
 
-import { StackActions } from 'react-navigation';
-
 import { CircleBack } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
-import { addItineraryToRedux, uploadCoverPhoto, updateItineraryByID, getDraftItineraryDetails } from '@actions';
+import {
+	addItineraryToRedux,
+	uploadCoverPhoto,
+	updateItineraryByID,
+	getItineraryById,
+	deleteItineraryByID
+} from '@actions';
 
 import { Languages, Color, calculateDays, Images, Styles, create_UUID, Constants, showOkAlert } from '@common';
-import { UploadImageBox, Button, DayHolder } from '@components';
+import { UploadImageBox, Button, Spinner, DayHolder } from '@components';
 
 import styles from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 const { Action } = Constants.Action;
-const TAG = 'AddItineraryDetail';
+const { Mode, Sizes } = Constants.Spinner;
+const TAG = 'EditItineraryDetail';
+const STATUS_PUBLISHED = 'PUBLISHED';
 
 function wp(percentage) {
 	const value = percentage * width / 100;
@@ -36,38 +42,84 @@ const itemHorizontalMargin = wp(16);
 export const sliderWidth = width;
 export const itemWidth = slideWidth + itemHorizontalMargin;
 
-const AddItineraryDetail = (props) => {
+const EditItineraryDetail = (props) => {
 	const { navigation } = props;
 	const { token, userId } = props.user;
-	const { draftItinerary, itineraryId } = navigation.state.params;
+	const { itineraryId } = navigation.state.params;
 
 	const [ top ] = useState(new Animated.Value(20));
 	const [ isTitleFocus, setIsTitleFocus ] = useState(false);
+	const [ isQuoteFocus, setIsQuoteFocus ] = useState(false);
 
-	const [ startDate, setStartDate ] = useState(moment(new Date(draftItinerary.startDate)).format('DD-MMM-YYYY'));
-	const [ endDate, setEndDate ] = useState(moment(new Date(draftItinerary.endDate)).format('DD-MMM-YYYY'));
-	const [ title, setTitle ] = useState(draftItinerary.title);
+	const [ startDate, setStartDate ] = useState();
+	const [ endDate, setEndDate ] = useState();
+	const [ title, setTitle ] = useState();
+	const [ quote, setQuote ] = useState();
+	const [ coverPhoto, setCoverPhoto ] = useState();
 
-	const [ coverPhoto, setCoverPhoto ] = useState(draftItinerary.coverPhoto);
+	const [ selectedItinerary, setSelectedItinerary ] = useState(null);
 
-	const [ selectedItinerary, setSelectedItinerary ] = useState(
-		props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId)
-	);
-
-	// const [ days, setDays ] = useState();
-
+	const [ isLoading, setIsLoading ] = useState(false);
 	const [ isDirty, setIsDirty ] = useState(false);
 
 	useEffect(
 		() => {
-			setSelectedItinerary(props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId));
+			const getItineraryDetail = async () => {
+				setIsLoading(true);
+				try {
+					let response = await props.getItineraryById(token, itineraryId);
+
+					setIsLoading(false);
+
+					if (response.OK) {
+						const { itinerary } = response;
+
+						setSelectedItinerary(itinerary);
+
+						setStartDate(moment(new Date(itinerary.startDate)).format('DD-MMM-YYYY'));
+						setEndDate(moment(new Date(itinerary.endDate)).format('DD-MMM-YYYY'));
+						setTitle(itinerary.title);
+						setQuote(itinerary.quote);
+						setCoverPhoto(itinerary.coverPhoto);
+					}
+				} catch (error) {
+					setIsLoading(false);
+					console.log(error);
+				}
+			};
+
+			getItineraryDetail();
 
 			return () => {
 				ImagePicker.clean();
 			};
 		},
-		[ props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId) ]
+		[ itineraryId, props, token ]
 	);
+
+	const refreshItinerary = async () => {
+		setIsLoading(true);
+		try {
+			let response = await props.getItineraryById(token, itineraryId);
+
+			setIsLoading(false);
+
+			if (response.OK) {
+				const { itinerary } = response;
+
+				setSelectedItinerary(itinerary);
+
+				setStartDate(moment(new Date(itinerary.startDate)).format('DD-MMM-YYYY'));
+				setEndDate(moment(new Date(itinerary.endDate)).format('DD-MMM-YYYY'));
+				setTitle(itinerary.title);
+				setQuote(itinerary.quote);
+				setCoverPhoto(itinerary.coverPhoto);
+			}
+		} catch (error) {
+			setIsLoading(false);
+			console.log(error);
+		}
+	};
 
 	const setBackButtonHide = (hide) => {
 		Animated.timing(top, {
@@ -78,46 +130,40 @@ const AddItineraryDetail = (props) => {
 	};
 
 	const onAddDayHandle = (day) => {
+		if (selectedItinerary === null) return;
+
 		let tmpDays = selectedItinerary.days || [];
 
 		if (isDirty) {
 			onUpdateHandle();
 		}
 
-		navigation.navigate('AddDayDetail', {
+		navigation.navigate('EditDayDetail', {
 			day: day,
 			itineraryId: itineraryId,
 			days: tmpDays,
 			type: Action.ADD,
-			publishedDate: moment(new Date(startDate), 'DD-MMM-YYYY').add(day - 1, 'd').format('DD-MMM-YYYY')
+			publishedDate: moment(new Date(startDate), 'DD-MMM-YYYY').add(day - 1, 'd').format('DD-MMM-YYYY'),
+			refreshItinerary: refreshItinerary
 		});
 	};
 
 	const onNavigateToEditDayDetail = (selectedDay) => {
+		if (selectedItinerary === null) return;
+
 		let tmpDays = selectedItinerary.days || [];
 		if (isDirty) {
 			onUpdateHandle();
 		}
 
-		navigation.navigate('AddDayDetail', {
+		navigation.navigate('EditDayDetail', {
 			day: selectedDay,
 			selectedDay: selectedItinerary.days.find((tmpDay) => tmpDay.day === selectedDay),
 			itineraryId: itineraryId,
 			days: tmpDays,
-			type: Action.EDIT
+			type: Action.EDIT,
+			refreshItinerary: refreshItinerary
 		});
-	};
-
-	const onPublishHandle = () => {
-		if (selectedItinerary.coverPhoto === null) {
-			showOkAlert(Languages.CoverPhotoNeededTitle, Languages.CoverPhotoNeededMessage);
-			return;
-		} else {
-			navigation.navigate('AddQuote', {
-				title: title,
-				itineraryId: itineraryId
-			});
-		}
 	};
 
 	const onUpdateHandle = () => {
@@ -125,7 +171,8 @@ const AddItineraryDetail = (props) => {
 			startDate: startDate,
 			endDate: endDate,
 			title: title,
-			itineraryId: itineraryId
+			itineraryId: itineraryId,
+			quote: quote
 		};
 
 		props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
@@ -133,6 +180,54 @@ const AddItineraryDetail = (props) => {
 				setIsDirty(false);
 			}
 		});
+	};
+
+	const onSetToDraft = () => {
+		// let newItinerary = {
+		// 	startDate: startDate,
+		// 	endDate: endDate,
+		// 	title: title,
+		// 	itineraryId: itineraryId,
+		// 	quote: quote
+		// };
+
+		// props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
+		// 	if (response.OK) {
+		// 		setIsDirty(false);
+		// 	}
+		// });
+
+		//TODO: call set to draft
+		console.log('triggered');
+	};
+
+	const onConfirmRemove = async () => {
+		try {
+			let deleteResponse = await props.deleteItineraryByID(itineraryId, token, STATUS_PUBLISHED);
+
+			if (deleteResponse.OK) {
+				onGoBack();
+			} else {
+				showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
+			}
+		} catch (error) {
+			showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
+		}
+	};
+
+	const onConfirmRemovePopUp = () => {
+		Alert.alert(Languages.RemoveConfirmationItineraryTitle, Languages.RemoveConfirmationItinerary, [
+			{
+				text: Languages.Confirm,
+				onPress: () => {
+					onConfirmRemove();
+				},
+				style: 'destructive'
+			},
+			{
+				text: Languages.Cancel
+			}
+		]);
 	};
 
 	const onUploadCoverPhoto = () => {
@@ -169,20 +264,31 @@ const AddItineraryDetail = (props) => {
 	};
 
 	const onGoBack = () => {
-		const { draft } = props;
-
-		if (draft.itineraries.length > 0) {
-			navigation.dispatch(StackActions.popToTop());
-		} else {
-			navigation.goBack(null);
-		}
+		navigation.goBack(null);
 	};
 
 	const onBackHandle = () => {
-		if (isDirty) {
-			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
+		if (selectedItinerary.days == null) {
+			Alert.alert(Languages.EmptyItinerary, Languages.SetStatusToDraft, [
 				{
 					text: Languages.SaveAsDraft,
+					onPress: () => {
+						onSetToDraft();
+						onGoBack();
+					}
+				},
+				{
+					text: Languages.Remove,
+					onPress: () => {
+						onConfirmRemovePopUp();
+					},
+					style: 'destructive'
+				}
+			]);
+		} else if (isDirty) {
+			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
+				{
+					text: Languages.Update,
 					onPress: () => {
 						onUpdateHandle();
 						onGoBack();
@@ -204,9 +310,8 @@ const AddItineraryDetail = (props) => {
 		setBackButtonHide(currentOffset > 64);
 	};
 
-	const renderUpdateOrPublishButton = () => {
-		const dateFrom = new Date(startDate);
-		const dateTo = new Date(endDate);
+	const renderUpdateButton = () => {
+		if (selectedItinerary === null) return;
 
 		if (isDirty) {
 			return (
@@ -220,24 +325,13 @@ const AddItineraryDetail = (props) => {
 				</Animated.View>
 			);
 		}
-
-		if (selectedItinerary.days != null && selectedItinerary.days.length === calculateDays(dateFrom, dateTo)) {
-			return (
-				<Animated.View style={styles.buttonWrapper}>
-					<Button
-						text={Languages.Publish}
-						textStyle={styles.publishButtonTextStyle}
-						containerStyle={styles.publishButton}
-						onPress={onPublishHandle}
-					/>
-				</Animated.View>
-			);
-		}
 	};
 
 	const renderActivity = ({ item }) => <DayHolder type="draft" key={create_UUID()} activity={item} />;
 
 	const renderDays = () => {
+		if (selectedItinerary === null) return;
+
 		let renderDays = [];
 
 		const dateFrom = new Date(startDate);
@@ -329,6 +423,12 @@ const AddItineraryDetail = (props) => {
 		return renderDays;
 	};
 
+	const renderLoading = () => {
+		if (!isLoading) return;
+
+		return <Spinner mode={Mode.overlay} size={Sizes.SMALL} color={Color.lightTextPrimary} />;
+	};
+
 	return (
 		<View>
 			<Animated.View style={[ styles.backButton, { top: top } ]}>
@@ -347,7 +447,6 @@ const AddItineraryDetail = (props) => {
 				<View style={styles.subContain}>
 					<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.titleWrapper ]}>
 						<Text style={styles.label}>{Languages.Title}</Text>
-						{/* <View style={[ Styles.Common.ColumnCenterRight, { flex: 1 } ]}> */}
 						<TextInput
 							placeholder={Languages.JourneyName}
 							underlineColorAndroid="transparent"
@@ -366,7 +465,27 @@ const AddItineraryDetail = (props) => {
 								setIsDirty(true);
 							}}
 						/>
-						{/* </View> */}
+					</View>
+					<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.quoteWrapper ]}>
+						<Text style={styles.label}>{Languages.Quote}</Text>
+						<TextInput
+							placeholder={Languages.Quote}
+							underlineColorAndroid="transparent"
+							selectionColor={Color.textSelectionColor}
+							value={quote}
+							onFocus={() => setIsQuoteFocus(true)}
+							onBlur={() => setIsQuoteFocus(false)}
+							style={[
+								styles.inputStyle,
+								{
+									borderBottomColor: isTitleFocus ? Color.primary : Color.lightGrey6
+								}
+							]}
+							onChangeText={(text) => {
+								setQuote(text);
+								setIsDirty(true);
+							}}
+						/>
 					</View>
 					<View style={styles.rowWrapper}>
 						<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.dateWrapper ]}>
@@ -443,14 +562,14 @@ const AddItineraryDetail = (props) => {
 					</View>
 					{renderDays()}
 				</View>
-				{renderUpdateOrPublishButton()}
+				{renderUpdateButton()}
 			</ScrollView>
+			{renderLoading()}
 		</View>
 	);
 };
 
-const mapStateToProps = ({ draft, user }) => ({
-	draft,
+const mapStateToProps = ({ user }) => ({
 	user
 });
 
@@ -458,5 +577,6 @@ export default connect(mapStateToProps, {
 	addItineraryToRedux,
 	uploadCoverPhoto,
 	updateItineraryByID,
-	getDraftItineraryDetails
-})(AddItineraryDetail);
+	getItineraryById,
+	deleteItineraryByID
+})(EditItineraryDetail);

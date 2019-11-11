@@ -40,7 +40,7 @@ const GET_TRAVELLER_PROFILE = async (travellerId, token) => {
 
 const GET_TRAVELLER_FOLLOWERS = async (token, page) => {
 	return await new Promise((resolve, reject) => {
-		base //TODO: page in query -> scroll loading
+		base
 			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWER}`, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const GET_TRAVELLER_FOLLOWERS = async (token, page) => {
 
 const GET_TRAVELLER_FOLLOWING = async (token, page) => {
 	return await new Promise((resolve, reject) => {
-		base //TODO: page in query -> scroll loading
+		base
 			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWING}`, {
 				headers: {
 					'Content-Type': 'application/json',

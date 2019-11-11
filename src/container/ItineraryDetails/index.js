@@ -33,7 +33,6 @@ class ItineraryDetails extends Component {
 			itinerary: this.props.itinerary
 		};
 	}
-	_keyExtractor = (item) => item.id.toString();
 
 	componentDidMount = async () => {
 		this.setState({ isLoading: true });
@@ -139,8 +138,7 @@ class ItineraryDetails extends Component {
 					});
 				}
 			}
-
-			// console.log(this.state.itinerary);
+			this.props.navigation.state.params.refreshBookmarks();
 		} catch (error) {}
 	};
 
@@ -174,8 +172,6 @@ class ItineraryDetails extends Component {
 			}
 		}
 
-		console.log(images);
-
 		navigation.navigate('ViewImages', {
 			images: images,
 			title: itinerary.title
@@ -191,7 +187,11 @@ class ItineraryDetails extends Component {
 
 			if (response.OK) {
 				this.setState({
-					itinerary: { ...itinerary, liked: !itinerary.liked }
+					itinerary: {
+						...itinerary,
+						liked: !itinerary.liked,
+						totalLikes: type === TYPE_LIKE ? itinerary.totalLikes + 1 : itinerary.totalLikes - 1
+					}
 				});
 			}
 		} catch (error) {
@@ -275,7 +275,8 @@ class ItineraryDetails extends Component {
 					/>
 				</TouchableOpacity>
 
-				{itinerary.quote && (
+				{itinerary.quote !== '' &&
+				itinerary.quote && (
 					<View style={styles.quoteWrapper}>
 						<Text style={styles.quoteTextStyle}>{itinerary.quote}</Text>
 					</View>

@@ -1,35 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {
-	View,
-	Text,
-	FlatList,
-	Image,
-	TouchableOpacity,
-	Alert,
-	ScrollView,
-	TouchableWithoutFeedback
-} from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, Alert, TouchableWithoutFeedback } from 'react-native';
 
 import { connect } from 'react-redux';
 import { getTravellers, followTraveller, getProfile } from '@actions';
 
-import { Images, Color, Languages, Constants } from '@common';
+import { Images, Color, Languages, Constants, create_UUID } from '@common';
 
 import styles from './styles';
 
 const { Follow_Type } = Constants.Follow_Type;
 
 const Traveller = (props) => {
-	useEffect(() => {
-		// const { token } = props.user;
-		// try {
-		// 	let response = props.getTravellers(token, 1);
-
-		// 	if (response.OK) {
-		// 	} else {
-		// 	}
-		// } catch (error) {}
-	}, []);
+	const [ page, setPage ] = useState(1);
+	const [ endReachedCalledDuringMomentum, setEndReachedCalledDuringMomentum ] = useState(true);
 
 	const _keyExtractor = (item) => item.userId.toString();
 
@@ -44,12 +27,32 @@ const Traveller = (props) => {
 		const { userId } = props.user;
 
 		try {
-			let response = await props.followTraveller(token, travellerId, following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW);
+			let response = await props.followTraveller(
+				token,
+				travellerId,
+				following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW
+			);
 
 			if (response.OK) {
 				await props.getProfile(userId, token);
 			}
 		} catch (error) {}
+	};
+
+	const handleLoadMore = async () => {
+		const { token } = props.user;
+
+		if (!endReachedCalledDuringMomentum) {
+			try {
+				let response = await props.getTravellers(token, page + 1);
+				if (response.OK) {
+					setEndReachedCalledDuringMomentum(true);
+					setPage(page + 1);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}
 	};
 
 	const onFollowClick = async (item) => {
@@ -110,14 +113,17 @@ const Traveller = (props) => {
 		);
 	};
 	return (
-		<ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContentContainerStyle}>
-			<FlatList
-				data={props.traveller.travellers}
-				extraData={props.traveller}
-				keyExtractor={_keyExtractor}
-				renderItem={renderTravellerHolder}
-			/>
-		</ScrollView>
+		<FlatList
+			data={props.traveller.travellers}
+			extraData={props.traveller}
+			keyExtractor={_keyExtractor}
+			renderItem={renderTravellerHolder}
+			style={styles.container}
+			contentContainerStyle={styles.scrollViewContentContainerStyle}
+			onEndReachedThreshold={0.2}
+			onEndReached={() => handleLoadMore()}
+			onMomentumScrollBegin={() => setEndReachedCalledDuringMomentum(false)}
+		/>
 	);
 };
 

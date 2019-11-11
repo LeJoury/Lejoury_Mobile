@@ -1,16 +1,12 @@
-import { Dimensions, StyleSheet,Platform } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
-const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
+const IMAGE_HEIGHT = Device.isIphoneX ? 320 : 300;
 export default StyleSheet.create({
 	scrollViewContainer: {
 		flex: 1
-	},
-	imageWrapper: {
-		backgroundColor: Color.white,
-		height: IMAGE_HEIGHT
 	},
 	item: {
 		width: width,
@@ -19,7 +15,7 @@ export default StyleSheet.create({
 	imageContainer: {
 		flex: 1,
 		marginBottom: Platform.select({ ios: 0, android: 1 }),
-		backgroundColor: 'white',
+		backgroundColor: 'white'
 	},
 	image: {
 		...StyleSheet.absoluteFillObject,
@@ -34,12 +30,21 @@ export default StyleSheet.create({
 		right: 0,
 		zIndex: 99999
 	},
+	paginationWrapper: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
+		backgroundColor: Color.transparent
+	},
+	dotStyle: {
+		width: 10,
+		height: 10,
+		borderRadius: 5,
+		backgroundColor: Color.white90T
+	},
 	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
 	bucketButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
-	image: {
-		height: '100%',
-		width: width
-	},
 	subContain: {
 		backgroundColor: Color.white,
 		borderTopRightRadius: 6,

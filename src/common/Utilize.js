@@ -6,9 +6,15 @@ const toCapitalized = (string) => {
 };
 
 const getCountryCurrency = (name) => {
-	const currencies = require('../../assets/currency-symbols.json');
+	const currencies = require('../../assets/currency_symbols.json');
 
 	return currencies[name];
+};
+
+const getCountryEmoji = (code) => {
+	const countries = require('../../assets/country_emoji.json');
+
+	return countries[code].emoji;
 };
 
 const getCountry = (code) => {
@@ -113,6 +119,7 @@ export {
 	toCapitalized,
 	getCountry,
 	getCountryCurrency,
+	getCountryEmoji,
 	calculateDays,
 	create_UUID,
 	realmObjectToArray,

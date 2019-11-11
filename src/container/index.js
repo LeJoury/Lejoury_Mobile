@@ -46,6 +46,15 @@ export const AddDayDetail = _AddDayDetail;
 import _AddActivityDetail from './AddActivityDetail';
 export const AddActivityDetail = _AddActivityDetail;
 
+import _EditItineraryDetail from './EditItineraryDetail';
+export const EditItineraryDetail = _EditItineraryDetail;
+
+import _EditDayDetail from './EditDayDetail';
+export const EditDayDetail = _EditDayDetail;
+
+import _EditActivityDetail from './EditActivityDetail';
+export const EditActivityDetail = _EditActivityDetail;
+
 import _ActivityDetail from './ActivityDetail';
 export const ActivityDetail = _ActivityDetail;
 

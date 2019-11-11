@@ -58,6 +58,11 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.SETUP_PUBLISHED_ITINERARIES:
 			return {
 				...state,
+				itineraries: action.payload
+			};
+		case Types.UPDATE_PUBLISHED_ITINERARIES:
+			return {
+				...state,
 				itineraries: state.itineraries.concat(action.payload)
 			};
 		case Types.UPDATE_PROFILE:

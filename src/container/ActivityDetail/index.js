@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
 	View,
-	ImageBackground,
 	Text,
 	Dimensions,
-	ScrollView,
 	Animated,
 	ActivityIndicator,
 	TouchableOpacity,
 	Platform,
 	Modal,
-	Image,
 	Linking
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
+import Carousel, { ParallaxImage, Pagination } from 'react-native-snap-carousel';
 import StarRating from 'react-native-star-rating';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { Icon } from 'react-native-elements';
 import ReadMore from 'react-native-read-more-text';
 
@@ -32,8 +28,7 @@ const { Sizes } = Constants.Spinner;
 
 import styles from './styles';
 
-const IMAGE_HEIGHT = Device.isIphoneX ? 350 : 320;
-const PARALLAX_HEADER_HEIGHT = Device.isIphoneX ? 350 : 320;
+const IMAGE_HEIGHT = Device.isIphoneX ? 320 : 300;
 
 const { width, height } = Dimensions.get('window');
 const backTop = Device.isIphoneX ? 35 : 20;
@@ -65,6 +60,9 @@ const ActivityDetail = (props) => {
 
 	//preview image
 	const [ previewModalVisible, setPreviewModalVisible ] = useState(false);
+
+	//scroll animation
+	const [ scrollY ] = useState(new Animated.Value(0));
 
 	useEffect(() => {
 		const { navigation } = props;
@@ -150,21 +148,14 @@ const ActivityDetail = (props) => {
 		} catch (error) {}
 	};
 
-	{
-		/* <TouchableOpacity
-							key={index}
-							// onPress={() => {
-							// 	setPreviewModalVisible(true);
-							// 	setSelectedIndex(index);
-							// }}
-						>
-							
-						</TouchableOpacity> */
-	}
-
 	const renderImage = ({ item, index }, parallaxProps) => {
 		return (
-			<View style={styles.item}>
+			<TouchableOpacity
+				style={styles.item}
+				onPress={() => {
+					setPreviewModalVisible(true);
+				}}
+			>
 				<ParallaxImage
 					source={{ uri: item.link }}
 					containerStyle={styles.imageContainer}
@@ -172,21 +163,37 @@ const ActivityDetail = (props) => {
 					parallaxFactor={0.2}
 					{...parallaxProps}
 				/>
-			</View>
+			</TouchableOpacity>
+		);
+	};
+
+	const renderPagination = () => {
+		return (
+			<Pagination
+				dotsLength={photos.length}
+				activeDotIndex={selectedIndex}
+				containerStyle={styles.paginationWrapper}
+				dotStyle={styles.dotStyle}
+				inactiveDotScale={0.6}
+				inactiveDotColor={Color.white60T}
+			/>
 		);
 	};
 
 	const renderSliderBox = () => {
 		return (
-			<Carousel
-				data={photos}
-				sliderWidth={width}
-				sliderHeight={IMAGE_HEIGHT}
-				itemWidth={width}
-				renderItem={renderImage}
-				hasParallaxImages={true}
-				autoplay={true}
-			/>
+			<Animated.View style={{ transform: [ { scale: imageScale } ] }}>
+				<Carousel
+					data={photos}
+					sliderWidth={width}
+					sliderHeight={IMAGE_HEIGHT}
+					itemWidth={width}
+					renderItem={renderImage}
+					hasParallaxImages={true}
+					onSnapToItem={(index) => setSelectedIndex(index)}
+				/>
+				{renderPagination()}
+			</Animated.View>
 		);
 	};
 
@@ -312,7 +319,7 @@ const ActivityDetail = (props) => {
 					</Text>
 					<View style={styles.locationMapContainer}>
 						<TouchableOpacity style={styles.mapStyle} onPress={() => openGps()}>
-							{/* <MapView
+							<MapView
 								provider={PROVIDER_GOOGLE}
 								onMapReady={onMapReady}
 								style={{ aspectRatio: 1 }}
@@ -327,7 +334,7 @@ const ActivityDetail = (props) => {
 									coordinate={{ latitude: locationLat, longitude: locationLng }}
 									title={locationName}
 								/>
-							</MapView> */}
+							</MapView>
 						</TouchableOpacity>
 
 						<View style={styles.locationContainer}>
@@ -347,16 +354,33 @@ const ActivityDetail = (props) => {
 		);
 	};
 
+	const imageScale = scrollY.interpolate({
+		inputRange: [ -300, 0 ],
+		outputRange: [ 2, 1 ],
+		extrapolate: 'clamp'
+	});
+
 	return (
-		<ParallaxScrollView
+		<Animated.ScrollView
 			style={styles.scrollViewContainer}
-			parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
-			backgroundColor={Color.transparent}
-			renderBackground={renderSliderBox}
-			renderForeground={renderNavButton}
+			scrollEventThrottle={1}
+			onScroll={Animated.event(
+				[
+					{
+						nativeEvent: { contentOffset: { y: scrollY } }
+					}
+				],
+				{},
+				{
+					useNativeDriver: true // <- Native Driver used for animated events
+				}
+			)}
 		>
+			{renderSliderBox()}
+			{renderNavButton()}
 			{renderContent()}
-		</ParallaxScrollView>
+			{renderPreviewModal()}
+		</Animated.ScrollView>
 	);
 };
 

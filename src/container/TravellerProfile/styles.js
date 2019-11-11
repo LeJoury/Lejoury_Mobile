@@ -3,8 +3,10 @@ const { width, height } = Dimensions.get('window');
 import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
-	container: {
-		flexGrow: 1
+	containerStyle: {
+		backgroundColor: Color.white,
+		flexGrow: 1,
+		paddingBottom: 30
 	},
 	landingBackground: {
 		width,
@@ -24,44 +26,21 @@ export default StyleSheet.create({
 		borderColor: Color.lightGrey2
 	},
 
-	// ScrollView
-	scrollableView: {
-		paddingBottom: 30
-	},
-	scrollableTabTextStyle: {
-		fontFamily: 'Quicksand-Bold',
-		fontSize: 14
-	},
-	scrollableUnderlineStyle: {
-		backgroundColor: Color.primary,
-		borderRadius: 2
-	},
-
-	//horizontal section
-	sectionContainer: {
-		flex: 1
-	},
-	sectionTitle: {
-		color: Color.darkGrey3,
-		fontFamily: 'Quicksand-Bold',
-		fontSize: 28,
-		paddingHorizontal: 16,
-		paddingTop: 12
-	},
-
 	//No itineraries display
-	noItinerariesContainer: {
-		flex: 1,
-		...Styles.Common.ColumnCenter
+	emptyContainer: {
+		...Styles.Common.ColumnCenter,
+		paddingVertical: 30
 	},
-	noItinerariesImage: {
-		width: 120,
-		height: 120
+	emptyImage: {
+		width: 100,
+		height: 100
 	},
-	noItinerariesText: {
-		fontFamily: 'Quicksand-Medium',
+	emptyBucketListText: {
 		marginTop: 12,
-		fontSize: 14,
-		color: Color.lightGrey3
+		width: width / 2,
+		color: Color.lightGrey3,
+		textAlign: 'center',
+		fontSize: 16,
+		fontFamily: 'Quicksand-Bold'
 	}
 });

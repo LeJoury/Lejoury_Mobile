@@ -18,7 +18,8 @@ export default {
 	Success: 'Success',
 	Save: 'Save',
 	Send: 'Send',
-	SomethingWentWrong: 'Something went wrong. Please try again.',
+	SomethingWentWrong: 'Something went wrong.',
+
 	HelloThere: 'Hello There!',
 	Welcome: 'Welcome to LeJoury.',
 	WelcomeDescription: 'Keep your stories with the loved one forever with ',
@@ -30,8 +31,10 @@ export default {
 	End: 'End',
 	TheEnd: 'The End',
 	Empty: 'Empty',
+	EmptyItinerary: 'Empty Itinerary',
 	Discard: 'Discard',
 	SaveAsDraft: 'Save draft',
+	SetStatusToDraft: 'Move to Draft ?',
 	Remove: 'Remove',
 	RemoveConfirmationActivityTitle: 'Remove Activity',
 	RemoveConfirmationActivity: 'Are you sure to remove this activity ?',
@@ -89,7 +92,6 @@ export default {
 	BASICSETTINGS: 'BASIC SETTINGS',
 	Language: 'Language',
 	INFO: 'INFO',
-	About: 'About us',
 
 	//about us
 	// AppName: 'StaffCheetah',
@@ -156,6 +158,7 @@ export default {
 	Pictures: 'Pictures',
 	Countries: 'Countries',
 	Experiences: 'Experiences',
+	About: 'About',
 
 	//Crop Image
 	MoveScale: 'Move and Scale',
@@ -291,7 +294,8 @@ export default {
 
 	//Quote
 	ShareYourQuote: 'Share your quote of the trip...',
-
+	Quote: 'Quote',
+	
 	// Activity Holder
 	ShareYourPhotos: 'Share Your Photos',
 	AddDescription: 'Add Description',
@@ -306,7 +310,7 @@ export default {
 
 	//Activity Detail
 	Bookmark: 'Bookmark',
-	IStory: 'I\'s Story',
+	IStory: "I's Story",
 	Directions: 'Directions',
 
 	//Itinerary Detail

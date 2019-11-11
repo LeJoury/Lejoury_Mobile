@@ -229,10 +229,21 @@ const CREATE_ACTIVITY = async (newActivity, token, itineraryId, date, day) => {
 	const { ITINERARY_ID } = PARAMS_ITINERARY;
 	const { DAY, DATE } = PARAMS_DAY;
 	const { TITLE, DESCRIPTION, BUDGET, CURRENCY, RATE, LOCATION } = PARAMS_ACTIVITY;
-	const { STATE, COUNTRY, POSTCODE, LATITUDE, LONGITUDE, NAME, TYPES, LOCATION_URL } = PARAMS_LOCATION;
+	const {
+		STATE,
+		COUNTRY,
+		POSTCODE,
+		LATITUDE,
+		LONGITUDE,
+		NAME,
+		TYPES,
+		LOCATION_URL,
+		ALPHA2,
+		FULLADDRESS
+	} = PARAMS_LOCATION;
 
 	const { location, budget, currency, description, rate, title } = newActivity;
-	const { country, latitude, longitude, name, postcode, state, types, url } = location;
+	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress } = location;
 
 	let version = '';
 	try {
@@ -250,7 +261,9 @@ const CREATE_ACTIVITY = async (newActivity, token, itineraryId, date, day) => {
 		[LONGITUDE]: longitude,
 		[NAME]: name,
 		[TYPES]: types.toString(),
-		[LOCATION_URL]: url
+		[LOCATION_URL]: url,
+		[ALPHA2]: alpha2,
+		[FULLADDRESS]: fullAddress
 	};
 
 	let params = JSON.stringify({
@@ -404,6 +417,28 @@ const GET_DRAFT_ITINERARIES = async (token, userId) => {
 			.catch((error) => {
 				reject(error);
 				Bugsnag.leaveBreadcrumb(TAG, `GET_DRAFT_ITINERARIES - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
+const GET_ITINERARIES = async (token, page) => {
+	let params = `&${PAGE}=${page}`;
+
+	return await new Promise((resolve, reject) => {
+		base
+			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}?${params}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_ITINERARIES - ${error}`);
 				Bugsnag.notify(new Error(error));
 			});
 	});
@@ -603,6 +638,7 @@ export {
 	UPLOAD_COVER_PHOTO,
 	UPLOAD_ACTIVITY_PHOTOS,
 	UPDATE_ACTIVITY,
+	GET_ITINERARIES,
 	GET_DRAFT_ITINERARY_DETAILS,
 	GET_DRAFT_ITINERARIES,
 	GET_DRAFT_ACTIVITY_DETAILS,

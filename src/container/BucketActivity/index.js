@@ -13,23 +13,52 @@ import styles from './styles';
 
 const BucketActivity = (props) => {
 	const [ activities, setActivities ] = useState([]);
-	useEffect(() => {
-		const getBookmarks = async () => {
-			try {
-				let response = await props.getActivityBookmark(props.user.token);
+	useEffect(
+		() => {
+			const getBookmarks = async () => {
+				try {
+					let response = await props.getActivityBookmark(props.user.token);
 
-				if (response.OK) {
-					setActivities(response.data);
+					if (response.OK) {
+						setActivities(response.data);
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
+			};
+			getBookmarks();
 
-		getBookmarks();
-	}, []);
+			const didFocusSubscription = props.navigation.addListener('didFocus', (payload) => {
+				getBookmarks();
+			});
+
+			return () => {
+				didFocusSubscription.remove();
+			};
+		},
+		[ props ]
+	);
 
 	const _keyExtractor = (item, index) => item.id.toString();
+
+	const refreshBookmarks = async () => {
+		try {
+			let response = await props.getActivityBookmark(props.user.token);
+
+			if (response.OK) {
+				setActivities(response.data);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const onPressActivity = (selectedActivity) => {
+		props.navigation.navigate('BucketActivityDetail', {
+			selectedActivity: selectedActivity,
+			updateBookmark: refreshBookmarks
+		});
+	};
 
 	const renderEmpty = () => (
 		<View style={styles.emptyContainer}>
@@ -39,7 +68,7 @@ const BucketActivity = (props) => {
 	);
 
 	const renderActivity = ({ item }) => {
-		return <BookmarkActivityHolder activity={item} />;
+		return <BookmarkActivityHolder activity={item} onPress={(activity) => onPressActivity(activity)} />;
 	};
 
 	return (

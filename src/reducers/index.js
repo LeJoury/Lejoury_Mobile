@@ -8,6 +8,7 @@ import { reducer as AuthReducer } from './AuthRedux';
 import { reducer as DraftReducer } from './DraftRedux';
 import { reducer as ProfileReducer } from './ProfileRedux';
 import { reducer as TravellerRedux } from './TravellerRedux';
+import { reducer as ItineraryRedux } from './ItineraryRedux';
 
 const saveSubsetFilter = createFilter('user', [ 'username', 'userId', 'token' ]);
 
@@ -30,5 +31,6 @@ export default persistCombineReducers(config, {
 	user: AuthReducer,
 	draft: DraftReducer,
 	profile: ProfileReducer,
-	traveller: TravellerRedux
+	traveller: TravellerRedux,
+	itinerary: ItineraryRedux
 });

@@ -26,7 +26,6 @@ const getProfile = (travellerId, token) => async (dispatch) => {
 
 					const { data } = result;
 
-					// console.log(data);
 					dispatch({
 						type: Types.SETUP_PROFILE,
 						payload: {
@@ -56,14 +55,11 @@ const getProfile = (travellerId, token) => async (dispatch) => {
 
 // -----------------------------  get followers ----------------------------------- //
 const getFollowers = (token, page = 1) => async (dispatch) => {
-	console.log(token, page);
 	return new Promise((resolve, reject) => {
 		GET_TRAVELLER_FOLLOWERS(token, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
-
-					console.log(result.data.content);
 
 					dispatch({
 						type: Types.UPDATE_FOLLOWERS,
@@ -228,17 +224,26 @@ const editProfile = (token, profile) => async (dispatch) => {
 };
 
 // -----------------------------  get all travellers ----------------------------------- //
-const getTravellers = (token, page) => async (dispatch) => {
+const getTravellers = (token, page = 1) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_TRAVELLERS(token, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
 
-					dispatch({
-						type: Types.SETUP_TRAVELLERS,
-						payload: result.data.content
-					});
+					// console.log(result.data.content);
+
+					if (page === 1) {
+						dispatch({
+							type: Types.SETUP_TRAVELLERS,
+							payload: result.data.content
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_TRAVELLERS,
+							payload: result.data.content
+						});
+					}
 
 					resolve(response);
 				} else if (result.statusCode === 401) {

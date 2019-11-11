@@ -21,7 +21,6 @@ import NotificationScreen from './NoticationScreen';
 import BucketActivityScreen from './BucketActivityScreen';
 import BucketItineraryScreen from './BucketItineraryScreen';
 
-
 import AddItineraryScreen from './AddItineraryScreen';
 import AddNewItineraryScreen from './AddNewItineraryScreen';
 import AddItineraryDetailScreen from './AddItineraryDetailScreen';
@@ -30,6 +29,9 @@ import AddActivityDetailScreen from './AddActivityDetailScreen';
 import AddQuoteScreen from './AddQuoteScreen';
 
 import EditProfileScreen from './EditProfileScreen';
+import EditItineraryDetailScreen from './EditItineraryDetailScreen';
+import EditDayDetailScreen from './EditDayDetailScreen';
+import EditActivityDetailScreen from './EditActivityDetailScreen';
 
 import ProfileScreen from './ProfileScreen';
 import ProfileFollowerScreen from './ProfileFollowerScreen';
@@ -47,7 +49,6 @@ import ItineraryListScreen from './ItineraryListScreen';
 
 import SplashScreen from './SplashScreen';
 
-
 const FadeTransition = (index, position) => {
 	const sceneRange = [ index - 1, index ];
 	const outputOpacity = [ 0, 1 ];
@@ -62,7 +63,11 @@ const FadeTransition = (index, position) => {
 };
 
 const AddActivityTransitionConfig = (sceneProps) => {
-	if (sceneProps.scene.route.routeName === 'AddActivityDetail' || sceneProps.scene.route.routeName === 'Landing') {
+	if (
+		sceneProps.scene.route.routeName === 'EditActivityDetail' ||
+		sceneProps.scene.route.routeName === 'AddActivityDetail' ||
+		sceneProps.scene.route.routeName === 'Landing'
+	) {
 		return {
 			screenInterpolator: (sceneProps) => {
 				const position = sceneProps.position;
@@ -218,7 +223,14 @@ const BucketListStack = createStackNavigator({
 		navigationOptions: {
 			headerStyle: Styles.Common.toolbar
 		}
-	}
+	},
+	BucketActivityDetail: {
+		screen: ActivityDetailScreen,
+		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
+			header: null
+		}
+	},
 });
 
 const FollowerTopTabbar = createMaterialTopTabNavigator(
@@ -244,6 +256,36 @@ const FollowerTopTabbar = createMaterialTopTabNavigator(
 			style: {
 				backgroundColor: Color.transparent
 			}
+		}
+	}
+);
+
+const EditItineraryStack = createStackNavigator(
+	{
+		EditItineraryDetail: {
+			screen: EditItineraryDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		EditDayDetail: {
+			screen: EditDayDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		EditActivityDetail: {
+			screen: EditActivityDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		}
+	},
+	{
+		transitionConfig: AddActivityTransitionConfig,
+		defaultNavigationOptions: {
+			gesturesEnabled: false
 		}
 	}
 );
@@ -369,6 +411,13 @@ const MainNavigator = createStackNavigator(
 			screen: EditProfileScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
+			}
+		},
+		EditItineraryStack: {
+			screen: EditItineraryStack,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
 			}
 		},
 		TravellerList: {

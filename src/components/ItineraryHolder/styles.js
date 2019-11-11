@@ -36,7 +36,7 @@ export default StyleSheet.create({
 	profile_noOfLikesText: {
 		marginLeft: 8,
 		fontSize: 14,
-		color: Color.red1,
+		color: Color.white,
 		fontFamily: 'Quicksand-Medium'
 	},
 	profile_ItineraryContainer: {
@@ -57,22 +57,15 @@ export default StyleSheet.create({
 		fontStyle: 'italic',
 		fontWeight: '300'
 	},
-	profile_DateContainer: {
-		alignItems: 'flex-end',
-		flex: 1,
-		borderBottomLeftRadius: 5
-	},
-	profile_DateText: {
-		color: Color.darkGrey2,
-		fontSize: 16,
-		backgroundColor: Color.white30T,
-		paddingHorizontal: 8,
-		paddingVertical: 6,
-		fontFamily: 'Quicksand-Bold'
-	},
 	profile_ReadMoreContainer: {
 		...Styles.Common.ColumnCenterRight,
 		justifyContent: 'flex-end'
+	},
+	profile_ItinerarySettings: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		padding: 8,
 	},
 
 	//draft:

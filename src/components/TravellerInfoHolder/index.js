@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 
 import Heart from '../Heart';
-import { Images, Styles, getCountry } from '@common';
+import { Images, Styles, getCountry, getCountryEmoji } from '@common';
 
 import styles from './styles';
 
@@ -26,9 +26,14 @@ const TravellerInfo = ({
 	return (
 		<Animated.View style={[ Styles.Common.ColumnCenter, mainContainer ]}>
 			<Animated.View style={[ styles.main_contentContainer, contentContainer ]}>
-				<Text style={[ styles.main_Country, { fontSize: countryTextSize } ]} numberOfLines={1}>
-					{getCountry(itinerary.country)}
-				</Text>
+				{itinerary.country && itinerary.country.length > 0 &&
+					itinerary.country.map((country, index) => {
+						return (
+							<Text key={index} style={[ styles.main_Country, { fontSize: countryTextSize } ]} numberOfLines={1}>
+								{getCountryEmoji(country.alpha2)}
+							</Text>
+						);
+					})}
 				<Text style={[ styles.main_Title, { fontSize: titleTextSize } ]} numberOfLines={1}>
 					{itinerary.title}
 				</Text>

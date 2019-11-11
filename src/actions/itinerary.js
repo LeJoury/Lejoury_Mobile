@@ -11,6 +11,7 @@ import {
 	UPLOAD_COVER_PHOTO,
 	UPLOAD_ACTIVITY_PHOTOS,
 	UPDATE_ACTIVITY,
+	GET_ITINERARIES,
 	GET_DRAFT_ITINERARY_DETAILS,
 	GET_DRAFT_ITINERARIES,
 	GET_DRAFT_ACTIVITY_DETAILS,
@@ -21,6 +22,9 @@ import {
 	GET_BOOKMARKS,
 	BOOKMARK
 } from '@services';
+
+const STATUS_DRAFT = 'DRAFT';
+const STATUS_PUBLISHED = 'PUBLISHED';
 
 const { STATUS } = Constants.STATUS;
 const { Types } = Constants.Actions;
@@ -88,17 +92,19 @@ const updateItineraryByID = (itineraryId, itinerary, token, userId) => async (di
 };
 
 // ----------------------------------- delete itinerary by id ----------------------------------- //
-const deleteItineraryByID = (itineraryId, token) => async (dispatch) => {
+const deleteItineraryByID = (itineraryId, token, status = STATUS_DRAFT) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		DELETE_ITINERARY_BY_ID(itineraryId, token)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
 
-					dispatch({
-						type: Types.DELETE_UPDATE_ITINERARY,
-						payload: itineraryId
-					});
+					if (STATUS_DRAFT) {
+						dispatch({
+							type: Types.DELETE_UPDATE_ITINERARY,
+							payload: itineraryId
+						});
+					}
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -121,6 +127,34 @@ const deleteActivityByID = (activityId, token) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
+
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get itineraries ----------------------------------- //
+const getItineraries = (token, page = 1) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_ITINERARIES(token, page)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
+					const { content } = result.data;
+
+					dispatch({
+						type: Types.SETUP_HOME_ITINERARIES,
+						payload: content
+					});
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -217,14 +251,16 @@ const createActivity = (activity, token, itineraryId, date, identifier) => async
 							resolve(response);
 						})
 						.catch((photo_error) => {
-							// TODO: reupload
+							// TODO: upload image error
+
 							console.log(photo_error);
 						});
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
 					resolve(response);
 				} else {
-					resolve(result);
+					let response = { OK: false };
+					resolve(response);
 				}
 			})
 			.catch((error) => {
@@ -373,7 +409,8 @@ const getDraftActivityDetails = (token, itineraryId, day) => async (dispatch) =>
 };
 
 // ----------------------------------- get published itinerary ----------------------------------- //
-const getUserItineraries = (token, userId, isMe = true, page = 1) => async (dispatch) => {
+const getUserItineraries = (token, userId, isMe = false, page = 1) => async (dispatch) => {
+
 	return new Promise((resolve, reject) => {
 		GET_PUBLISHED_ITINERARIES(token, userId, page)
 			.then((result) => {
@@ -382,17 +419,21 @@ const getUserItineraries = (token, userId, isMe = true, page = 1) => async (disp
 						let response = { OK: true };
 						const { content } = result.data;
 
-						console.log(content);
-						dispatch({
-							type: Types.SETUP_PUBLISHED_ITINERARIES,
-							payload: content
-						});
+						if (page === 1) {
+							dispatch({
+								type: Types.SETUP_PUBLISHED_ITINERARIES,
+								payload: content
+							});
+						} else {
+							dispatch({
+								type: Types.UPDATE_PUBLISHED_ITINERARIES,
+								payload: content
+							});
+						}
 
 						resolve(response);
 					} else {
 						const { content } = result.data;
-
-						// console.log(content);
 
 						let response = { OK: true, itineraries: content };
 						resolve(response);
@@ -556,6 +597,7 @@ export {
 	uploadCoverPhoto,
 	updateActivity,
 	publishItineraryByID,
+	getItineraries,
 	getDraftItineraryDetails,
 	getDraftActivityDetails,
 	getDraftItineraries,

@@ -14,6 +14,7 @@ const { Follow_Type } = Constants.Follow_Type;
 const Follower = (props) => {
 	const [ search, setSearch ] = useState('');
 	const [ page, setPage ] = useState(1);
+	const [ endReachedCalledDuringMomentum, setEndReachedCalledDuringMomentum ] = useState(true);
 
 	const _keyExtractor = (item) => item.userId;
 
@@ -50,15 +51,17 @@ const Follower = (props) => {
 	const handleLoadMore = async () => {
 		const { token } = props.user;
 
-		setPage(page + 1);
+		if (!endReachedCalledDuringMomentum) {
+			try {
+				let response = await props.getFollowers(token, page + 1);
 
-		try {
-			let response = await props.getFollowers(token, page);
-
-			if (response.OK) {
+				if (response.OK) {
+					setEndReachedCalledDuringMomentum(true);
+					setPage(page + 1);
+				}
+			} catch (error) {
+				console.log(error);
 			}
-		} catch (error) {
-			console.log(error);
 		}
 	};
 
@@ -145,8 +148,9 @@ const Follower = (props) => {
 			extraData={props.profile}
 			keyExtractor={_keyExtractor}
 			renderItem={renderTravellerHolder}
-			onEndReachedThreshold={0.1}
+			onEndReachedThreshold={0.2}
 			onEndReached={() => handleLoadMore()}
+			onMomentumScrollBegin={() => setEndReachedCalledDuringMomentum(false)}
 		/>
 	);
 };

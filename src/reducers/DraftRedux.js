@@ -37,6 +37,7 @@ const addOrUpdateDay = (itineraries, payload) => {
 
 const removeItinerary = (itineraries, itineraryId) => {
 	var tmpItineraries = itineraries;
+
 	return tmpItineraries.filter((itinerary) => itinerary.itineraryId !== itineraryId);
 };
 

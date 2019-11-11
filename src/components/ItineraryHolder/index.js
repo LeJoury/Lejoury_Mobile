@@ -13,7 +13,15 @@ import styles from './styles';
 
 const LoadImage = createImageProgress(FastImage);
 
-const ItineraryHolder = ({ itinerary, type, user = undefined, onPress = undefined, onRemovePress = undefined }) => {
+const ItineraryHolder = ({
+	itinerary,
+	type,
+	user = undefined,
+	onPress = undefined,
+	onRemovePress = undefined,
+	isMe = false,
+	onItineraryOptionPress = undefined
+}) => {
 	if (type === 'main') {
 		return <MainItinerary itinerary={itinerary} onPress={onPress} />;
 	} else if (type === 'draft') {
@@ -23,7 +31,14 @@ const ItineraryHolder = ({ itinerary, type, user = undefined, onPress = undefine
 	} else if (type === 'country') {
 		return <CountryItinerary itinerary={itinerary} onPress={onPress} />;
 	} else {
-		return <ProfileItinerary itinerary={itinerary} onPress={onPress} />;
+		return (
+			<ProfileItinerary
+				itinerary={itinerary}
+				onPress={onPress}
+				isMe={isMe}
+				onItineraryOptionPress={onItineraryOptionPress}
+			/>
+		);
 	}
 };
 
@@ -116,23 +131,25 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 	);
 };
 
-const MainItinerary = ({ itinerary, onPress }) => (
-	<View style={styles.main_Card}>
-		<TouchableOpacity onPress={() => onPress(itinerary)}>
-			<LoadImage
-				source={{
-					uri: itinerary.coverPhoto,
-					priority: FastImage.priority.high
-				}}
-				style={styles.main_Image}
-				resizeMode={FastImage.resizeMode.cover}
-			/>
-		</TouchableOpacity>
-		<TravellerInfoHolder itinerary={itinerary} traveller={itinerary.traveller} />
-	</View>
-);
+const MainItinerary = ({ itinerary, onPress }) => {
+	return (
+		<View style={styles.main_Card}>
+			<TouchableOpacity onPress={() => onPress(itinerary)}>
+				<LoadImage
+					source={{
+						uri: itinerary.coverPhoto,
+						priority: FastImage.priority.high
+					}}
+					style={styles.main_Image}
+					resizeMode={FastImage.resizeMode.cover}
+				/>
+			</TouchableOpacity>
+			<TravellerInfoHolder itinerary={itinerary} traveller={itinerary.traveller} />
+		</View>
+	);
+};
 
-const ProfileItinerary = ({ itinerary, onPress }) => {
+const ProfileItinerary = ({ itinerary, onPress, isMe, onItineraryOptionPress }) => {	
 	return (
 		<Card containerStyle={styles.profile_Card} key={itinerary.itineraryId}>
 			<TouchableOpacity onPress={() => onPress(itinerary)}>
@@ -155,16 +172,22 @@ const ProfileItinerary = ({ itinerary, onPress }) => {
 							Color.black70T
 						]}
 					>
-						{/* <View style={styles.profile_DateContainer}>
-							<Text style={styles.profile_DateText}>{end}</Text>
-						</View> */}
+						{isMe && (
+							<TouchableOpacity
+								style={styles.profile_ItinerarySettings}
+								onPress={() => onItineraryOptionPress(itinerary)}
+							>
+								<Icon color={Color.lightGrey3} type="feather" size={22} name="more-vertical" />
+							</TouchableOpacity>
+						)}
 
 						<View style={styles.profile_ContentWrapper}>
 							<View style={styles.profile_DetailsContainer}>
 								<Text style={styles.profile_TitleItinerary} numberOfLines={1} ellipsizeMode={'tail'}>
 									{itinerary.title}
 								</Text>
-								{itinerary.quote && (
+								{itinerary.quote !== '' &&
+								itinerary.quote && (
 									<Text
 										style={styles.profile_QuoteItinerary}
 										numberOfLines={2}
@@ -175,7 +198,7 @@ const ProfileItinerary = ({ itinerary, onPress }) => {
 								)}
 
 								<View style={styles.profile_LikesContainer}>
-									<Heart heartIconSize={Styles.IconSize.Small} isLike={true} disabled={true} />
+									<Heart heartIconSize={Styles.IconSize.Small} liked={itinerary.liked} disabled={true} color={Color.white}/>
 									<Text style={styles.profile_noOfLikesText}>{itinerary.totalLikes}</Text>
 								</View>
 							</View>

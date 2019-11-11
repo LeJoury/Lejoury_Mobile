@@ -28,6 +28,11 @@ export const reducer = (state = INITIAL_STATE, action) => {
 				...state,
 				travellers: action.payload
 			};
+		case Types.UPDATE_TRAVELLERS:
+			return {
+				...state,
+				travellers: state.travellers.concat(action.payload)
+			};
 		case Types.FOLLOW_TRAVELLER:
 			return {
 				...state,

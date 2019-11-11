@@ -30,7 +30,7 @@ import styles from './styles';
 const numColumns = 3;
 const DEFAULT_RATE = 4;
 const { width, height } = Dimensions.get('window');
-const TAG = 'AddActivityDetail';
+const TAG = 'EditActivityDetail';
 
 // const GOOGLE_API_KEY = config.GOOGLE_PLACE_API_KEY;
 
@@ -269,7 +269,7 @@ const data = {
 	status: 'OK'
 };
 
-const AddActivityDetail = (props) => {
+const EditActivityDetail = (props) => {
 	const [ isDirty, setIsDirty ] = useState(false);
 
 	const [ title, setTitle ] = useState('');
@@ -829,4 +829,4 @@ const mapStateToProps = ({ user }) => ({
 
 export default connect(mapStateToProps, {
 	deleteActivityPhoto
-})(AddActivityDetail);
+})(EditActivityDetail);

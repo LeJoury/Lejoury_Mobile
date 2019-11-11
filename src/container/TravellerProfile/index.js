@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList, Easing, Animated, RefreshControl, Image } from 'react-native';
+import { View, Text, FlatList, Easing, Animated, RefreshControl, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Back } from '../../navigation/IconNav';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { followTraveller, getProfile, getUserItineraries, getTravellerProfile } from '@actions';
 
 import { UserProfileHeader, Spinner, ItineraryHolder } from '@components';
-import { Images, Languages, Color, Constants } from '@common';
+import { Languages, Color, Constants, Images } from '@common';
 
 import styles from './styles';
 const { Mode, Sizes } = Constants.Spinner;
@@ -20,7 +20,8 @@ class TravellerProfile extends Component {
 		selectedUser: this.props.selectedUser,
 		top: new Animated.Value(20),
 		pullToRefresh: false,
-		page: 1
+		page: 1,
+		endReachedCalledDuringMomentum: true
 	};
 
 	_keyExtractor = (item, index) => item.itineraryId.toString();
@@ -57,12 +58,42 @@ class TravellerProfile extends Component {
 				}
 			});
 		} catch (error) {
-			console.log(error);
 			this.setState({
 				isLoading: false
 			});
 		}
 	};
+
+	willFocusSubscription = this.props.navigation.addListener('willFocus', async (payload) => {
+		const { userId } = this.state.selectedUser;
+		const { token } = this.props.user;
+
+		try {
+			let itineraryResponse = await this.props.getUserItineraries(token, userId, false);
+			let profileResponse = await this.props.getTravellerProfile(userId, token);
+
+			Promise.all([ profileResponse, itineraryResponse ]).then((values) => {
+				if (profileResponse.OK) {
+					this.setState({
+						selectedUser: profileResponse.user
+					});
+				}
+
+				if (itineraryResponse.OK) {
+					this.setState({
+						page: 1,
+						itineraries: itineraryResponse.itineraries
+					});
+				}
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	});
+
+	componentWillUnmount() {
+		this.willFocusSubscription.remove();
+	}
 
 	refreshProfile = async () => {
 		const { userId } = this.state.selectedUser;
@@ -104,33 +135,9 @@ class TravellerProfile extends Component {
 
 	componentDidUpdate() {}
 
-	componentWillUnmount() {}
+	navigateToFollowers = () => {};
 
-	navigateToFollowers = () => {
-		// const { profile } = this.props;
-		// this.props.navigation.dispatch(
-		// 	NavigationActions.navigate({
-		// 		routeName: 'ProfileFollower',
-		// 		params: {
-		// 			username: profile.username
-		// 		},
-		// 		action: NavigationActions.navigate({ routeName: 'Followers' })
-		// 	})
-		// );
-	};
-
-	navigateToFollowing = () => {
-		// const { profile } = this.props;
-		// this.props.navigation.dispatch(
-		// 	NavigationActions.navigate({
-		// 		routeName: 'ProfileFollowing',
-		// 		params: {
-		// 			username: profile.username
-		// 		},
-		// 		action: NavigationActions.navigate({ routeName: 'Following' })
-		// 	})
-		// );
-	};
+	navigateToFollowing = () => {};
 
 	navigateToItineraries = () => {};
 
@@ -162,28 +169,29 @@ class TravellerProfile extends Component {
 		} catch (error) {}
 	};
 
+	onPressItinerary = (itinerary) => {
+		this.props.navigation.navigate('ItineraryDetails', {
+			itinerary: itinerary
+		});
+	};
+
 	handleLoadMore = async () => {
 		const { userId } = this.state.selectedUser;
 		const { token } = this.props.user;
 
-		this.setState(
-			(prevState) => {
-				return { page: prevState.page + 1 };
-			},
-			async () => {
-				try {
-					console.log(this.state.page);
-
-					let response = await this.props.getUserItineraries(token, userId, false, this.state.page);
-
-					if (response.OK) {
-						this.setState((prevState) => {
-							return { itineraries: prevState.itineraries.concat(response.itineraries) };
-						});
-					}
-				} catch (error) {}
-			}
-		);
+		if (!this.state.endReachedCalledDuringMomentum) {
+			try {
+				let response = await this.props.getUserItineraries(token, userId, false, this.state.page);
+				this.setState({ endReachedCalledDuringMomentum: true });
+				if (response.OK) {
+					this.setState((prevState) => {
+						return {
+							page: prevState.page + 1
+						};
+					});
+				}
+			} catch (error) {}
+		}
 	};
 
 	onScrollHandle = (event) => {
@@ -227,6 +235,15 @@ class TravellerProfile extends Component {
 		);
 	};
 
+	renderEmptyList = () => {
+		return (
+			<View style={styles.emptyContainer}>
+				<Image source={Images.defaultLogo} style={styles.emptyImage} />
+				<Text style={styles.emptyBucketListText}>{Languages.EmptyItinerary}</Text>
+			</View>
+		);
+	};
+
 	render() {
 		const { navigation } = this.props;
 		const { itineraries } = this.state;
@@ -238,7 +255,7 @@ class TravellerProfile extends Component {
 				</Animated.View>
 				<FlatList
 					data={itineraries}
-					extraData={this.props.profile}
+					extraData={this.state}
 					refreshControl={
 						<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshProfile} />
 					}
@@ -246,10 +263,15 @@ class TravellerProfile extends Component {
 					onScroll={(e) => this.onScrollHandle(e)}
 					keyExtractor={this._keyExtractor}
 					renderItem={this.renderItem}
-					contentContainerStyle={{ backgroundColor: Color.white, flexGrow: 1 }}
+					contentContainerStyle={styles.containerStyle}
 					ListHeaderComponent={this.renderHeader()}
-					onEndReachedThreshold={0.1}
+					ListEmptyComponent={this.renderEmptyList()}
+					onEndReachedThreshold={0.2}
 					onEndReached={() => this.handleLoadMore()}
+					onMomentumScrollBegin={() =>
+						this.setState({
+							endReachedCalledDuringMomentum: false
+						})}
 				/>
 				{this.renderLoading()}
 			</LinearGradient>

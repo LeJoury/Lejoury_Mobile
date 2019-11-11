@@ -13,6 +13,7 @@ const Heart = (props) => {
 		this.view.bounceIn(500);
 		props.onPress();
 	};
+	
 
 	return (
 		<TouchableWithoutFeedback onPress={onPress} disabled={props.disabled ? props.disabled : false}>
@@ -21,7 +22,7 @@ const Heart = (props) => {
 					name={props.liked ? 'heart' : 'heart-o'}
 					type={'font-awesome'}
 					size={props.heartIconSize === undefined ? Styles.IconSize.Small : props.heartIconSize}
-					color={Color.red2}
+					color={props.color ? props.color : Color.red2}
 				/>
 			</Animatable.View>
 		</TouchableWithoutFeedback>

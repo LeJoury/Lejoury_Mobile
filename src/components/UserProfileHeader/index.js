@@ -159,7 +159,7 @@ const UserProfileHeader = ({
 			<View style={styles.bioContainer}>
 				{isMe ? (
 					<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
-						<Text style={styles.bioAbout}>About</Text>
+						<Text style={styles.bioAbout}>{Languages.About}</Text>
 						<ReadMore
 							numberOfLines={5}
 							renderTruncatedFooter={renderTruncatedFooter}
@@ -171,7 +171,7 @@ const UserProfileHeader = ({
 				) : (
 					user.bio && (
 						<View>
-							<Text style={styles.bioAbout}>About</Text>
+							<Text style={styles.bioAbout}>{Languages.About}</Text>
 							<Text style={styles.bio}>{user ? user.bio : ''}</Text>
 						</View>
 					)

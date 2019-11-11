@@ -45,13 +45,6 @@ export default StyleSheet.create({
 		borderRadius: 4,
 		backgroundColor: Color.white
 	},
-	// imageWrapper: {
-	// 	marginTop: 16,
-	// 	height: 100,
-	// 	width: 120,
-	// 	backgroundColor: Color.black
-	// },
-
 	imageContainer: {
 		width: '100%',
 		borderRadius: 8,

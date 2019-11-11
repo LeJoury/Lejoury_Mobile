@@ -14,28 +14,50 @@ import styles from './styles';
 const BucketItinerary = (props) => {
 	const [ itineraries, setItineraries ] = useState([]);
 
-	useEffect(() => {
-		const getBookmarks = async () => {
-			try {
-				let response = await props.getItineraryBookmark(props.user.token);
+	useEffect(
+		() => {
+			const getBookmarks = async () => {
+				try {
+					let response = await props.getItineraryBookmark(props.user.token);
 
-				if (response.OK) {
-					setItineraries(response.data);
+					if (response.OK) {
+						setItineraries(response.data);
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
+			};
+			getBookmarks();
 
-		getBookmarks();
-	}, []);
+			const didFocusSubscription = props.navigation.addListener('didFocus', (payload) => {
+				getBookmarks();
+			});
+
+			return () => {
+				didFocusSubscription.remove();
+			};
+		},
+		[ props ]
+	);
 
 	const _keyExtractor = (item, index) => item.itineraryId.toString();
 
+	const refreshBookmarks = async () => {
+		try {
+			let response = await props.getItineraryBookmark(props.user.token);
+
+			if (response.OK) {
+				setItineraries(response.data);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const onPressItinerary = (selectedItinerary) => {
-		// updater functions are preferred for transactional updates
-		this.props.navigation.navigate('ItineraryDetails', {
-			itinerary: selectedItinerary
+		props.navigation.navigate('ItineraryDetails', {
+			itinerary: selectedItinerary,
+			refreshBookmarks: refreshBookmarks
 		});
 	};
 
@@ -47,7 +69,13 @@ const BucketItinerary = (props) => {
 	);
 
 	const renderItinerary = ({ item }) => {
-		return <ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => onPressItinerary(item)} />;
+		return (
+			<ItineraryHolder
+				itinerary={item}
+				key={item.itineraryId}
+				onPress={(itinerary) => onPressItinerary(itinerary)}
+			/>
+		);
 	};
 
 	return (

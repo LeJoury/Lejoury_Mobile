@@ -10,7 +10,9 @@ class BucketItineraryScreen extends PureComponent {
 		// headerLeft: Back(navigation, Color.primary),
 		// headerTitle: Title(navigation.state.routeName, Color.headerTitleColor)
 	});
-
+	componentWillFocus(){
+		console.log('componentwillFocus');
+	}
 
 	render() {
 		return <BucketItinerary navigation={this.props.navigation} />;
