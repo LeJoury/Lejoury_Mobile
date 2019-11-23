@@ -4,7 +4,8 @@ const { Types } = Constants.Actions;
 const { Follow_Type } = Constants.Follow_Type;
 
 const INITIAL_STATE = {
-	travellers: []
+	travellers: [],
+	isTravellerLastPage: false
 };
 
 const updateTravellers = (travellers, userId, action) => {
@@ -26,12 +27,14 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.SETUP_TRAVELLERS:
 			return {
 				...state,
-				travellers: action.payload
+				travellers: action.payload.content,
+				isTravellerLastPage: action.payload.isLastPage
 			};
 		case Types.UPDATE_TRAVELLERS:
 			return {
 				...state,
-				travellers: state.travellers.concat(action.payload)
+				travellers: state.travellers.concat(action.payload.content),
+				isTravellerLastPage: action.payload.isLastPage
 			};
 		case Types.FOLLOW_TRAVELLER:
 			return {

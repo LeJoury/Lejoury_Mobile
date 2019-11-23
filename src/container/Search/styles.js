@@ -21,17 +21,17 @@ export default StyleSheet.create({
 	resultRow: {
 		...Styles.Common.RowCenterLeft,
 		flex: 1,
-		paddingVertical: 8,
+		paddingVertical: 8
 	},
 	resultIconContainer: {
 		flex: 1
 	},
 	resultKeywordContainer: {
-		flex: 6
+		flex: 6,
+		paddingHorizontal: 6
 	},
 	resultKeywordTextStyle: {
 		fontSize: 16,
-		paddingHorizontal: 6,
 		color: Color.primary,
 		fontFamily: 'Quicksand-Regular'
 	}

@@ -7,22 +7,40 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Settings } from '../../navigation/IconNav';
 
 import { connect } from 'react-redux';
-import { getProfile, getFollowers, getFollowing, getUserItineraries, deleteItineraryByID } from '@actions';
+import {
+	getProfile,
+	getFollowers,
+	getFollowing,
+	getUserItineraries,
+	deleteItineraryByID,
+	unPublishItineraryByID,
+	getDraftItineraries
+} from '@actions';
 
 import { UserProfileHeader, ItineraryHolder } from '@components';
-import { Languages, Color, Images } from '@common';
+import { Languages, Color, Device, Images, showOkAlert } from '@common';
 
 import styles from './styles';
 
-const BUTTONS = [ 'Edit', 'Delete', 'Cancel' ];
+const BUTTONS = [
+	Languages.Edit,
+	Languages.SetToDraft,
+	Languages.Delete,
+	Languages.Cancel
+];
 const EDIT_INDEX = 0;
-const REMOVE_INDEX = 1;
-const CANCEL_INDEX = 2;
+const SET_DRAFT_INDEX = 1;
+const REMOVE_INDEX = 2;
+const CANCEL_INDEX = 3;
+
 const STATUS_PUBLISHED = 'PUBLISHED';
+
+const TOP_IPHONE_X = 32;
+const TOP_NORMAL_IPHONE = 20;
 
 class Profile extends Component {
 	state = {
-		top: new Animated.Value(20),
+		top: new Animated.Value(Device.isIphoneX ? TOP_IPHONE_X : TOP_NORMAL_IPHONE),
 		pullToRefresh: false,
 		page: 1,
 		endReachedCalledDuringMomentum: true,
@@ -53,8 +71,10 @@ class Profile extends Component {
 		try {
 			let profileResponse = await this.props.getProfile(userId, token);
 			let itineraryResponse = await this.props.getUserItineraries(token, userId, true, 1);
+			let followersResponse = await this.props.getFollowers(token);
+			let followingResponse = await this.props.getFollowing(token);
 
-			Promise.all([ profileResponse, itineraryResponse ]).then((values) => {
+			Promise.all([ profileResponse, itineraryResponse, followersResponse, followingResponse ]).then((values) => {
 				if (profileResponse.OK && itineraryResponse.OK) {
 					this.setState({
 						page: 1
@@ -117,26 +137,31 @@ class Profile extends Component {
 	setBackButtonHide = (hide) => {
 		Animated.timing(this.state.top, {
 			duration: 50,
-			toValue: hide ? -100 : 20,
+			toValue: hide ? -100 : Device.isIphoneX ? TOP_IPHONE_X : TOP_NORMAL_IPHONE,
 			easing: Easing.linear
 		}).start();
 	};
 
 	handleLoadMore = async () => {
 		const { token, userId } = this.props.user;
+		const { isItineraryLastPage } = this.props.profile;
 
 		if (!this.state.endReachedCalledDuringMomentum) {
-			try {
-				let response = await this.props.getUserItineraries(token, userId, true, this.state.page + 1);
+			if (!isItineraryLastPage) {
+				try {
+					let response = await this.props.getUserItineraries(token, userId, true, this.state.page + 1);
+					this.setState({ endReachedCalledDuringMomentum: true });
+					if (response.OK) {
+						this.setState((prevState) => {
+							return {
+								page: prevState.page + 1
+							};
+						});
+					}
+				} catch (error) {}
+			} else {
 				this.setState({ endReachedCalledDuringMomentum: true });
-				if (response.OK) {
-					this.setState((prevState) => {
-						return {
-							page: prevState.page + 1
-						};
-					});
-				}
-			} catch (error) {}
+			}
 		}
 	};
 
@@ -152,7 +177,7 @@ class Profile extends Component {
 	};
 
 	onPressItinerary = (itinerary) => {
-		this.props.navigation.navigate('ItineraryDetails', {
+		this.props.navigation.navigate('ProfileItineraryDetails', {
 			itinerary: itinerary
 		});
 	};
@@ -204,6 +229,11 @@ class Profile extends Component {
 												profileResponse,
 												userPublishItinerariesResponse
 											]).then((values) => {
+												showOkAlert(
+													Languages.RemoveItinerarySuccessTitle,
+													Languages.RemoveItinerarySuccessMessage
+												);
+												
 												this.setState({
 													page: 1
 												});
@@ -219,6 +249,54 @@ class Profile extends Component {
 								text: Languages.Cancel
 							}
 						]);
+					} else if (buttonIndex === SET_DRAFT_INDEX) {
+						Alert.alert(
+							Languages.SetToDraftConfirmationItineraryTitle,
+							Languages.SetToDraftConfirmationItinerary,
+							[
+								{
+									text: Languages.Confirm,
+									onPress: async () => {
+										const { itineraryId } = this.state.selectedItineraryForOptions;
+										const { token, userId } = this.props.user;
+
+										try {
+											let response = await this.props.unPublishItineraryByID(itineraryId, token);
+											showOkAlert(
+												Languages.SetToDraftSuccessTitle,
+												Languages.SetToDraftSuccessMessage
+											);
+
+											if (response.OK) {
+												let userPublishItinerariesResponse = await this.props.getUserItineraries(
+													token,
+													userId,
+													true,
+													1
+												);
+												let profileResponse = await this.props.getProfile(userId, token);
+												let draftResponse = await this.props.getDraftItineraries(token, userId);
+
+												Promise.all([
+													profileResponse,
+													userPublishItinerariesResponse,
+													draftResponse
+												]).then((values) => {
+													this.setState({
+														page: 1
+													});
+												});
+											}
+										} catch (error) {
+											console.log(error);
+										}
+									}
+								},
+								{
+									text: Languages.Cancel
+								}
+							]
+						);
 					} else if (buttonIndex === EDIT_INDEX) {
 						const { itineraryId } = this.state.selectedItineraryForOptions;
 
@@ -250,7 +328,7 @@ class Profile extends Component {
 		const { profile } = this.props;
 
 		return (
-			<View>
+			<View style={styles.headerContainer}>
 				<UserProfileHeader
 					user={profile}
 					isMe={true}
@@ -279,7 +357,10 @@ class Profile extends Component {
 		const { itineraries } = this.props.profile;
 
 		return (
-			<LinearGradient colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}>
+			<LinearGradient
+				colors={[ Color.splashScreenBg1, Color.splashScreenBg1, Color.white, Color.white ]}
+				styles={{ paddingTop: 30 }}
+			>
 				<Animated.View style={[ styles.settingsButton, { top: this.state.top } ]}>
 					{Settings(navigation, Color.white)}
 				</Animated.View>
@@ -293,7 +374,7 @@ class Profile extends Component {
 					onScroll={(e) => this.onScrollHandle(e)}
 					keyExtractor={this._keyExtractor}
 					renderItem={this.renderItem}
-					contentContainerStyle={{ backgroundColor: Color.white, flexGrow: 1 }}
+					contentContainerStyle={styles.container}
 					ListHeaderComponent={this.renderHeader()}
 					ListEmptyComponent={this.renderEmptyList()}
 					onEndReachedThreshold={0.2}
@@ -319,5 +400,7 @@ export default connect(mapStateToProps, {
 	getFollowers,
 	getFollowing,
 	getUserItineraries,
-	deleteItineraryByID
+	deleteItineraryByID,
+	unPublishItineraryByID,
+	getDraftItineraries
 })(Profile);

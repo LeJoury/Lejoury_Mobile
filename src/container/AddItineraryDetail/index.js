@@ -54,8 +54,6 @@ const AddItineraryDetail = (props) => {
 		props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId)
 	);
 
-	// const [ days, setDays ] = useState();
-
 	const [ isDirty, setIsDirty ] = useState(false);
 
 	useEffect(
@@ -115,7 +113,8 @@ const AddItineraryDetail = (props) => {
 		} else {
 			navigation.navigate('AddQuote', {
 				title: title,
-				itineraryId: itineraryId
+				itineraryId: itineraryId,
+				quote: selectedItinerary.quote !== null && selectedItinerary.quote !== '' ? selectedItinerary.quote : ''
 			});
 		}
 	};
@@ -139,7 +138,7 @@ const AddItineraryDetail = (props) => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
-			ImageResizer.createResizedImage(image.path, 500, 400, 'JPEG', 75)
+			ImageResizer.createResizedImage(image.path, 400, 400, 'JPEG', 90)
 				.then((response) => {
 					let resizedImage = {
 						uri: response.uri,
@@ -232,6 +231,17 @@ const AddItineraryDetail = (props) => {
 					/>
 				</Animated.View>
 			);
+		} else {
+			return (
+				<Animated.View style={styles.buttonWrapper}>
+					<Button
+						disabled={true}
+						text={Languages.Publish}
+						textStyle={styles.disabledPublishButtonTextStyle}
+						containerStyle={styles.disabledPublishButton}
+					/>
+				</Animated.View>
+			);
 		}
 	};
 
@@ -251,7 +261,6 @@ const AddItineraryDetail = (props) => {
 
 			if (selectedItinerary.days !== null && selectedItinerary.days !== undefined) {
 				var sortedDays = selectedItinerary.days.sort((a, b) => (a.day > b.day ? 1 : -1));
-				// console.log(sortedDays);
 				for (let index = 0; index < sortedDays.length; index++) {
 					if (i + 1 === sortedDays[index].day) {
 						hasDayMatch = true;
@@ -282,9 +291,9 @@ const AddItineraryDetail = (props) => {
 									layout={'default'}
 									renderItem={renderActivity}
 									sliderWidth={sliderWidth}
-									itemWidth={itemWidth}
+									itemWidth={sortedDays[index].activities.length > 1 ? itemWidth : itemWidth + wp(8)}
 									enableMomentum={true}
-									activeSlideAlignment={'center'}
+									activeSlideAlignment={sortedDays[index].activities.length > 1 ? 'start' : 'center'}
 									inactiveSlideScale={1}
 									inactiveSlideOpacity={0.8}
 								/>

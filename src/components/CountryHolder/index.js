@@ -2,9 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
-import { createImageProgress } from 'react-native-image-progress';
+import LinearGradient from 'react-native-linear-gradient';
 
-// import { CachedImage, ImageCacheProvider } from 'react-native-cached-image';
+import { createImageProgress } from 'react-native-image-progress';
+import { Color, getCountryEmoji } from '@common';
 
 import styles from './styles';
 
@@ -16,15 +17,18 @@ const CountryHolder = ({ country, onPress }) => (
 			<View style={styles.imageWrapper}>
 				<LoadImage
 					source={{
-						uri: country.thumbnails
+						uri: country.link
 						// cache: 'only-if-cached'
 					}}
 					style={styles.countryImage}
 					resizeMode={FastImage.resizeMode.cover}
 				/>
 			</View>
-			<View style={styles.separator} />
-			<Text style={styles.countrNameStyle}>{country.countryName}</Text>
+			<View style={styles.detailContainer}>
+				<Text style={styles.countryNameStyle} numberOfLines={1} ellipsizeMode={'tail'}>
+					{country.name}
+				</Text>
+			</View>
 		</TouchableOpacity>
 	</Card>
 );

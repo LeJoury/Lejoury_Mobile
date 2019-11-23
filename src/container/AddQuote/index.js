@@ -18,7 +18,7 @@ const AddQuote = (props) => {
 	const [ quoteBox ] = useState(new Animated.Value(0));
 	const [ confirmButtonBox ] = useState(new Animated.Value(0));
 
-	const [ quote, setQuote ] = useState('');
+	const [ quote, setQuote ] = useState(props.navigation.state.params.quote);
 	const [ isQuoteFocus, setQuoteFocus ] = useState(false);
 
 	const [ isLoading, setIsLoading ] = useState(false);

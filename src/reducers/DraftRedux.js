@@ -3,7 +3,8 @@ import { Constants } from '@common';
 const { Types } = Constants.Actions;
 
 const INITIAL_STATE = {
-	itineraries: []
+	itineraries: [],
+	isLastPage: false
 };
 
 const addOrUpdateItinerary = (itineraries, newItinerary) => {
@@ -71,7 +72,14 @@ const reducer = (state = INITIAL_STATE, action) => {
 		case Types.ADD_ITINERARIES:
 			return {
 				...state,
-				itineraries: action.payload
+				itineraries: action.payload.content,
+				isLastPage: action.payload.isLastPage
+			};
+		case Types.UPDATE_ITINERARIES:
+			return {
+				...state,
+				itineraries: state.itineraries.concat(action.payload.content),
+				isLastPage: action.payload.isLastPage
 			};
 		case Types.ADD_UPDATE_ITINERARY:
 			return {

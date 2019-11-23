@@ -16,7 +16,9 @@ import {
 	uploadCoverPhoto,
 	updateItineraryByID,
 	getItineraryById,
-	deleteItineraryByID
+	deleteItineraryByID,
+	unPublishItineraryByID,
+	getDraftItineraries
 } from '@actions';
 
 import { Languages, Color, calculateDays, Images, Styles, create_UUID, Constants, showOkAlert } from '@common';
@@ -177,28 +179,32 @@ const EditItineraryDetail = (props) => {
 
 		props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
 			if (response.OK) {
+				showOkAlert(Languages.UpdateSuccessTitle, Languages.UpdateSuccessMessage);
 				setIsDirty(false);
+			} else {
+				showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
 			}
 		});
 	};
 
-	const onSetToDraft = () => {
-		// let newItinerary = {
-		// 	startDate: startDate,
-		// 	endDate: endDate,
-		// 	title: title,
-		// 	itineraryId: itineraryId,
-		// 	quote: quote
-		// };
+	const onSetToDraft = async () => {
+		try {
+			let response = await props.unPublishItineraryByID(itineraryId, token);
 
-		// props.updateItineraryByID(itineraryId, newItinerary, token, userId).then((response) => {
-		// 	if (response.OK) {
-		// 		setIsDirty(false);
-		// 	}
-		// });
+			if (response.OK) {
+				let draftResponse = await props.getDraftItineraries(token, userId);
 
-		//TODO: call set to draft
-		console.log('triggered');
+				if (draftResponse.OK) {
+					onGoBack();
+				} else {
+					showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
+				}
+			} else {
+				showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const onConfirmRemove = async () => {
@@ -206,6 +212,7 @@ const EditItineraryDetail = (props) => {
 			let deleteResponse = await props.deleteItineraryByID(itineraryId, token, STATUS_PUBLISHED);
 
 			if (deleteResponse.OK) {
+				showOkAlert(Languages.RemoveItinerarySuccessTitle, Languages.RemoveItinerarySuccessMessage);
 				onGoBack();
 			} else {
 				showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
@@ -234,8 +241,8 @@ const EditItineraryDetail = (props) => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
-			ImageResizer.createResizedImage(image.path, 500, 400, 'JPEG', 75)
-				.then((response) => {
+			ImageResizer.createResizedImage(image.path, 400, 400, 'JPEG', 90)
+				.then(async (response) => {
 					let resizedImage = {
 						uri: response.uri,
 						path: response.path,
@@ -251,10 +258,15 @@ const EditItineraryDetail = (props) => {
 						coverPhoto: resizedImage.path
 					};
 
-					props.uploadCoverPhoto(itineraryId, token, resizedImage.path).then(() => {
+					let uploadResponse = await props.uploadCoverPhoto(itineraryId, token, resizedImage.path);
+
+					if (uploadResponse.OK) {
+						showOkAlert(Languages.UpdateSuccessTitle, Languages.UpdateSuccessMessage);
 						setCoverPhoto(resizedImage.path);
 						props.addItineraryToRedux(tmpItinerary);
-					});
+					} else {
+						showOkAlert(Languages.SomethingWentWrong, Languages.SystemError);
+					}
 				})
 				.catch((error) => {
 					Bugsnag.leaveBreadcrumb(TAG, `RESIZE IMAGE - ${error}`);
@@ -274,7 +286,6 @@ const EditItineraryDetail = (props) => {
 					text: Languages.SaveAsDraft,
 					onPress: () => {
 						onSetToDraft();
-						onGoBack();
 					}
 				},
 				{
@@ -478,7 +489,7 @@ const EditItineraryDetail = (props) => {
 							style={[
 								styles.inputStyle,
 								{
-									borderBottomColor: isTitleFocus ? Color.primary : Color.lightGrey6
+									borderBottomColor: isQuoteFocus ? Color.primary : Color.lightGrey6
 								}
 							]}
 							onChangeText={(text) => {
@@ -578,5 +589,7 @@ export default connect(mapStateToProps, {
 	uploadCoverPhoto,
 	updateItineraryByID,
 	getItineraryById,
-	deleteItineraryByID
+	deleteItineraryByID,
+	unPublishItineraryByID,
+	getDraftItineraries
 })(EditItineraryDetail);

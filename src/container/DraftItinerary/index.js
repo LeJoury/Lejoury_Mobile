@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, FlatList, Text, RefreshControl, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { deleteItineraryByID, getDraftItineraries } from '@actions';
@@ -15,7 +15,28 @@ class DraftItinerary extends Component {
 	//constructor(props) {
 	//super (props)
 	//}
+	state = {
+		pullToRefresh: false,
+		page: 1,
+		isLastPage: false,
+		endReachedCalledDuringMomentum: true
+	};
+
 	_keyExtractor = (item, index) => index.toString();
+
+	willFocusSubscription = this.props.navigation.addListener('willFocus', async (payload) => {
+		const { token, userId } = this.props.user;
+
+		try {
+			let response = await this.props.getDraftItineraries(token, userId, 1);
+
+			if (response.OK) {
+				this.setState({
+					isLastPage: response.isLastPage
+				});
+			}
+		} catch (error) {}
+	});
 
 	componentDidMount() {
 		this.props.onRef(this);
@@ -26,6 +47,25 @@ class DraftItinerary extends Component {
 	componentWillUnmount() {
 		this.props.onRef(null);
 	}
+
+	refreshDraftItineraries = async () => {
+		const { userId, token } = this.props.user;
+		this.setState({ pullToRefresh: true });
+
+		try {
+			let response = await this.props.getDraftItineraries(token, userId, 1);
+
+			if (response.OK) {
+				this.setState({
+					pullToRefresh: false,
+					isLastPage: response.isLastPage
+				});
+			}
+		} catch (error) {
+			this.setState({ pullToRefresh: false });
+		}
+		// console.log(this.props.profile);
+	};
 
 	onPressItinerary = (itinerary) => {
 		this.props.navigation.navigate('AddItineraryDetail', {
@@ -45,15 +85,20 @@ class DraftItinerary extends Component {
 		Alert.alert(Languages.RemoveConfirmationItineraryTitle, Languages.RemoveConfirmationItinerary, [
 			{
 				text: Languages.Remove,
-				onPress: () => {
+				onPress: async () => {
 					let needUpdate = this.props.draft.itineraries.length >= 10;
 
 					try {
-						let response = this.props.deleteItineraryByID(itineraryId, token);
+						let response = await this.props.deleteItineraryByID(itineraryId, token);
 
 						if (response.OK) {
 							if (needUpdate) {
-								this.props.getDraftItineraries(token, userId);
+								let draftResponse = await this.props.getDraftItineraries(token, userId, 1);
+								if (draftResponse.OK) {
+									this.setState({
+										isLastPage: response.isLastPage
+									});
+								}
 							}
 						}
 					} catch (error) {
@@ -66,6 +111,30 @@ class DraftItinerary extends Component {
 				text: Languages.Cancel
 			}
 		]);
+	};
+
+	handleLoadMore = async () => {
+		const { token, userId } = this.props.user;
+		const { isLastPage } = this.props.draft;
+
+
+		if (!this.state.endReachedCalledDuringMomentum) {
+			if (!isLastPage) {
+				try {
+					let response = await this.props.getDraftItineraries(token, userId, this.state.page + 1);
+					this.setState({ endReachedCalledDuringMomentum: true });
+					if (response.OK) {
+						this.setState((prevState) => {
+							return {
+								page: prevState.page + 1
+							};
+						});
+					}
+				} catch (error) {}
+			} else {
+				this.setState({ endReachedCalledDuringMomentum: true });
+			}
+		}
 	};
 
 	renderEndofList() {
@@ -97,10 +166,22 @@ class DraftItinerary extends Component {
 				<FlatList
 					style={{ paddingTop: 6 }}
 					data={itineraries}
-					extraData={itineraries}
+					extraData={this.props.draft}
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.pullToRefresh}
+							onRefresh={this.refreshDraftItineraries}
+						/>
+					}
 					keyExtractor={this._keyExtractor}
 					renderItem={this.renderItem}
 					ListEmptyComponent={this.renderEmpty}
+					onEndReachedThreshold={0.4}
+					onEndReached={() => this.handleLoadMore()}
+					onMomentumScrollBegin={() =>
+						this.setState({
+							endReachedCalledDuringMomentum: false
+						})}
 				/>
 				{/* <Button
 					type="floating"

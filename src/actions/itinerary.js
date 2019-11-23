@@ -8,6 +8,7 @@ import {
 	DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID,
 	UPDATE_ITINERARY_BY_ID,
 	PUBLISH_ITINERARY_BY_ID,
+	UNPUBLISH_ITINERARY_BY_ID,
 	UPLOAD_COVER_PHOTO,
 	UPLOAD_ACTIVITY_PHOTOS,
 	UPDATE_ACTIVITY,
@@ -20,7 +21,8 @@ import {
 	GET_ITINERARY_BY_COUNTRY,
 	GET_PUBLISHED_ITINERARY_DETAILS,
 	GET_BOOKMARKS,
-	BOOKMARK
+	BOOKMARK,
+	SEARCH_ITINERARIES
 } from '@services';
 
 const STATUS_DRAFT = 'DRAFT';
@@ -149,13 +151,57 @@ const getItineraries = (token, page = 1) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
-					const { content } = result.data;
+					const { content, last } = result.data;
 
-					dispatch({
-						type: Types.SETUP_HOME_ITINERARIES,
-						payload: content
-					});
+					if (page === 1) {
+						dispatch({
+							type: Types.SETUP_HOME_ITINERARIES,
+							payload: { content, isLastPage: last }
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_HOME_ITINERARIES,
+							payload: { content, isLastPage: last }
+						});
+					}
 
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- get itineraries ----------------------------------- //
+const searchItineraries = (token, query, page = 1) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		SEARCH_ITINERARIES(token, query, page)
+			.then((result) => {
+				console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { content, last } = result.data;
+
+					console.log(content);
+					// if (page === 1) {
+					// 	dispatch({
+					// 		type: Types.SETUP_HOME_ITINERARIES,
+					// 		payload: { content, isLastPage: last }
+					// 	});
+					// } else {
+					// 	dispatch({
+					// 		type: Types.UPDATE_HOME_ITINERARIES,
+					// 		payload: { content, isLastPage: last }
+					// 	});
+					// }
+
+					let response = { OK: true, result: content };
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -196,6 +242,28 @@ const getItineraryById = (token, itineraryId) => async (dispatch) => {
 const publishItineraryByID = (itineraryId, token) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		PUBLISH_ITINERARY_BY_ID(itineraryId, token)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true };
+
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// ----------------------------------- publish itinerary by id ----------------------------------- //
+const unPublishItineraryByID = (itineraryId, token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		UNPUBLISH_ITINERARY_BY_ID(itineraryId, token)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
@@ -271,24 +339,35 @@ const createActivity = (activity, token, itineraryId, date, identifier) => async
 	});
 };
 
-// ----------------------------------- create activity ----------------------------------- //
+// ----------------------------------- update activity ----------------------------------- //
 const updateActivity = (activityId, activity, token, itineraryId, date, identifier) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		UPDATE_ACTIVITY(activityId, activity, token, itineraryId, date, identifier)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
-					UPLOAD_ACTIVITY_PHOTOS(activityId, token, activity.photos)
-						.then((photo_result) => {
-							let createdActivity = { ...activity, id: activityId, photos: photo_result.data };
-							let response = { OK: true, newActivity: createdActivity };
+					let filteredArray = activity.photos.filter((photo) => {
+						return !photo.hasOwnProperty('id');
+					});
 
-							// console.log(response);
-							resolve(response);
-						})
-						.catch((photo_error) => {
-							// TODO: reupload
-							console.log(photo_error);
-						});
+					if (filteredArray.length > 0) {
+						UPLOAD_ACTIVITY_PHOTOS(activityId, token, filteredArray)
+							.then((photo_result) => {
+								let createdActivity = { ...activity, id: activityId, photos: photo_result.data };
+								let response = { OK: true, newActivity: createdActivity };
+
+								// console.log(response);
+								resolve(response);
+							})
+							.catch((photo_error) => {
+								console.log(photo_error);
+							});
+					} else {
+						let createdActivity = { ...activity, id: activityId };
+						let response = { OK: true, newActivity: createdActivity };
+
+						// console.log(response);
+						resolve(response);
+					}
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
 					resolve(response);
@@ -338,18 +417,26 @@ const deleteActivityPhoto = (photoId, activityId, itineraryId, token) => async (
 };
 
 // ----------------------------------- get draft itineraries ----------------------------------- //
-const getDraftItineraries = (token, userId) => async (dispatch) => {
+const getDraftItineraries = (token, userId, page = 1) => async (dispatch) => {
+	console.log(page);
 	return new Promise((resolve, reject) => {
-		GET_DRAFT_ITINERARIES(token, userId)
+		GET_DRAFT_ITINERARIES(token, userId, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
+					const { content, last } = result.data;
 					let response = { OK: true };
-					const { content } = result.data;
 
-					dispatch({
-						type: Types.ADD_ITINERARIES,
-						payload: content
-					});
+					if (page === 1) {
+						dispatch({
+							type: Types.ADD_ITINERARIES,
+							payload: { content, isLastPage: last }
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_ITINERARIES,
+							payload: { content, isLastPage: last }
+						});
+					}
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -360,6 +447,8 @@ const getDraftItineraries = (token, userId) => async (dispatch) => {
 				}
 			})
 			.catch((error) => {
+				console.log(error);
+
 				reject(error);
 			});
 	});
@@ -410,32 +499,31 @@ const getDraftActivityDetails = (token, itineraryId, day) => async (dispatch) =>
 
 // ----------------------------------- get published itinerary ----------------------------------- //
 const getUserItineraries = (token, userId, isMe = false, page = 1) => async (dispatch) => {
-
 	return new Promise((resolve, reject) => {
 		GET_PUBLISHED_ITINERARIES(token, userId, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					if (isMe) {
 						let response = { OK: true };
-						const { content } = result.data;
+						const { content, last } = result.data;
 
 						if (page === 1) {
 							dispatch({
 								type: Types.SETUP_PUBLISHED_ITINERARIES,
-								payload: content
+								payload: { content, isLastPage: last }
 							});
 						} else {
 							dispatch({
 								type: Types.UPDATE_PUBLISHED_ITINERARIES,
-								payload: content
+								payload: { content, isLastPage: last }
 							});
 						}
 
 						resolve(response);
 					} else {
-						const { content } = result.data;
+						const { content, last } = result.data;
 
-						let response = { OK: true, itineraries: content };
+						let response = { OK: true, itineraries: content, isLastPage: last };
 						resolve(response);
 					}
 				} else if (result.statusCode === 401) {
@@ -452,14 +540,26 @@ const getUserItineraries = (token, userId, isMe = false, page = 1) => async (dis
 };
 
 // ----------------------------------- get country list ----------------------------------- //
-const getCountryList = (token) => async (dispatch) => {
+const getCountryList = (token, page = 1) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_COUNTRIES(token)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
-					const { content } = result.data;
+					const { content, last } = result.data;
 
-					let response = { OK: true, countries: content };
+					if (page === 1) {
+						dispatch({
+							type: Types.SETUP_COUNTRY,
+							payload: { content, isLastPage: last }
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_COUNTRY,
+							payload: { content, isLastPage: last }
+						});
+					}
+
+					let response = { OK: true };
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -475,14 +575,14 @@ const getCountryList = (token) => async (dispatch) => {
 };
 
 // ----------------------------------- get itinerary by country id ----------------------------------- //
-const getItineraryByCountryId = (token, userId, countryId) => async (dispatch) => {
+const getItineraryByCountryId = (token, code, page = 1) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
-		GET_ITINERARY_BY_COUNTRY(token, userId, countryId)
+		GET_ITINERARY_BY_COUNTRY(token, code, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
-					const { content } = result.data;
+					const { content, last } = result.data;
 
-					let response = { OK: true, countries: content };
+					let response = { OK: true, itineraries: content, isLastPage: last };
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -597,6 +697,7 @@ export {
 	uploadCoverPhoto,
 	updateActivity,
 	publishItineraryByID,
+	unPublishItineraryByID,
 	getItineraries,
 	getDraftItineraryDetails,
 	getDraftActivityDetails,
@@ -608,5 +709,6 @@ export {
 	addBookmark,
 	removeBookmark,
 	getActivityBookmark,
-	getItineraryBookmark
+	getItineraryBookmark,
+	searchItineraries
 };

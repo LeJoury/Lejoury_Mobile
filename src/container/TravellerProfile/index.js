@@ -8,19 +8,23 @@ import { connect } from 'react-redux';
 import { followTraveller, getProfile, getUserItineraries, getTravellerProfile } from '@actions';
 
 import { UserProfileHeader, Spinner, ItineraryHolder } from '@components';
-import { Languages, Color, Constants, Images } from '@common';
+import { Languages, Color, Constants, Device, Images } from '@common';
 
 import styles from './styles';
 const { Mode, Sizes } = Constants.Spinner;
+
+const TOP_IPHONE_X = 32;
+const TOP_NORMAL_IPHONE = 20;
 
 class TravellerProfile extends Component {
 	state = {
 		itineraries: [],
 		isLoading: false,
 		selectedUser: this.props.selectedUser,
-		top: new Animated.Value(20),
+		top: new Animated.Value(Device.isIphoneX ? TOP_IPHONE_X : TOP_NORMAL_IPHONE),
 		pullToRefresh: false,
 		page: 1,
+		isLastPage: false,
 		endReachedCalledDuringMomentum: true
 	};
 
@@ -38,6 +42,7 @@ class TravellerProfile extends Component {
 				if (itineraryResponse.OK) {
 					this.setState({
 						isLoading: false,
+						isLastPage: itineraryResponse.isLastPage,
 						itineraries: itineraryResponse.itineraries
 					});
 				} else {
@@ -82,6 +87,7 @@ class TravellerProfile extends Component {
 				if (itineraryResponse.OK) {
 					this.setState({
 						page: 1,
+						isLastPage: itineraryResponse.isLastPage,
 						itineraries: itineraryResponse.itineraries
 					});
 				}
@@ -106,23 +112,25 @@ class TravellerProfile extends Component {
 			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
 				if (itineraryResponse.OK) {
 					this.setState({
-						isLoading: false,
-						itineraries: itineraryResponse.itineraries
+						pullToRefresh: false,
+						page: 1,
+						itineraries: itineraryResponse.itineraries,
+						isLastPage: itineraryResponse.isLastPage
 					});
 				} else {
 					this.setState({
-						isLoading: false
+						pullToRefresh: false
 					});
 				}
 
 				if (profileResponse.OK) {
 					this.setState({
-						isLoading: false,
+						pullToRefresh: false,
 						selectedUser: profileResponse.user
 					});
 				} else {
 					this.setState({
-						isLoading: false
+						pullToRefresh: false
 					});
 				}
 			});
@@ -144,7 +152,7 @@ class TravellerProfile extends Component {
 	setBackButtonHide = (hide) => {
 		Animated.timing(this.state.top, {
 			duration: 50,
-			toValue: hide ? -100 : 20,
+			toValue: hide ? -100 : Device.isIphoneX ? TOP_IPHONE_X : TOP_NORMAL_IPHONE,
 			easing: Easing.linear
 		}).start();
 	};
@@ -176,21 +184,30 @@ class TravellerProfile extends Component {
 	};
 
 	handleLoadMore = async () => {
-		const { userId } = this.state.selectedUser;
+		const { isLastPage, selectedUser } = this.state;
+		const { userId } = selectedUser;
 		const { token } = this.props.user;
 
 		if (!this.state.endReachedCalledDuringMomentum) {
-			try {
-				let response = await this.props.getUserItineraries(token, userId, false, this.state.page);
+			if (!isLastPage) {
+				try {
+					let response = await this.props.getUserItineraries(token, userId, false, this.state.page + 1);
+					this.setState({ endReachedCalledDuringMomentum: true });
+
+					if (response.OK) {
+						console.log(response);
+						this.setState((prevState) => {
+							return {
+								page: prevState.page + 1,
+								itineraries: prevState.itineraries.concat(response.itineraries),
+								isLastPage: response.isLastPage
+							};
+						});
+					}
+				} catch (error) {}
+			} else {
 				this.setState({ endReachedCalledDuringMomentum: true });
-				if (response.OK) {
-					this.setState((prevState) => {
-						return {
-							page: prevState.page + 1
-						};
-					});
-				}
-			} catch (error) {}
+			}
 		}
 	};
 
@@ -263,7 +280,7 @@ class TravellerProfile extends Component {
 					onScroll={(e) => this.onScrollHandle(e)}
 					keyExtractor={this._keyExtractor}
 					renderItem={this.renderItem}
-					contentContainerStyle={styles.containerStyle}
+					contentContainerStyle={styles.container}
 					ListHeaderComponent={this.renderHeader()}
 					ListEmptyComponent={this.renderEmptyList()}
 					onEndReachedThreshold={0.2}

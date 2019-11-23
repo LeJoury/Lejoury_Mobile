@@ -143,7 +143,7 @@ const ViewImages = (navigation, color = Color.white, onPress = undefined) => (
 
 const CircleBack = (navigation, color = Color.white, onPress = undefined) => (
 	<TouchableOpacity
-		style={Styles.Common.FloatCircle}
+		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -156,6 +156,24 @@ const CircleBack = (navigation, color = Color.white, onPress = undefined) => (
 		}
 	>
 		<Icon name="chevron-left" type="feather" color={color} />
+	</TouchableOpacity>
+);
+
+const MoreOptions = (navigation, color = Color.white, onPress = undefined) => (
+	<TouchableOpacity
+		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+		hitSlop={hitSlop}
+		onPress={
+			onPress === undefined ? (
+				() => {
+					navigation.goBack(null);
+				}
+			) : (
+				onPress
+			)
+		}
+	>
+		<Icon name="more-vertical" type="feather" color={color} />
 	</TouchableOpacity>
 );
 
@@ -210,6 +228,7 @@ export {
 	Add,
 	AddBookmark,
 	RemoveBookmark,
+	MoreOptions,
 	ViewImages,
 	Save
 };

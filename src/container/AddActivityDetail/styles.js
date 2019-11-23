@@ -138,7 +138,7 @@ export default StyleSheet.create({
 	},
 	description: {
 		alignItems: 'flex-start',
-		height: 100,
+		height: 130,
 		borderWidth: 1,
 		borderRadius: 3,
 		padding: 8,

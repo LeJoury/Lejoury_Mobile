@@ -4,21 +4,18 @@ import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
 	container: {
-		flexGrow: 1
+		backgroundColor: Color.white,
+		flexGrow: 1,
+		paddingBottom: 60,
+		marginTop: Device.isIphoneX ? 45 : 10
 	},
 	landingBackground: {
 		width,
 		top: 0
 	},
-	settingsButton: { right: 0, position: 'absolute', zIndex: 99999 },
+	settingsButton: {  right: 0, position: 'absolute', zIndex: 99999 },
 
-	headerSection: {
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-		fontSize: 15,
-		color: Color.primaryLight,
-		fontWeight: '600'
-	},
+	headerContainer: {},
 	separator: {
 		borderBottomWidth: 8,
 		borderColor: Color.lightGrey2

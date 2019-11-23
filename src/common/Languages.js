@@ -10,6 +10,7 @@ export default {
 	Confirm: 'Confirm',
 	Done: 'Done',
 	Next: 'Next',
+	Previous: 'Previous',
 	Submit: 'Submit',
 	Total: 'Total',
 	Nett: 'Nett',
@@ -18,6 +19,7 @@ export default {
 	Success: 'Success',
 	Save: 'Save',
 	Send: 'Send',
+	Delete:'Delete',
 	SomethingWentWrong: 'Something went wrong.',
 
 	HelloThere: 'Hello There!',
@@ -34,7 +36,8 @@ export default {
 	EmptyItinerary: 'Empty Itinerary',
 	Discard: 'Discard',
 	SaveAsDraft: 'Save draft',
-	SetStatusToDraft: 'Move to Draft ?',
+	SetStatusToDraft: 'Set to Draft ?',
+	SetToDraft:'Set To Draft',
 	Remove: 'Remove',
 	RemoveConfirmationActivityTitle: 'Remove Activity',
 	RemoveConfirmationActivity: 'Are you sure to remove this activity ?',
@@ -42,6 +45,15 @@ export default {
 	RemoveConfirmationDay: 'Are you sure to remove this day ?',
 	RemoveConfirmationItineraryTitle: 'Remove Itinerary',
 	RemoveConfirmationItinerary: 'Are you sure to remove this itinerary ?',
+	SetToDraftConfirmationItineraryTitle: 'Unpublish Itinerary',
+	SetToDraftConfirmationItinerary: 'Are you sure to set this itinerary to draft ?',
+	UpdateSuccessTitle: 'Update Itinerary',
+	UpdateSuccessMessage: 'Updated Successfully.',
+	SetToDraftSuccessTitle: 'Successfully',
+	SetToDraftSuccessMessage: 'Successfully set to draft.',
+	RemoveItinerarySuccessTitle: 'Successfully',
+	RemoveItinerarySuccessMessage: 'Successfully delete your itinerary.',
+
 	Title: 'Title',
 	FillUpBothField: 'Please fill up everything.',
 	SystemError: 'Sorry, our system might having some problems. Please try again later.',
@@ -126,6 +138,7 @@ export default {
 	Loading: 'Loading...',
 	welcomeBack: 'Welcome back! ',
 	seeMore: 'See More',
+	more: 'More',
 
 	// Place holder
 	TypeFirstName: 'Type your first name',
@@ -247,6 +260,7 @@ export default {
 	TrendingInfluencers: 'Trending Influencers',
 	PlaceHolderTryMalaysia: "Try 'Malaysia' ",
 	RecentSearch: 'Recent Search',
+	Result: 'Result',
 
 	//Draft
 	Edit: 'Edit',
@@ -291,6 +305,10 @@ export default {
 	Memories: 'Memories',
 	Arrival: 'Arrival',
 	Departure: 'Departure',
+	FirstDayFirstActivityTitle:'Itinerary reach the starting point',
+	FirstDayFirstActivity:'This is the first day of the itinerary',
+	LastDayLastActivityTitle:'Itinerary reach the end point',
+	LastDayLastActivity:'This is the last day of the itinerary',
 
 	//Quote
 	ShareYourQuote: 'Share your quote of the trip...',

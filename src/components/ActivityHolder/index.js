@@ -73,7 +73,9 @@ const ActivityHolder = ({ index, name, photos, description, currency, budget, ra
 					{description === '' ? (
 						<Text style={styles.activityDescription}>{Languages.AddDescription}</Text>
 					) : (
-						<Text style={styles.activityDescription}>{description}</Text>
+						<Text style={styles.activityDescription} numberOfLines={3} ellipsizeMode={'tail'}>
+							{description}
+						</Text>
 					)}
 
 					<View style={[ Styles.Common.RowCenterBetween, { marginTop: 8 } ]}>

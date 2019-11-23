@@ -3,10 +3,12 @@ const { width, height } = Dimensions.get('window');
 import { Color, Device, Styles } from '@common';
 
 export default StyleSheet.create({
-	containerStyle: {
+	container: {
 		backgroundColor: Color.white,
 		flexGrow: 1,
-		paddingBottom: 30
+		paddingBottom: 60,
+		marginTop: Device.isIphoneX ? 45 : 10
+
 	},
 	landingBackground: {
 		width,

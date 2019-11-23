@@ -10,6 +10,7 @@ const PUBLISH_STATUS_PUBLISHED = 'PUBLISHED';
 
 const { URL } = Constants.URL;
 const { STATUS } = Constants.STATUS;
+const { Action } = Constants.Action;
 const {
 	BASIC_PARAMS,
 	PARAMS_ITINERARY,
@@ -177,9 +178,58 @@ const DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID = async (photoId, token) => {
 };
 
 const PUBLISH_ITINERARY_BY_ID = async (itineraryId, token) => {
+	const { ITINERARY_ID, ACTION } = PARAMS_ITINERARY;
+
+	let params = {
+		[ACTION]: Action.PUBLISH
+	};
+
+	var formBody = [];
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+
 	return await new Promise((resolve, reject) => {
 		base
-			.put(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_PUBLISH}/${itineraryId}`, '', {
+			.put(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${itineraryId}`, formBody, {
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `PUBLISH_ITINERARY_BY_ID - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
+const UNPUBLISH_ITINERARY_BY_ID = async (itineraryId, token) => {
+	const { ITINERARY_ID, ACTION } = PARAMS_ITINERARY;
+
+	let params = {
+		[ACTION]: Action.UNPUBLISH
+	};
+
+	var formBody = [];
+	for (var property in params) {
+		var encodedKey = encodeURIComponent(property);
+		var encodedValue = encodeURIComponent(params[property]);
+		formBody.push(encodedKey + '=' + encodedValue);
+	}
+	formBody = formBody.join('&');
+
+	return await new Promise((resolve, reject) => {
+		base
+			.put(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${itineraryId}`, formBody, {
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
 					Authorization: `Bearer ${token}`
@@ -304,10 +354,21 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 	const { ITINERARY_ID } = PARAMS_ITINERARY;
 	const { DAY, DATE } = PARAMS_DAY;
 	const { TITLE, DESCRIPTION, BUDGET, CURRENCY, RATE, LOCATION } = PARAMS_ACTIVITY;
-	const { STATE, COUNTRY, POSTCODE, LATITUDE, LONGITUDE, NAME, TYPES, LOCATION_URL } = PARAMS_LOCATION;
+	const {
+		STATE,
+		COUNTRY,
+		POSTCODE,
+		LATITUDE,
+		LONGITUDE,
+		NAME,
+		TYPES,
+		LOCATION_URL,
+		ALPHA2,
+		FULLADDRESS
+	} = PARAMS_LOCATION;
 
 	const { location, budget, currency, description, rate, title } = newActivity;
-	const { country, latitude, longitude, name, postcode, state, types, url } = location;
+	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress } = location;
 
 	let version = '';
 	let activityLocation;
@@ -328,7 +389,9 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 			[LONGITUDE]: longitude,
 			[NAME]: name,
 			[TYPES]: types.toString(),
-			[LOCATION_URL]: url
+			[LOCATION_URL]: url,
+			[ALPHA2]: alpha2,
+			[FULLADDRESS]: fullAddress
 		};
 	}
 
@@ -345,6 +408,8 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 		[PLATFORM]: Platform.OS.toUpperCase(),
 		[APP_VERSION]: version
 	});
+
+	console.log(params);
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -398,10 +463,10 @@ const UPLOAD_ACTIVITY_PHOTOS = async (activityID, token, photos) => {
 	});
 };
 
-const GET_DRAFT_ITINERARIES = async (token, userId) => {
+const GET_DRAFT_ITINERARIES = async (token, userId, page) => {
 	const { USER_ID, PUBLISH_STATUS } = PARAMS_ITINERARY;
 
-	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_DRAFT}`;
+	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_DRAFT}&${PAGE}=${page}`;
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -424,6 +489,28 @@ const GET_DRAFT_ITINERARIES = async (token, userId) => {
 
 const GET_ITINERARIES = async (token, page) => {
 	let params = `&${PAGE}=${page}`;
+
+	return await new Promise((resolve, reject) => {
+		base
+			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}?${params}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_ITINERARIES - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
+
+const SEARCH_ITINERARIES = async (token, query, page) => {
+	let params = `&${PAGE}=${page}&search=${query}`;
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -552,20 +639,19 @@ const GET_COUNTRIES = async (token) => {
 	});
 };
 
-const GET_ITINERARY_BY_COUNTRY = async (token, userId, countryId) => {
-	const { USER_ID, COUNTRY_ID } = PARAMS_ITINERARY;
+const GET_ITINERARY_BY_COUNTRY = async (token, code, page) => {
+	const { COUNTRY } = PARAMS_ITINERARY;
+
+	let params = `${COUNTRY}=${code}&${PAGE}=${page}`;
 
 	return await new Promise((resolve, reject) => {
 		base
-			.get(
-				`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_COUNTRY}${USER_ID}=${userId}&${COUNTRY_ID}=${countryId}`,
-				{
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: `Bearer ${token}`
-					}
+			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_COUNTRY}?${params}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
 				}
-			)
+			})
 			.then((response) => {
 				resolve(response.data);
 			})
@@ -635,6 +721,7 @@ export {
 	DELETE_ACTIVITY_PHOTO_BY_PHOTO_ID,
 	UPDATE_ITINERARY_BY_ID,
 	PUBLISH_ITINERARY_BY_ID,
+	UNPUBLISH_ITINERARY_BY_ID,
 	UPLOAD_COVER_PHOTO,
 	UPLOAD_ACTIVITY_PHOTOS,
 	UPDATE_ACTIVITY,
@@ -647,5 +734,6 @@ export {
 	GET_ITINERARY_BY_COUNTRY,
 	GET_PUBLISHED_ITINERARY_DETAILS,
 	GET_BOOKMARKS,
-	BOOKMARK
+	BOOKMARK,
+	SEARCH_ITINERARIES
 };

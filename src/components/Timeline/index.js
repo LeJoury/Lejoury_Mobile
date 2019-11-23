@@ -50,7 +50,7 @@ export default class Timeline extends PureComponent {
 
 		content = (
 			<View style={[ styles.rowContainer, this.props.rowContainerStyle ]}>
-				{this.renderEvent(item)}
+				{this.renderEvent(item, index)}
 				{this.renderCircle(item)}
 			</View>
 		);
@@ -58,7 +58,7 @@ export default class Timeline extends PureComponent {
 		return <View key={index}>{content}</View>;
 	};
 
-	renderEvent = (item) => {
+	renderEvent = (item, index) => {
 		const lineWidth = this.props.lineWidth;
 
 		const isLast = this.props.data.slice(-1)[0] === item;
@@ -87,7 +87,7 @@ export default class Timeline extends PureComponent {
 				<TouchableOpacity
 					disabled={this.props.onEventPress == null}
 					style={{ paddingBottom: 8, paddingRight: 16 }}
-					onPress={() => (this.props.onEventPress ? this.props.onEventPress(item) : null)}
+					onPress={() => (this.props.onEventPress ? this.props.onEventPress(index) : null)}
 				>
 					<View style={styles.detail}>{this.renderDetail(item)}</View>
 					<View style={Styles.Common.RowCenterBetween}>

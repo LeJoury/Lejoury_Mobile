@@ -26,6 +26,7 @@ const Section = ({
 	data,
 	keyExtractor,
 	renderHolder,
+	renderFooter = undefined,
 	flatListStyle,
 	holderWidth = itemWidth,
 	type = 'flatlist',
@@ -54,6 +55,7 @@ const Section = ({
 				activeSlideAlignment={'start'}
 				inactiveSlideScale={0.9}
 				inactiveSlideOpacity={0.5}
+				ListFooterComponent={renderFooter}
 			/>
 		)}
 	</View>

@@ -12,8 +12,11 @@ const INITIAL_STATE = {
 	userId: null,
 	username: null,
 	itineraries: [],
+	isItineraryLastPage: false,
 	following: [],
-	followers: []
+	isFollowingLastPage: false,
+	followers: [],
+	isFollowerLastPage: false
 };
 
 const updateList = (travellers, userId, action) => {
@@ -58,12 +61,14 @@ export const reducer = (state = INITIAL_STATE, action) => {
 		case Types.SETUP_PUBLISHED_ITINERARIES:
 			return {
 				...state,
-				itineraries: action.payload
+				itineraries: action.payload.content,
+				isItineraryLastPage : action.payload.isLastPage
 			};
 		case Types.UPDATE_PUBLISHED_ITINERARIES:
 			return {
 				...state,
-				itineraries: state.itineraries.concat(action.payload)
+				itineraries: state.itineraries.concat(action.payload),
+				isItineraryLastPage : action.payload.isLastPage
 			};
 		case Types.UPDATE_PROFILE:
 			return {
@@ -76,15 +81,29 @@ export const reducer = (state = INITIAL_STATE, action) => {
 				...state,
 				photo: action.payload
 			};
+		case Types.SETUP_FOLLOWERS:
+			return {
+				...state,
+				followers: action.payload.content,
+				isFollowerLastPage: action.payload.isLastPage
+			};
 		case Types.UPDATE_FOLLOWERS:
 			return {
 				...state,
-				followers: state.followers.concat(action.payload)
+				followers: state.followers.concat(action.payload.content),
+				isFollowerLastPage: action.payload.isLastPage
+			};
+		case Types.SETUP_FOLLOWING:
+			return {
+				...state,
+				following: action.payload.content,
+				isFollowingLastPage: action.payload.isLastPage
 			};
 		case Types.UPDATE_FOLLOWING:
 			return {
 				...state,
-				following: state.following.concat(action.payload)
+				following: state.following.concat(action.payload.content),
+				isFollowingLastPage: action.payload.isLastPage
 			};
 		case Types.UPDATE_FOLLOWERS_LIST:
 			return {

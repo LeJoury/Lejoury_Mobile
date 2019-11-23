@@ -4,6 +4,12 @@ import { Color, Styles } from '@common';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
+	container: {
+		flex: 1
+	},
+	scrollViewContentContainerStyle:{
+		flexGrow: 1
+	},
 	separatorWrap: {
 		flexDirection: 'row',
 		alignItems: 'center',

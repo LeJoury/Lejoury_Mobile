@@ -56,7 +56,8 @@ const BucketActivity = (props) => {
 	const onPressActivity = (selectedActivity) => {
 		props.navigation.navigate('BucketActivityDetail', {
 			selectedActivity: selectedActivity,
-			updateBookmark: refreshBookmarks
+			updateBookmark: refreshBookmarks,
+			type: 'bookmark'
 		});
 	};
 

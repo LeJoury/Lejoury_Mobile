@@ -146,6 +146,19 @@ export default StyleSheet.create({
 		backgroundColor: Color.splashScreenBg5,
 		justifyContent: 'center'
 	},
+	disabledPublishButtonTextStyle: {
+		color: Color.white,
+		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Bold'
+	},
+	disabledPublishButton: {
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
+		backgroundColor: Color.lightGrey3,
+		justifyContent: 'center'
+	},
 	updateButtonTextStyle: {
 		color: Color.white,
 		fontSize: 14,

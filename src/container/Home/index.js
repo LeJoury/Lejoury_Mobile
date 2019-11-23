@@ -11,81 +11,28 @@ import {
 	getProfile,
 	getUserItineraries,
 	getTravellers,
-	getCountryList
+	getCountryList,
+	getHome,
+	searchItineraries
 } from '@actions';
 
 import { ItineraryHolder, CountryHolder, TravellerHolder, Section, Spinner } from '@components';
 import { Search } from '@container';
-import { Images, Languages, Device, Color, Styles, Constants } from '@common';
+import { Languages, Color, Styles, Constants } from '@common';
 import { Bugsnag } from '@services';
 
 import styles from './styles';
 
 const { width, height } = Dimensions.get('window');
 const { Mode, Sizes } = Constants.Spinner;
-
-const countries = [
-	{
-		countryID: 'country_1',
-		countryName: 'Malaysia',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FMalaysia.jpg?alt=media&token=9f1a40b2-4429-4562-9409-5faeac822e91'
-	},
-	{
-		countryID: 'country_2',
-		countryName: 'Brunei',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FBrunei.jpeg?alt=media&token=541930d6-e212-4c27-b93e-9099c157fcb5'
-	},
-	{
-		countryID: 'country_3',
-		countryName: 'Cambodia',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FCambodia.jpg?alt=media&token=19eec492-827b-46e3-8cd9-926ceef6bd20'
-	},
-	{
-		countryID: 'country_4',
-		countryName: 'Laos',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FLaos.jpeg?alt=media&token=0ad2ce9a-bcac-4bb5-b060-0c817fda09a3'
-	},
-	{
-		countryID: 'country_5',
-		countryName: 'Myanmar',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FMyanmar.jpg?alt=media&token=c8f9341f-8b32-47f1-9aac-ff9c5103af92'
-	},
-	{
-		countryID: 'country_6',
-		countryName: 'Philippines',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FPhilippines.jpg?alt=media&token=195d88ab-236e-4e37-b301-d44011dc9da4'
-	},
-	{
-		countryID: 'country_7',
-		countryName: 'Singapore',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FSingapore.jpg?alt=media&token=53423a33-fcf1-4e83-979e-85cefc1f22e2'
-	},
-	{
-		countryID: 'country_8',
-		countryName: 'Thailand',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FThailand.jpeg?alt=media&token=0e5c0250-611f-4c42-88b3-277bfb1ae42b'
-	},
-	{
-		countryID: 'country_9',
-		countryName: 'Vietnam',
-		thumbnails:
-			'https://firebasestorage.googleapis.com/v0/b/lejoury-86cb4.appspot.com/o/Countries%2FVietnam.jpg?alt=media&token=534fbb86-c4ef-4b0a-b34d-257dff55d6d7'
-	}
-];
+const { Type } = Constants.Itinerary_Type;
 
 class Home extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			search: '',
+			searchResult: [],
 			searchWidth: new Animated.Value(width - 18),
 			showCancel: false,
 			searchViewOpacity: new Animated.Value(0),
@@ -95,7 +42,7 @@ class Home extends Component {
 	}
 	_keyExtractor_Itinerary = (item) => item.itineraryId.toString();
 
-	_keyExtractor_Country = (item) => item.countryID.toString();
+	_keyExtractor_Country = (item) => item.name.toString();
 
 	_keyExtractor_Traveller = (item) => item.userId.toString();
 
@@ -105,25 +52,18 @@ class Home extends Component {
 		this.setState({ isLoading: true });
 
 		try {
-			let itineraryResponse = await this.props.getItineraries(token);
-
 			let draftResponse = await this.props.getDraftItineraries(token, userId);
 
 			let profileResponse = await this.props.getProfile(userId, token);
 
 			let userPublishItinerariesResponse = await this.props.getUserItineraries(token, userId, true);
-
-			let travellerResponse = await this.props.getTravellers(token);
-
-			let countryResponse = await this.props.getCountryList(token);
-
 			Promise.all([
-				itineraryResponse,
+				// itineraryResponse,
 				draftResponse,
 				profileResponse,
-				userPublishItinerariesResponse,
-				travellerResponse,
-				countryResponse
+				userPublishItinerariesResponse
+				// travellerResponse,
+				// countryResponse
 			]).then((values) => {
 				this.setState({ isLoading: false });
 			});
@@ -136,18 +76,10 @@ class Home extends Component {
 		const { token } = this.props.user;
 
 		try {
-			let itineraryResponse = await this.props.getItineraries(token);
+			let response = await this.props.getHome(token);
 
-			let travellerResponse = await this.props.getTravellers(token);
-
-			let countryResponse = await this.props.getCountryList(token);
-
-			Promise.all([
-				itineraryResponse,
-				travellerResponse,
-				countryResponse
-			]).then((values) => {
-			});
+			if (response.OK) {
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -157,13 +89,27 @@ class Home extends Component {
 		this.willFocusSubscription.remove();
 	}
 
-
 	componentDidUpdate() {}
 
 	updateSearch = (search) => {
-		this.setState({
-			search
-		});
+		const { token, userId } = this.props.user;
+
+		this.setState(
+			{
+				search
+			},
+			() => {
+				this.timer = setTimeout(async () => {
+					let searchResponse = await this.props.searchItineraries(token, search);
+
+					if (searchResponse.OK) {
+						this.setState({
+							searchResult: searchResponse.result
+						});
+					}
+				}, 2000);
+			}
+		);
 	};
 
 	onSearchFocus = () => {
@@ -221,7 +167,16 @@ class Home extends Component {
 
 	onPressCountry = (country) => {
 		this.props.navigation.navigate('ItineraryList', {
-			countryID: country.countryID
+			code: country.alpha2,
+			type: Type.COUNTRY_ITINERARY,
+			routeTitle: country.name
+		});
+	};
+
+	onPressMoreItinerary = () => {
+		this.props.navigation.navigate('ItineraryList', {
+			type: Type.DAILY_ITINERARY,
+			routeTitle: ''
 		});
 	};
 
@@ -236,15 +191,23 @@ class Home extends Component {
 	};
 
 	renderFamousPlaces = ({ item }) => (
-		<ItineraryHolder itinerary={item} key={item.itineraryId} onPress={() => this.onPressFamous(item)} type="main" />
+		<ItineraryHolder itinerary={item} onPress={() => this.onPressFamous(item)} type="main" />
+	);
+
+	renderFamousPlacesFooter = () => (
+		<View style={styles.itinerarySeeMoreContainer}>
+			<TouchableOpacity style={styles.itinerarySeeMoreInnerContainer} onPress={this.onPressMoreItinerary}>
+				<Text style={styles.itinerarySeeMoreStyle}>{Languages.more}</Text>
+			</TouchableOpacity>
+		</View>
 	);
 
 	renderPopular = ({ item }) => (
-		<CountryHolder country={item} key={item.countryID} onPress={() => this.onPressCountry(item)} type="main" />
+		<CountryHolder country={item} onPress={() => this.onPressCountry(item)} type="main" />
 	);
 
 	renderTraveller = ({ item }) => (
-		<TravellerHolder traveller={item} key={item.userId} onPress={() => this.onPressTraveller(item)} type="main" />
+		<TravellerHolder traveller={item} onPress={() => this.onPressTraveller(item)} type="main" />
 	);
 
 	renderSearchBar = () => {
@@ -270,7 +233,7 @@ class Home extends Component {
 				</Animated.View>
 				<Animated.View style={styles.cancelSearchBarContainer}>
 					<TouchableOpacity onPress={this.onSearchBlur}>
-						{this.state.showCancel && <Text style={styles.cancelSearchBarText}>Cancel</Text>}
+						{this.state.showCancel && <Text style={styles.cancelSearchBarText}>{Languages.Cancel}</Text>}
 					</TouchableOpacity>
 				</Animated.View>
 			</View>
@@ -283,10 +246,11 @@ class Home extends Component {
 				<Section
 					isHorizontalList={true}
 					showHorizontalIndicator={false}
-					data={this.props.itinerary.itineraries.slice(0, 8)} //render first 8 itineraries
+					data={this.props.itinerary.itineraries.slice(0, 6)} //render first 8 itineraries
 					type="carousel"
 					keyExtractor={this._keyExtractor_Itinerary}
 					renderHolder={this.renderFamousPlaces}
+					renderFooter={this.renderFamousPlacesFooter}
 				>
 					<Text style={[ styles.sectionTitle, { fontSize: 26, color: Color.primary } ]}>
 						{Languages.Destination}
@@ -302,16 +266,6 @@ class Home extends Component {
 					containerStyle={styles.sectionContainer}
 					isHorizontalList={true}
 					showHorizontalIndicator={false}
-					data={countries}
-					keyExtractor={this._keyExtractor_Country}
-					renderHolder={this.renderPopular}
-				>
-					<Text style={styles.smallSectionTitle}>{Languages.TrendingCountries}</Text>
-				</Section>
-				<Section
-					containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
-					isHorizontalList={true}
-					showHorizontalIndicator={false}
 					data={this.props.traveller.travellers}
 					keyExtractor={this._keyExtractor_Traveller}
 					renderHolder={this.renderTraveller}
@@ -325,6 +279,16 @@ class Home extends Component {
 							<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
 						</TouchableOpacity>
 					</View>
+				</Section>
+				<Section
+					containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
+					isHorizontalList={true}
+					showHorizontalIndicator={false}
+					data={this.props.itinerary.countries}
+					keyExtractor={this._keyExtractor_Country}
+					renderHolder={this.renderPopular}
+				>
+					<Text style={styles.sectionTitle}>{Languages.TrendingCountries}</Text>
 				</Section>
 			</ScrollView>
 		);
@@ -364,7 +328,11 @@ class Home extends Component {
 
 				{showSearchView && (
 					<Animated.View style={[ searchViewStyle, styles.searchViewOverlayContainer ]}>
-						<Search navigation={this.props.navigation} />
+						<Search
+							navigation={this.props.navigation}
+							data={this.state.searchResult}
+							onResultPress={this.onPressFamous}
+						/>
 					</Animated.View>
 				)}
 				{this.renderLoading()}
@@ -387,5 +355,7 @@ export default connect(mapStateToProps, {
 	getProfile,
 	getUserItineraries,
 	getTravellers,
-	getCountryList
+	getCountryList,
+	getHome,
+	searchItineraries
 })(Home);

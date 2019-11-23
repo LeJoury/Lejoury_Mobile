@@ -31,9 +31,11 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Medium'
 	},
 	navButtonWrapper: {
+		...Styles.Common.RowCenterBetween,
 		flexDirection: 'row',
 		flex: 1,
 		position: 'absolute',
+		paddingRight: 12,
 		top: 0,
 		left: 0,
 		right: 0,
@@ -63,8 +65,9 @@ export default StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold'
 	},
-	backButton: { top: 0, left: 0, position: 'absolute', zIndex: 99999 },
-	bookmarkButton: { top: 0, right: 12, position: 'absolute', zIndex: 99999 },
+	backButton: { zIndex: 99999 },
+	moreButton: { zIndex: 99999 },
+	bookmarkButton: { zIndex: 99999 },
 	image: {
 		height: PARALLAX_HEADER_HEIGHT,
 		width: width
@@ -77,7 +80,8 @@ export default StyleSheet.create({
 		paddingTop: 40,
 		flexShrink: 0,
 		minHeight: height,
-		...Styles.Common.ShadowBox
+		...Styles.Common.ShadowBox,
+		shadowOffset: { width: 0, height: -10 }
 	},
 	travellerMainContainer: {
 		width: width - 32,

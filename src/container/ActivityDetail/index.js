@@ -22,7 +22,7 @@ import { addBookmark, removeBookmark } from '@actions';
 
 import { CircleBack, AddBookmark, RemoveBookmark } from '../../navigation/IconNav';
 
-import { Constants, Styles, Languages, Color, Device, formatImages, getCountryCurrency } from '@common';
+import { Constants, Styles, Languages, Color, Device, formatImages, getCountryCurrency, showOkAlert } from '@common';
 
 const { Sizes } = Constants.Spinner;
 
@@ -35,6 +35,12 @@ const backTop = Device.isIphoneX ? 35 : 20;
 const { Bucket_Type } = Constants.Bucket_Type;
 
 const ActivityDetail = (props) => {
+	//all days
+	const [ allDays ] = useState(props.navigation.state.params.days);
+	const [ dayIndex, setDayIndex ] = useState(props.navigation.state.params.dayIndex);
+	const [ activityIndex, setActivityIndex ] = useState(props.navigation.state.params.activityIndex);
+	const [ selectedActivity, setSelectedActivity ] = useState();
+
 	//location details
 	const [ locationName, setLocationName ] = useState('');
 	const [ locationLat, setLocationLat ] = useState(0);
@@ -44,6 +50,7 @@ const ActivityDetail = (props) => {
 	const [ locationState, setLocationState ] = useState();
 	const [ locationPostcode, setLocationPostcode ] = useState();
 	const [ locationTypes, setLocationTypes ] = useState();
+	const [ locationFullAddress, setFullAddress ] = useState();
 
 	//activity details
 	const [ title, setTitle ] = useState('');
@@ -64,31 +71,40 @@ const ActivityDetail = (props) => {
 	//scroll animation
 	const [ scrollY ] = useState(new Animated.Value(0));
 
-	useEffect(() => {
-		const { navigation } = props;
-		const { selectedActivity } = navigation.state.params;
+	useEffect(
+		() => {
+			let currentActivity;
+			if (props.navigation.state.params.type === 'bookmark') {
+				setSelectedActivity(props.navigation.state.params.selectedActivity);
+				currentActivity = props.navigation.state.params.selectedActivity;
+			} else {
+				setSelectedActivity(allDays[dayIndex].activities[activityIndex]);
+				currentActivity = allDays[dayIndex].activities[activityIndex];
+			}
 
-		// props.onRef(this);
-		setTitle(selectedActivity.title);
+			setTitle(currentActivity.title);
 
-		setLocationName(selectedActivity.location.name);
-		setLocationLat(selectedActivity.location.lat);
-		setLocationLng(selectedActivity.location.lng);
-		setLocationCountry(selectedActivity.location.country);
-		setLocationUrl(selectedActivity.location.url);
-		setLocationState(selectedActivity.location.state);
-		setLocationPostcode(selectedActivity.location.postcode);
-		setLocationTypes(selectedActivity.location.types);
+			setLocationName(currentActivity.location.name);
+			setLocationLat(currentActivity.location.lat);
+			setLocationLng(currentActivity.location.lng);
+			setLocationCountry(currentActivity.location.country);
+			setLocationUrl(currentActivity.location.url);
+			setLocationState(currentActivity.location.state);
+			setLocationPostcode(currentActivity.location.postcode);
+			setLocationTypes(currentActivity.location.types);
+			setFullAddress(currentActivity.location.fullAddress);
 
-		setPhotos(selectedActivity.photos);
-		setCurrency(selectedActivity.currency);
-		setBudget(selectedActivity.budget);
-		setDescription(selectedActivity.description);
-		setRate(selectedActivity.rating);
-		setBookmark(selectedActivity.bookmarked);
+			setPhotos(currentActivity.photos);
+			setCurrency(currentActivity.currency);
+			setBudget(currentActivity.budget);
+			setDescription(currentActivity.description);
+			setRate(currentActivity.rating);
+			setBookmark(currentActivity.bookmarked);
 
-		return () => {};
-	}, []);
+			return () => {};
+		},
+		[ activityIndex, dayIndex, allDays ]
+	);
 
 	onBackHandle = () => {
 		const { navigation } = props;
@@ -101,6 +117,36 @@ const ActivityDetail = (props) => {
 
 	const openGps = () => {
 		Linking.openURL(locationUrl);
+	};
+
+	const onPreviousActivityClick = () => {
+		if (activityIndex === 0) {
+			if (dayIndex === 0) {
+				showOkAlert(Languages.FirstDayFirstActivityTitle, Languages.FirstDayFirstActivity, Languages.OK);
+			} else {
+				this._scrollView.getNode().scrollTo({ x: 0, y: 0, animated: true });
+				setActivityIndex(allDays[dayIndex - 1].activities.length - 1);
+				setDayIndex(dayIndex - 1);
+			}
+		} else {
+			this._scrollView.getNode().scrollTo({ x: 0, y: 0, animated: true });
+			setActivityIndex(activityIndex - 1);
+		}
+	};
+
+	const onNextActivityClick = () => {
+		if (allDays[dayIndex].activities.length - 1 === activityIndex) {
+			if (allDays.length - 1 === dayIndex) {
+				showOkAlert(Languages.LastDayLastActivityTitle, Languages.LastDayLastActivity, Languages.OK);
+			} else {
+				this._scrollView.getNode().scrollTo({ x: 0, y: 0, animated: true });
+				setDayIndex(dayIndex + 1);
+				setActivityIndex(0);
+			}
+		} else {
+			this._scrollView.getNode().scrollTo({ x: 0, y: 0, animated: true });
+			setActivityIndex(activityIndex + 1);
+		}
 	};
 
 	const onMapReady = () => {
@@ -127,7 +173,7 @@ const ActivityDetail = (props) => {
 
 	const onActivityBookmarkPress = async () => {
 		const { token } = props.user;
-		const { selectedActivity, updateBookmark } = props.navigation.state.params;
+		const { updateBookmark } = props.navigation.state.params;
 
 		try {
 			if (!selectedActivity.bookmarked) {
@@ -136,6 +182,8 @@ const ActivityDetail = (props) => {
 				if (response.OK) {
 					setBookmark(true);
 					updateBookmark(true, selectedActivity.id);
+				} else {
+					showOkAlert(Languages.SomethingWentWrong, Languages.SystemError, Languages.OK);
 				}
 			} else {
 				let response = await props.removeBookmark(token, selectedActivity.id, Bucket_Type.ACTIVITY);
@@ -143,6 +191,8 @@ const ActivityDetail = (props) => {
 				if (response.OK) {
 					setBookmark(false);
 					updateBookmark(false, selectedActivity.id);
+				} else {
+					showOkAlert(Languages.SomethingWentWrong, Languages.SystemError, Languages.OK);
 				}
 			}
 		} catch (error) {}
@@ -339,7 +389,7 @@ const ActivityDetail = (props) => {
 
 						<View style={styles.locationContainer}>
 							<Text multiline={true} style={styles.locationTextStyle}>
-								{locationPostcode}, {locationState},
+								{locationFullAddress}
 							</Text>
 							<Text multiline={true} style={styles.locationTextStyle}>
 								{locationCountry}
@@ -354,6 +404,21 @@ const ActivityDetail = (props) => {
 		);
 	};
 
+	const renderActivityNavigator = () => {
+		return (
+			<View style={styles.activityNavigatorContainer}>
+				<TouchableOpacity onPress={onPreviousActivityClick} style={styles.navigatorContainer}>
+					<Icon name="chevron-left" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
+					<Text style={styles.previousNavigatorTextStyle}>{Languages.Previous}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={onNextActivityClick} style={styles.navigatorContainer}>
+					<Text style={styles.nextNavigatorTextStyle}>{Languages.Next}</Text>
+					<Icon name="chevron-right" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
+				</TouchableOpacity>
+			</View>
+		);
+	};
+
 	const imageScale = scrollY.interpolate({
 		inputRange: [ -300, 0 ],
 		outputRange: [ 2, 1 ],
@@ -362,6 +427,7 @@ const ActivityDetail = (props) => {
 
 	return (
 		<Animated.ScrollView
+			ref={(ref) => (this._scrollView = ref)}
 			style={styles.scrollViewContainer}
 			scrollEventThrottle={1}
 			onScroll={Animated.event(
@@ -380,6 +446,7 @@ const ActivityDetail = (props) => {
 			{renderNavButton()}
 			{renderContent()}
 			{renderPreviewModal()}
+			{!props.navigation.state.params.type && renderActivityNavigator()}
 		</Animated.ScrollView>
 	);
 };

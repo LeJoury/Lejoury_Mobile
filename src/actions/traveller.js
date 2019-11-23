@@ -8,7 +8,8 @@ import {
 	FOLLOW_NEW_TRAVELLER,
 	LIKE_NEW_ITINERARY,
 	UPLOAD_PROFILE_PHOTO,
-	EDIT_PROFILE
+	EDIT_PROFILE,
+	GET_HOME_ITINERARIES
 } from '@services';
 
 const { STATUS } = Constants.STATUS;
@@ -59,12 +60,19 @@ const getFollowers = (token, page = 1) => async (dispatch) => {
 		GET_TRAVELLER_FOLLOWERS(token, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
+					const { content, last } = result.data;
 					let response = { OK: true };
-
-					dispatch({
-						type: Types.UPDATE_FOLLOWERS,
-						payload: result.data.content
-					});
+					if (page === 1) {
+						dispatch({
+							type: Types.SETUP_FOLLOWERS,
+							payload: { content, isLastPage: last }
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_FOLLOWERS,
+							payload: { content, isLastPage: last }
+						});
+					}
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -86,12 +94,21 @@ const getFollowing = (token, page = 1) => async (dispatch) => {
 		GET_TRAVELLER_FOLLOWING(token, page)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
+					const { content, last } = result.data;
+
 					let response = { OK: true };
 
-					dispatch({
-						type: Types.UPDATE_FOLLOWING,
-						payload: result.data.content
-					});
+					if (page === 1) {
+						dispatch({
+							type: Types.SETUP_FOLLOWING,
+							payload: { content, isLastPage: last }
+						});
+					} else {
+						dispatch({
+							type: Types.UPDATE_FOLLOWING,
+							payload: { content, isLastPage: last }
+						});
+					}
 
 					resolve(response);
 				} else if (result.statusCode === 401) {
@@ -121,7 +138,6 @@ const followTraveller = (token, travellerId, type, from = 'none') => async (disp
 					});
 
 					if (from === 'FollowingList') {
-						console.log(type);
 						dispatch({
 							type: Types.UPDATE_FOLLOWING_LIST,
 							payload: { userId: travellerId, type: type }
@@ -230,18 +246,17 @@ const getTravellers = (token, page = 1) => async (dispatch) => {
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true };
-
-					// console.log(result.data.content);
+					const { content, last } = result.data;
 
 					if (page === 1) {
 						dispatch({
 							type: Types.SETUP_TRAVELLERS,
-							payload: result.data.content
+							payload: { content, isLastPage: last }
 						});
 					} else {
 						dispatch({
 							type: Types.UPDATE_TRAVELLERS,
-							payload: result.data.content
+							payload: { content, isLastPage: last }
 						});
 					}
 
@@ -259,13 +274,52 @@ const getTravellers = (token, page = 1) => async (dispatch) => {
 	});
 };
 
+// -----------------------------  get traveller profile ----------------------------------- //
 const getTravellerProfile = (travellerId, token) => async (dispatch) => {
 	return new Promise((resolve, reject) => {
 		GET_TRAVELLER_PROFILE(travellerId, token)
 			.then((result) => {
 				if (result.statusCode === STATUS.SUCCESS) {
 					let response = { OK: true, user: result.data };
-					// console.log(response);
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// -----------------------------  get home ----------------------------------- //
+const getHome = (token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		GET_HOME_ITINERARIES(token)
+			.then((result) => {
+				if (result.statusCode === STATUS.SUCCESS) {
+					const { data } = result;
+					const { countries, itineraries, travellers } = data;
+					let response = { OK: true };
+
+					dispatch({
+						type: Types.SETUP_HOME_ITINERARIES,
+						payload: { content: itineraries, isLastPage: false }
+					});
+
+					dispatch({
+						type: Types.SETUP_COUNTRY,
+						payload: { content: countries, isLastPage: false }
+					});
+
+					dispatch({
+						type: Types.SETUP_TRAVELLERS,
+						payload: { content: travellers, isLastPage: false }
+					});
+
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -289,5 +343,6 @@ export {
 	followTraveller,
 	likeItinerary,
 	uploadProfilePhoto,
-	editProfile
+	editProfile,
+	getHome
 };

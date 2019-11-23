@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, Image } from 'react-native';
 import { Icon, Card } from 'react-native-elements';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
@@ -7,12 +7,13 @@ import FastImage from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 
 import { Images, Color, Languages, Styles } from '@common';
-import { Button, TravellerInfoHolder, Heart } from '@components';
+import { Button, Heart } from '@components';
 
 import styles from './styles';
 
 const LoadImage = createImageProgress(FastImage);
-
+const travellerPicSize = 20;
+const heartIconSize = 16;
 const ItineraryHolder = ({
 	itinerary,
 	type,
@@ -131,7 +132,11 @@ const DraftItinerary = ({ itinerary, onPress, onRemovePress }) => {
 	);
 };
 
+
 const MainItinerary = ({ itinerary, onPress }) => {
+	const { traveller } = itinerary;
+	const avatar = traveller && traveller.profilePicture ? { uri: traveller.profilePicture } : Images.defaultAvatar;
+
 	return (
 		<View style={styles.main_Card}>
 			<TouchableOpacity onPress={() => onPress(itinerary)}>
@@ -142,14 +147,68 @@ const MainItinerary = ({ itinerary, onPress }) => {
 					}}
 					style={styles.main_Image}
 					resizeMode={FastImage.resizeMode.cover}
-				/>
+				>
+					<View style={styles.main_FrontContainer}>
+						<LinearGradient
+							style={styles.main_TopContainer}
+							colors={[ Color.black60T, Color.black40T, Color.black20T, Color.transparent1 ]}
+						>
+							<View style={Styles.Common.RowCenterRight}>
+								<View style={[ styles.main_UserProfilePicture ]}>
+									<Image
+										source={avatar}
+										style={[
+											styles.main_UserProfilePicture,
+											{ width: travellerPicSize, height: travellerPicSize }
+										]}
+									/>
+								</View>
+								<Text style={styles.main_TravellerNameStyle}>{itinerary.traveller.username}</Text>
+							</View>
+						</LinearGradient>
+						<LinearGradient
+							style={styles.main_BottomContainer}
+							colors={[
+								Color.transparent1,
+								Color.black20T,
+								Color.black40T,
+								Color.black60T,
+								Color.black80T
+							]}
+						>
+							<View style={Styles.Common.RowCenterBetween}>
+								<View style={{ flex: 0.7 }}>
+									<Text
+										style={styles.main_ItineraryTitleStyle}
+										numberOfLines={2}
+										ellipsizeMode={'tail'}
+									>
+										{itinerary.title}
+									</Text>
+									{itinerary.quote && (
+										<Text
+											style={styles.main_ItineraryQuoteStyle}
+											numberOfLines={1}
+											ellipsizeMode={'tail'}
+										>
+											{itinerary.quote}
+										</Text>
+									)}
+								</View>
+								<View style={[ Styles.Common.RowCenterRight, { flex: 0.3 } ]}>
+									<Heart heartIconSize={heartIconSize} liked={itinerary.liked} color={Color.white} />
+									<Text style={styles.main_noOfLikesText}>{itinerary.totalLikes}</Text>
+								</View>
+							</View>
+						</LinearGradient>
+					</View>
+				</LoadImage>
 			</TouchableOpacity>
-			<TravellerInfoHolder itinerary={itinerary} traveller={itinerary.traveller} />
 		</View>
 	);
 };
 
-const ProfileItinerary = ({ itinerary, onPress, isMe, onItineraryOptionPress }) => {	
+const ProfileItinerary = ({ itinerary, onPress, isMe, onItineraryOptionPress }) => {
 	return (
 		<Card containerStyle={styles.profile_Card} key={itinerary.itineraryId}>
 			<TouchableOpacity onPress={() => onPress(itinerary)}>
@@ -177,7 +236,7 @@ const ProfileItinerary = ({ itinerary, onPress, isMe, onItineraryOptionPress }) 
 								style={styles.profile_ItinerarySettings}
 								onPress={() => onItineraryOptionPress(itinerary)}
 							>
-								<Icon color={Color.lightGrey3} type="feather" size={22} name="more-vertical" />
+								<Icon color={Color.lightGrey6} type="feather" size={22} name="more-vertical" />
 							</TouchableOpacity>
 						)}
 
@@ -198,7 +257,12 @@ const ProfileItinerary = ({ itinerary, onPress, isMe, onItineraryOptionPress }) 
 								)}
 
 								<View style={styles.profile_LikesContainer}>
-									<Heart heartIconSize={Styles.IconSize.Small} liked={itinerary.liked} disabled={true} color={Color.white}/>
+									<Heart
+										heartIconSize={Styles.IconSize.Small}
+										liked={itinerary.liked}
+										disabled={true}
+										color={Color.white}
+									/>
 									<Text style={styles.profile_noOfLikesText}>{itinerary.totalLikes}</Text>
 								</View>
 							</View>

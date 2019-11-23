@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Platform, StyleSheet, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import posed from 'react-native-pose';
+import { NavigationActions } from 'react-navigation';
 
 import { connect } from 'react-redux';
 
@@ -68,17 +69,47 @@ const S = StyleSheet.create({
 });
 
 class TabBar extends PureComponent {
-	onPress(name, index) {
+	onPress = (name, index, activeRouteIndex) => {
 		// this.refs['tabItem' + index].flipInY(900);
 		this.refs['tabItem' + index].bounceIn(500);
 
-		if (name === 'AddItinerary') this.props.navigation.navigate('AddItineraryStack');
-		else this.props.navigation.navigate(name);
-	}
+		if (name === 'AddItinerary') {
+			this.props.navigation.navigate('AddItineraryStack');
+		} else {
+			if (index === activeRouteIndex) {
+				if (activeRouteIndex === 0) {
+					this.props.navigation.dispatch({
+						type: 'Navigation/RESET',
+						index: 0,
+						actions: [ NavigationActions.navigate({ routeName: 'Main' }) ]
+					});
+				} else if (activeRouteIndex === 1) {
+					this.props.navigation.dispatch({
+						type: 'Navigation/RESET',
+						index: 0,
+						actions: [ NavigationActions.navigate({ routeName: 'BucketList' }) ]
+					});
+				} else if (activeRouteIndex === 3) {
+					this.props.navigation.dispatch({
+						type: 'Navigation/RESET',
+						index: 0,
+						actions: [ NavigationActions.navigate({ routeName: 'Notification' }) ]
+					});
+				} else if (activeRouteIndex === 4) {
+					this.props.navigation.dispatch({
+						type: 'Navigation/RESET',
+						index: 0,
+						actions: [ NavigationActions.navigate({ routeName: 'Profile' }) ]
+					});
+				}
+			} else {
+				this.props.navigation.navigate(name);
+			}
+		}
+	};
 
 	render() {
 		const { navigation, renderIcon, activeTintColor, inactiveTintColor } = this.props;
-		// console.log(this.props.getLabelText());
 		// const { routes } = navigation.state;
 		const { routes, index: activeRouteIndex } = navigation.state;
 
@@ -100,7 +131,7 @@ class TabBar extends PureComponent {
 								<TouchableWithoutFeedback
 									key={route.key}
 									style={styles.tab}
-									onPress={this.onPress.bind(this, route.key, index)}
+									onPress={this.onPress.bind(this, route.key, index, activeRouteIndex)}
 								>
 									<Animatable.View ref={'tabItem' + index} style={styles.tab}>
 										<Scaler pose={focused ? 'active' : 'inactive'} style={S.scaler}>

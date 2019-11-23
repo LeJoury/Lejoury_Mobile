@@ -21,18 +21,14 @@ export default StyleSheet.create({
 		fontSize: 14
 	},
 	main_Title: {
-		color: Color.lightGrey3,
+		color: Color.darkGrey2,
 		paddingHorizontal: 12,
-		marginTop: 4,
-		fontSize: 13,
-		fontFamily: 'Quicksand-Regular'
+		marginTop: 8,
+		fontFamily: 'Quicksand-Bold'
 	},
 	main_Country: {
-		color: Color.black,
-		paddingHorizontal: 12,
-		fontSize: 16,
-		fontFamily: 'Quicksand-Bold',
-		letterSpacing: 0.5
+		flexDirection: 'row',
+		paddingHorizontal: 12
 	},
 	main_contentContainer: {
 		backgroundColor: Color.white,

@@ -13,8 +13,8 @@ const TravellerInfo = ({
 	traveller,
 	mainContainer = undefined,
 	contentContainer = undefined,
-	countryTextSize = 16,
-	titleTextSize = 13,
+	countryTextSize = 17,
+	titleTextSize = 14,
 	travellerPicSize = 20,
 	travellerNameSize = 14,
 	heartIconSize = undefined,
@@ -26,14 +26,17 @@ const TravellerInfo = ({
 	return (
 		<Animated.View style={[ Styles.Common.ColumnCenter, mainContainer ]}>
 			<Animated.View style={[ styles.main_contentContainer, contentContainer ]}>
-				{itinerary.country && itinerary.country.length > 0 &&
-					itinerary.country.map((country, index) => {
-						return (
-							<Text key={index} style={[ styles.main_Country, { fontSize: countryTextSize } ]} numberOfLines={1}>
-								{getCountryEmoji(country.alpha2)}
-							</Text>
-						);
-					})}
+				<View style={styles.main_Country}>
+					{itinerary.country &&
+						itinerary.country.length > 0 &&
+						itinerary.country.map((country, index) => {
+							return (
+								<Text key={index} style={{ fontSize: countryTextSize }} numberOfLines={1}>
+									{getCountryEmoji(country.alpha2)}
+								</Text>
+							);
+						})}
+				</View>
 				<Text style={[ styles.main_Title, { fontSize: titleTextSize } ]} numberOfLines={1}>
 					{itinerary.title}
 				</Text>

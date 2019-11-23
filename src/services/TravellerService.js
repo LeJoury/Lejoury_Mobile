@@ -13,8 +13,8 @@ const { STATUS } = Constants.STATUS;
 const { BASIC_PARAMS, PARAMS_TRAVELLER } = Constants.PARAMS;
 const { TRAVELLER_API_VERSION } = Constants.VERSION;
 
-const { URL_UPLOAD_PHOTO, URL_TRAVELLER, URL_FOLLOWER, URL_FOLLOWING, URL_ITINERARY, URL_LIKE, URL_PROFILE } = URL;
-const { PLATFORM, APP_VERSION } = BASIC_PARAMS;
+const { URL_UPLOAD_PHOTO, URL_TRAVELLER, URL_FOLLOWER, URL_FOLLOWING, URL_ITINERARY, URL_LIKE, URL_PROFILE, URL_HOME } = URL;
+const { PLATFORM, APP_VERSION, PAGE } = BASIC_PARAMS;
 
 const GET_TRAVELLER_PROFILE = async (travellerId, token) => {
 	const { TRAVELLER_ID } = PARAMS_TRAVELLER;
@@ -39,9 +39,11 @@ const GET_TRAVELLER_PROFILE = async (travellerId, token) => {
 };
 
 const GET_TRAVELLER_FOLLOWERS = async (token, page) => {
+	let params = `&${PAGE}=${page}`;
+
 	return await new Promise((resolve, reject) => {
 		base
-			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWER}`, {
+			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWER}?${params}`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`
@@ -59,9 +61,11 @@ const GET_TRAVELLER_FOLLOWERS = async (token, page) => {
 };
 
 const GET_TRAVELLER_FOLLOWING = async (token, page) => {
+	let params = `&${PAGE}=${page}`;
+
 	return await new Promise((resolve, reject) => {
 		base
-			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWING}`, {
+			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_FOLLOWING}?${params}`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`
@@ -181,9 +185,11 @@ const EDIT_PROFILE = async (token, profile) => {
 };
 
 const GET_TRAVELLERS = async (token, page) => {
+	let params = `&${PAGE}=${page}`;
+
 	return await new Promise((resolve, reject) => {
-		base //TODO: page in query -> scroll loading
-			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}`, {
+		base
+			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}?${params}`, {
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`
@@ -200,6 +206,25 @@ const GET_TRAVELLERS = async (token, page) => {
 	});
 };
 
+const GET_HOME_ITINERARIES = async (token, type) => {
+	return await new Promise((resolve, reject) => {
+		base
+			.get(`${TRAVELLER_API_VERSION}/${URL_TRAVELLER}/${URL_HOME}`, {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
+				}
+			})
+			.then((response) => {
+				resolve(response.data);
+			})
+			.catch((error) => {
+				reject(error);
+				Bugsnag.leaveBreadcrumb(TAG, `GET_HOME_ITINERARIES - ${error}`);
+				Bugsnag.notify(new Error(error));
+			});
+	});
+};
 export {
 	GET_TRAVELLERS,
 	GET_TRAVELLER_PROFILE,
@@ -208,5 +233,6 @@ export {
 	FOLLOW_NEW_TRAVELLER,
 	LIKE_NEW_ITINERARY,
 	UPLOAD_PROFILE_PHOTO,
-	EDIT_PROFILE
+	EDIT_PROFILE,
+	GET_HOME_ITINERARIES
 };

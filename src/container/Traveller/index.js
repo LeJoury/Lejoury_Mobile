@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, Alert, TouchableWithoutFeedback } from 'react-native';
+import React, { Component } from 'react';
+import {
+	View,
+	Text,
+	FlatList,
+	Image,
+	RefreshControl,
+	TouchableOpacity,
+	Alert,
+	TouchableWithoutFeedback
+} from 'react-native';
 
 import { connect } from 'react-redux';
 import { getTravellers, followTraveller, getProfile } from '@actions';
@@ -10,53 +19,85 @@ import styles from './styles';
 
 const { Follow_Type } = Constants.Follow_Type;
 
-const Traveller = (props) => {
-	const [ page, setPage ] = useState(1);
-	const [ endReachedCalledDuringMomentum, setEndReachedCalledDuringMomentum ] = useState(true);
+class Traveller extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			page: 1,
+			endReachedCalledDuringMomentum: true,
+			pullToRefresh: false
+		};
+	}
 
-	const _keyExtractor = (item) => item.userId.toString();
+	_keyExtractor = (item) => item.userId.toString();
 
-	const navigateToSelectedTraveller = (selectedUser) => {
-		//TODO: GO TO TRAVELLER PROFILE
-		props.navigation.navigate('TravellerProfile', {
+	navigateToSelectedTraveller = (selectedUser) => {
+		this.props.navigation.navigate('TravellerProfile', {
 			user: selectedUser
 		});
 	};
 
-	const onHandleFollow = async (token, travellerId, following) => {
-		const { userId } = props.user;
+	refreshTravellers = async () => {
+		const { token } = this.props.user;
+		this.setState({ pullToRefresh: true });
 
 		try {
-			let response = await props.followTraveller(
+			let response = await this.props.getTravellers(token);
+
+			if (response.OK) {
+				this.setState({ pullToRefresh: false });
+			}
+		} catch (error) {
+			this.setState({ pullToRefresh: false });
+		}
+		// console.log(this.props.profile);
+	};
+
+	onHandleFollow = async (token, travellerId, following) => {
+		const { userId } = this.props.user;
+
+		try {
+			let response = await this.props.followTraveller(
 				token,
 				travellerId,
 				following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW
 			);
 
 			if (response.OK) {
-				await props.getProfile(userId, token);
+				await this.props.getProfile(userId, token);
 			}
 		} catch (error) {}
 	};
 
-	const handleLoadMore = async () => {
-		const { token } = props.user;
+	handleLoadMore = async () => {
+		const { token } = this.props.user;
 
-		if (!endReachedCalledDuringMomentum) {
-			try {
-				let response = await props.getTravellers(token, page + 1);
-				if (response.OK) {
-					setEndReachedCalledDuringMomentum(true);
-					setPage(page + 1);
+		if (!this.state.endReachedCalledDuringMomentum && !this.state.pullToRefresh) {
+			if (!this.props.traveller.isTravellerLastPage) {
+				try {
+					let response = await this.props.getTravellers(token, this.state.page + 1);
+
+					if (response.OK) {
+						this.setState((prevState) => {
+							return {
+								page: prevState.page + 1,
+								endReachedCalledDuringMomentum: true
+							};
+						});
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
+			} else {
+				this.setState({
+					endReachedCalledDuringMomentum: true
+				});
 			}
 		}
 	};
 
-	const onFollowClick = async (item) => {
-		const { token } = props.user;
+	onFollowClick = async (item) => {
+		const { token } = this.props.user;
 		const { following, userId, username } = item;
 
 		if (following) {
@@ -69,16 +110,16 @@ const Traveller = (props) => {
 				},
 				{
 					text: Languages.Confirm,
-					onPress: () => onHandleFollow(token, userId, following),
+					onPress: () => this.onHandleFollow(token, userId, following),
 					style: 'destructive'
 				}
 			]);
 		} else {
-			onHandleFollow(token, userId, following);
+			this.onHandleFollow(token, userId, following);
 		}
 	};
 
-	const renderTravellerHolder = ({ item }) => {
+	renderTravellerHolder = ({ item }) => {
 		const functionButtonBGStyle = item.following ? styles.followingButtonStyle : styles.followButtonStyle;
 		const functionTextColor = item.following ? Color.white : Color.blue5;
 		const functionText = item.following ? Languages.ButtonFollowing : Languages.ButtonFollow;
@@ -92,7 +133,7 @@ const Traveller = (props) => {
 				<View style={styles.travellerSubcontainer}>
 					<TouchableWithoutFeedback
 						style={styles.travellerNameContainer}
-						onPress={() => navigateToSelectedTraveller(item)}
+						onPress={() => this.navigateToSelectedTraveller(item)}
 					>
 						<View style={styles.travellerNameContainer}>
 							<Text style={styles.travellerUsernameTextStyle}>{item.username}</Text>
@@ -102,7 +143,7 @@ const Traveller = (props) => {
 
 					<TouchableOpacity
 						style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}
-						onPress={() => onFollowClick(item)}
+						onPress={() => this.onFollowClick(item)}
 					>
 						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
 							{functionText}
@@ -112,20 +153,30 @@ const Traveller = (props) => {
 			</View>
 		);
 	};
-	return (
-		<FlatList
-			data={props.traveller.travellers}
-			extraData={props.traveller}
-			keyExtractor={_keyExtractor}
-			renderItem={renderTravellerHolder}
-			style={styles.container}
-			contentContainerStyle={styles.scrollViewContentContainerStyle}
-			onEndReachedThreshold={0.2}
-			onEndReached={() => handleLoadMore()}
-			onMomentumScrollBegin={() => setEndReachedCalledDuringMomentum(false)}
-		/>
-	);
-};
+
+	render() {
+		return (
+			<FlatList
+				data={this.props.traveller.travellers}
+				extraData={[ this.props.traveller, this.state ]}
+				refreshControl={
+					<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshTravellers} />
+				}
+				keyExtractor={this._keyExtractor}
+				renderItem={this.renderTravellerHolder}
+				style={styles.container}
+				contentContainerStyle={styles.scrollViewContentContainerStyle}
+				onEndReachedThreshold={0.2}
+				onEndReached={() => this.handleLoadMore()}
+				onMomentumScrollBegin={() => {
+					this.setState({
+						endReachedCalledDuringMomentum: false
+					});
+				}}
+			/>
+		);
+	}
+}
 
 const mapStateToProps = ({ user, profile, traveller }) => ({
 	user,

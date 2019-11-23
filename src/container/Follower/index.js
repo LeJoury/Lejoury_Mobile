@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, Alert, Platform, TouchableWithoutFeedback } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
@@ -11,29 +11,32 @@ import styles from './styles';
 
 const { Follow_Type } = Constants.Follow_Type;
 
-const Follower = (props) => {
-	const [ search, setSearch ] = useState('');
-	const [ page, setPage ] = useState(1);
-	const [ endReachedCalledDuringMomentum, setEndReachedCalledDuringMomentum ] = useState(true);
+class Follower extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			search: '',
+			page: 1,
+			endReachedCalledDuringMomentum: true
+		};
+	}
 
-	const _keyExtractor = (item) => item.userId;
+	_keyExtractor = (item) => item.userId.toString();
 
-	useEffect(() => {});
-
-	const updateSearch = (value) => {
-		setSearch(value);
+	updateSearch = (value) => {
+		this.setState({ search: value });
 	};
 
-	const navigateToSelectedTraveller = (selectedUser) => {
-		props.navigation.navigate('TravellerProfile', {
+	navigateToSelectedTraveller = (selectedUser) => {
+		this.props.navigation.navigate('TravellerProfile', {
 			user: selectedUser
 		});
 	};
 
-	const onHandleFollow = async (token, travellerId, following) => {
-		const { userId } = props.user;
+	onHandleFollow = async (token, travellerId, following) => {
+		const { userId } = this.props.user;
 		try {
-			let response = await props.followTraveller(
+			let response = await this.props.followTraveller(
 				token,
 				travellerId,
 				following ? Follow_Type.UNFOLLOW : Follow_Type.FOLLOW,
@@ -41,32 +44,42 @@ const Follower = (props) => {
 			);
 
 			if (response.OK) {
-				await props.getProfile(userId, token);
+				await this.props.getProfile(userId, token);
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const handleLoadMore = async () => {
-		const { token } = props.user;
+	handleLoadMore = async () => {
+		const { token } = this.props.user;
 
-		if (!endReachedCalledDuringMomentum) {
-			try {
-				let response = await props.getFollowers(token, page + 1);
+		if (!this.state.endReachedCalledDuringMomentum) {
+			if (!this.props.profile.isFollowerLastPage) {
+				try {
+					let response = await this.props.getFollowers(token, this.state.page + 1);
 
-				if (response.OK) {
-					setEndReachedCalledDuringMomentum(true);
-					setPage(page + 1);
+					if (response.OK) {
+						this.setState((prevState) => {
+							return {
+								page: prevState.page + 1,
+								endReachedCalledDuringMomentum: true
+							};
+						});
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
+			} else {
+				this.setState({
+					endReachedCalledDuringMomentum: true
+				});
 			}
 		}
 	};
 
-	const onFollowClick = async (item) => {
-		const { token } = props.user;
+	onFollowClick = async (item) => {
+		const { token } = this.props.user;
 		const { following, userId, username } = item;
 
 		if (following) {
@@ -79,18 +92,18 @@ const Follower = (props) => {
 				},
 				{
 					text: Languages.Confirm,
-					onPress: () => onHandleFollow(token, userId, following),
+					onPress: () => this.onHandleFollow(token, userId, following),
 					style: 'destructive'
 				}
 			]);
 		} else {
-			onHandleFollow(token, userId, following);
+			this.onHandleFollow(token, userId, following);
 		}
 	};
 
-	const renderTravellerHolder = ({ item }) => {
+	renderTravellerHolder = ({ item }) => {
 		const functionButtonBGStyle = item.following ? styles.followingButtonStyle : styles.followButtonStyle;
-		const functionTextColor = item.following ? Color.white : Color.blue5;
+		const functionTextColor = item.following ? Color.lightGrey3 : Color.white;
 		const functionText = item.following ? Languages.ButtonFollowing : Languages.ButtonFollow;
 
 		return (
@@ -103,7 +116,7 @@ const Follower = (props) => {
 				<View style={styles.travellerSubcontainer}>
 					<TouchableWithoutFeedback
 						style={styles.travellerNameContainer}
-						onPress={() => navigateToSelectedTraveller(item)}
+						onPress={() => this.navigateToSelectedTraveller(item)}
 					>
 						<View style={styles.travellerNameContainer}>
 							<Text style={styles.travellerUsernameTextStyle}>{item.username}</Text>
@@ -113,7 +126,7 @@ const Follower = (props) => {
 
 					<TouchableOpacity
 						style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}
-						onPress={() => onFollowClick(item)}
+						onPress={() => this.onFollowClick(item)}
 					>
 						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
 							{functionText}
@@ -124,11 +137,11 @@ const Follower = (props) => {
 		);
 	};
 
-	const renderSearchBar = () => (
+	renderSearchBar = () => (
 		<SearchBar
 			placeholder={Languages.Search}
-			onChangeText={updateSearch}
-			value={search}
+			onChangeText={this.updateSearch}
+			value={this.state.search}
 			lightTheme={true}
 			platform={Platform.OS}
 			showCancel={false}
@@ -139,21 +152,27 @@ const Follower = (props) => {
 		/>
 	);
 
-	return (
-		<FlatList
-			ListHeaderComponent={renderSearchBar()}
-			style={styles.container}
-			contentContainerStyle={styles.scrollViewContentContainerStyle}
-			data={props.profile.followers}
-			extraData={props.profile}
-			keyExtractor={_keyExtractor}
-			renderItem={renderTravellerHolder}
-			onEndReachedThreshold={0.2}
-			onEndReached={() => handleLoadMore()}
-			onMomentumScrollBegin={() => setEndReachedCalledDuringMomentum(false)}
-		/>
-	);
-};
+	render() {
+		return (
+			<FlatList
+				ListHeaderComponent={this.renderSearchBar()}
+				style={styles.container}
+				contentContainerStyle={styles.scrollViewContentContainerStyle}
+				data={this.props.profile.followers}
+				extraData={[ this.state, this.props.profile ]}
+				keyExtractor={this._keyExtractor}
+				renderItem={this.renderTravellerHolder}
+				onEndReachedThreshold={0.2}
+				onEndReached={() => this.handleLoadMore()}
+				onMomentumScrollBegin={() => {
+					this.setState({
+						endReachedCalledDuringMomentum: false
+					});
+				}}
+			/>
+		);
+	}
+}
 
 const mapStateToProps = ({ user, profile }) => ({
 	user,

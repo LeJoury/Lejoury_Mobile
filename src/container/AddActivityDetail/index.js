@@ -34,240 +34,240 @@ const TAG = 'AddActivityDetail';
 
 // const GOOGLE_API_KEY = config.GOOGLE_PLACE_API_KEY;
 
-const result = {
-	html_attributions: [],
-	result: {
-		address_components: [
-			{
-				long_name: 'Kuala Lumpur',
-				short_name: 'Kuala Lumpur',
-				types: [ 'locality', 'political' ]
-			},
-			{
-				long_name: 'Kuala Lumpur City Centre',
-				short_name: 'Kuala Lumpur City Centre',
-				types: [ 'sublocality_level_1', 'sublocality', 'political' ]
-			},
-			{
-				long_name: 'Federal Territory of Kuala Lumpur',
-				short_name: 'Federal Territory of Kuala Lumpur',
-				types: [ 'administrative_area_level_1', 'political' ]
-			},
-			{
-				long_name: 'Malaysia',
-				short_name: 'MY',
-				types: [ 'country', 'political' ]
-			},
-			{
-				long_name: '50450',
-				short_name: '50450',
-				types: [ 'postal_code' ]
-			}
-		],
-		formatted_address:
-			'Unnamed Road, Kuala Lumpur City Centre, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia',
-		geometry: {
-			location: {
-				lat: 3.1579931,
-				lng: 101.7119392
-			},
-			viewport: {
-				northeast: {
-					lat: 3.159640630291501,
-					lng: 101.7133557302915
-				},
-				southwest: {
-					lat: 3.156942669708497,
-					lng: 101.7106577697085
-				}
-			}
-		},
-		name: 'KLCC TOWER, Federal Territory.',
-		types: [ 'shopping_mall', 'point_of_interest', 'establishment' ],
-		url: 'https://maps.google.com/?cid=7973910685227469650'
-	},
-	status: 'OK'
-};
+// const result = {
+// 	html_attributions: [],
+// 	result: {
+// 		address_components: [
+// 			{
+// 				long_name: 'Kuala Lumpur',
+// 				short_name: 'Kuala Lumpur',
+// 				types: [ 'locality', 'political' ]
+// 			},
+// 			{
+// 				long_name: 'Kuala Lumpur City Centre',
+// 				short_name: 'Kuala Lumpur City Centre',
+// 				types: [ 'sublocality_level_1', 'sublocality', 'political' ]
+// 			},
+// 			{
+// 				long_name: 'Federal Territory of Kuala Lumpur',
+// 				short_name: 'Federal Territory of Kuala Lumpur',
+// 				types: [ 'administrative_area_level_1', 'political' ]
+// 			},
+// 			{
+// 				long_name: 'Malaysia',
+// 				short_name: 'MY',
+// 				types: [ 'country', 'political' ]
+// 			},
+// 			{
+// 				long_name: '50450',
+// 				short_name: '50450',
+// 				types: [ 'postal_code' ]
+// 			}
+// 		],
+// 		formatted_address:
+// 			'Unnamed Road, Kuala Lumpur City Centre, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia',
+// 		geometry: {
+// 			location: {
+// 				lat: 3.1579931,
+// 				lng: 101.7119392
+// 			},
+// 			viewport: {
+// 				northeast: {
+// 					lat: 3.159640630291501,
+// 					lng: 101.7133557302915
+// 				},
+// 				southwest: {
+// 					lat: 3.156942669708497,
+// 					lng: 101.7106577697085
+// 				}
+// 			}
+// 		},
+// 		name: 'KLCC TOWER, Federal Territory.',
+// 		types: [ 'shopping_mall', 'point_of_interest', 'establishment' ],
+// 		url: 'https://maps.google.com/?cid=7973910685227469650'
+// 	},
+// 	status: 'OK'
+// };
 
-const data = {
-	predictions: [
-		{
-			description: 'Malacca, Malaysia',
-			id: '2f09e79c601a159213345c93d958048986b1d9ce',
-			matched_substrings: [
-				{
-					length: 7,
-					offset: 0
-				}
-			],
-			place_id: 'ChIJ3WWMjifu0TERagGedoFyKgM',
-			reference: 'ChIJ3WWMjifu0TERagGedoFyKgM',
-			structured_formatting: {
-				main_text: 'Malacca',
-				main_text_matched_substrings: [
-					{
-						length: 7,
-						offset: 0
-					}
-				],
-				secondary_text: 'Malaysia'
-			},
-			terms: [
-				{
-					offset: 0,
-					value: 'Malacca'
-				},
-				{
-					offset: 9,
-					value: 'Malaysia'
-				}
-			],
-			types: [ 'locality', 'political', 'geocode' ]
-		},
-		{
-			description: 'Malacca Strait',
-			id: '83404a24691c57d24eed81f50d7200aefd36fd84',
-			matched_substrings: [
-				{
-					length: 7,
-					offset: 0
-				}
-			],
-			place_id: 'ChIJyeWkC0XBNTARscoq46CxhvQ',
-			reference: 'ChIJyeWkC0XBNTARscoq46CxhvQ',
-			structured_formatting: {
-				main_text: 'Malacca Strait',
-				main_text_matched_substrings: [
-					{
-						length: 7,
-						offset: 0
-					}
-				]
-			},
-			terms: [
-				{
-					offset: 0,
-					value: 'Malacca Strait'
-				}
-			],
-			types: [ 'natural_feature', 'establishment' ]
-		},
-		{
-			description: 'Malacca Street, Singapore',
-			id: 'd9ff53f9567dd66c11f03ca3e83d653928ed9068',
-			matched_substrings: [
-				{
-					length: 7,
-					offset: 0
-				}
-			],
-			place_id:
-				'EhlNYWxhY2NhIFN0cmVldCwgU2luZ2Fwb3JlIi4qLAoUChIJn4Enpg4Z2jER2GP5dXzMAWkSFAoSCXWTi4ojEdoxEcT1q1LPaXiI',
-			reference:
-				'EhlNYWxhY2NhIFN0cmVldCwgU2luZ2Fwb3JlIi4qLAoUChIJn4Enpg4Z2jER2GP5dXzMAWkSFAoSCXWTi4ojEdoxEcT1q1LPaXiI',
-			structured_formatting: {
-				main_text: 'Malacca Street',
-				main_text_matched_substrings: [
-					{
-						length: 7,
-						offset: 0
-					}
-				],
-				secondary_text: 'Singapore'
-			},
-			terms: [
-				{
-					offset: 0,
-					value: 'Malacca Street'
-				},
-				{
-					offset: 16,
-					value: 'Singapore'
-				}
-			],
-			types: [ 'route', 'geocode' ]
-		},
-		{
-			description: 'Malacca International Trade Centre, Ayer Keroh, Malacca, Malaysia',
-			id: '7c8db954addf3722605b89417ee6caacf8117885',
-			matched_substrings: [
-				{
-					length: 7,
-					offset: 0
-				}
-			],
-			place_id: 'ChIJSTk78xLl0TERdobThwrz64A',
-			reference: 'ChIJSTk78xLl0TERdobThwrz64A',
-			structured_formatting: {
-				main_text: 'Malacca International Trade Centre',
-				main_text_matched_substrings: [
-					{
-						length: 7,
-						offset: 0
-					}
-				],
-				secondary_text: 'Ayer Keroh, Malacca, Malaysia'
-			},
-			terms: [
-				{
-					offset: 0,
-					value: 'Malacca International Trade Centre'
-				},
-				{
-					offset: 36,
-					value: 'Ayer Keroh'
-				},
-				{
-					offset: 48,
-					value: 'Malacca'
-				},
-				{
-					offset: 57,
-					value: 'Malaysia'
-				}
-			],
-			types: [ 'sublocality_level_1', 'sublocality', 'political', 'geocode' ]
-		},
-		{
-			description: 'Malacca Island, Malacca, Malaysia',
-			id: 'ab756b7b9008fff07466be8da60c63b8b672cabe',
-			matched_substrings: [
-				{
-					length: 7,
-					offset: 0
-				}
-			],
-			place_id: 'ChIJsRoaV_zx0TER2PdRyWZfYz4',
-			reference: 'ChIJsRoaV_zx0TER2PdRyWZfYz4',
-			structured_formatting: {
-				main_text: 'Malacca Island',
-				main_text_matched_substrings: [
-					{
-						length: 7,
-						offset: 0
-					}
-				],
-				secondary_text: 'Malacca, Malaysia'
-			},
-			terms: [
-				{
-					offset: 0,
-					value: 'Malacca Island'
-				},
-				{
-					offset: 16,
-					value: 'Malacca'
-				},
-				{
-					offset: 25,
-					value: 'Malaysia'
-				}
-			],
-			types: [ 'natural_feature', 'establishment' ]
-		}
-	],
-	status: 'OK'
-};
+// const data = {
+// 	predictions: [
+// 		{
+// 			description: 'Malacca, Malaysia',
+// 			id: '2f09e79c601a159213345c93d958048986b1d9ce',
+// 			matched_substrings: [
+// 				{
+// 					length: 7,
+// 					offset: 0
+// 				}
+// 			],
+// 			place_id: 'ChIJ3WWMjifu0TERagGedoFyKgM',
+// 			reference: 'ChIJ3WWMjifu0TERagGedoFyKgM',
+// 			structured_formatting: {
+// 				main_text: 'Malacca',
+// 				main_text_matched_substrings: [
+// 					{
+// 						length: 7,
+// 						offset: 0
+// 					}
+// 				],
+// 				secondary_text: 'Malaysia'
+// 			},
+// 			terms: [
+// 				{
+// 					offset: 0,
+// 					value: 'Malacca'
+// 				},
+// 				{
+// 					offset: 9,
+// 					value: 'Malaysia'
+// 				}
+// 			],
+// 			types: [ 'locality', 'political', 'geocode' ]
+// 		},
+// 		{
+// 			description: 'Malacca Strait',
+// 			id: '83404a24691c57d24eed81f50d7200aefd36fd84',
+// 			matched_substrings: [
+// 				{
+// 					length: 7,
+// 					offset: 0
+// 				}
+// 			],
+// 			place_id: 'ChIJyeWkC0XBNTARscoq46CxhvQ',
+// 			reference: 'ChIJyeWkC0XBNTARscoq46CxhvQ',
+// 			structured_formatting: {
+// 				main_text: 'Malacca Strait',
+// 				main_text_matched_substrings: [
+// 					{
+// 						length: 7,
+// 						offset: 0
+// 					}
+// 				]
+// 			},
+// 			terms: [
+// 				{
+// 					offset: 0,
+// 					value: 'Malacca Strait'
+// 				}
+// 			],
+// 			types: [ 'natural_feature', 'establishment' ]
+// 		},
+// 		{
+// 			description: 'Malacca Street, Singapore',
+// 			id: 'd9ff53f9567dd66c11f03ca3e83d653928ed9068',
+// 			matched_substrings: [
+// 				{
+// 					length: 7,
+// 					offset: 0
+// 				}
+// 			],
+// 			place_id:
+// 				'EhlNYWxhY2NhIFN0cmVldCwgU2luZ2Fwb3JlIi4qLAoUChIJn4Enpg4Z2jER2GP5dXzMAWkSFAoSCXWTi4ojEdoxEcT1q1LPaXiI',
+// 			reference:
+// 				'EhlNYWxhY2NhIFN0cmVldCwgU2luZ2Fwb3JlIi4qLAoUChIJn4Enpg4Z2jER2GP5dXzMAWkSFAoSCXWTi4ojEdoxEcT1q1LPaXiI',
+// 			structured_formatting: {
+// 				main_text: 'Malacca Street',
+// 				main_text_matched_substrings: [
+// 					{
+// 						length: 7,
+// 						offset: 0
+// 					}
+// 				],
+// 				secondary_text: 'Singapore'
+// 			},
+// 			terms: [
+// 				{
+// 					offset: 0,
+// 					value: 'Malacca Street'
+// 				},
+// 				{
+// 					offset: 16,
+// 					value: 'Singapore'
+// 				}
+// 			],
+// 			types: [ 'route', 'geocode' ]
+// 		},
+// 		{
+// 			description: 'Malacca International Trade Centre, Ayer Keroh, Malacca, Malaysia',
+// 			id: '7c8db954addf3722605b89417ee6caacf8117885',
+// 			matched_substrings: [
+// 				{
+// 					length: 7,
+// 					offset: 0
+// 				}
+// 			],
+// 			place_id: 'ChIJSTk78xLl0TERdobThwrz64A',
+// 			reference: 'ChIJSTk78xLl0TERdobThwrz64A',
+// 			structured_formatting: {
+// 				main_text: 'Malacca International Trade Centre',
+// 				main_text_matched_substrings: [
+// 					{
+// 						length: 7,
+// 						offset: 0
+// 					}
+// 				],
+// 				secondary_text: 'Ayer Keroh, Malacca, Malaysia'
+// 			},
+// 			terms: [
+// 				{
+// 					offset: 0,
+// 					value: 'Malacca International Trade Centre'
+// 				},
+// 				{
+// 					offset: 36,
+// 					value: 'Ayer Keroh'
+// 				},
+// 				{
+// 					offset: 48,
+// 					value: 'Malacca'
+// 				},
+// 				{
+// 					offset: 57,
+// 					value: 'Malaysia'
+// 				}
+// 			],
+// 			types: [ 'sublocality_level_1', 'sublocality', 'political', 'geocode' ]
+// 		},
+// 		{
+// 			description: 'Malacca Island, Malacca, Malaysia',
+// 			id: 'ab756b7b9008fff07466be8da60c63b8b672cabe',
+// 			matched_substrings: [
+// 				{
+// 					length: 7,
+// 					offset: 0
+// 				}
+// 			],
+// 			place_id: 'ChIJsRoaV_zx0TER2PdRyWZfYz4',
+// 			reference: 'ChIJsRoaV_zx0TER2PdRyWZfYz4',
+// 			structured_formatting: {
+// 				main_text: 'Malacca Island',
+// 				main_text_matched_substrings: [
+// 					{
+// 						length: 7,
+// 						offset: 0
+// 					}
+// 				],
+// 				secondary_text: 'Malacca, Malaysia'
+// 			},
+// 			terms: [
+// 				{
+// 					offset: 0,
+// 					value: 'Malacca Island'
+// 				},
+// 				{
+// 					offset: 16,
+// 					value: 'Malacca'
+// 				},
+// 				{
+// 					offset: 25,
+// 					value: 'Malaysia'
+// 				}
+// 			],
+// 			types: [ 'natural_feature', 'establishment' ]
+// 		}
+// 	],
+// 	status: 'OK'
+// };
 
 const AddActivityDetail = (props) => {
 	const [ isDirty, setIsDirty ] = useState(false);
@@ -308,6 +308,8 @@ const AddActivityDetail = (props) => {
 
 	const [ itineraryId, setItineraryId ] = useState();
 	const [ activityId, setActivityId ] = useState();
+
+	const [ isLoading, setIsLoading ] = useState(false);
 
 	useEffect(() => {
 		const { navigation } = props;
@@ -350,7 +352,9 @@ const AddActivityDetail = (props) => {
 	showDiscardAlert = () => {
 		const { navigation } = props;
 
-		if (isDirty) {
+		if (showCancel) {
+			onSearchLocationBlur();
+		} else if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
 					text: Languages.SaveAsDraft,
@@ -378,7 +382,7 @@ const AddActivityDetail = (props) => {
 				maxFiles: 6
 			}).then((images) => {
 				images.forEach((image) => {
-					ImageResizer.createResizedImage(image.path, 500, 400, 'JPEG', 70)
+					ImageResizer.createResizedImage(image.path, 600, 400, 'JPEG', 90)
 						.then((response) => {
 							let newImage = {
 								uri: response.uri,
@@ -537,6 +541,7 @@ const AddActivityDetail = (props) => {
 				duration: 300
 			}).start(({ finished }) => {
 				if (finished) {
+					this._searchLocationText.blur();
 					setLocationFocus(false);
 					setShowCancel(false);
 				}
@@ -556,70 +561,95 @@ const AddActivityDetail = (props) => {
 					console.log(error);
 				});
 			}
-		}, 3000);
+		}, 2000);
 	};
 
 	const onLocationPress = (place_id) => {
-		const { name, types, address_components, url, geometry, formatted_address } = result.result;
-		const { lng, lat } = geometry.location;
-		let countryComponent = address_components.filter((component) => {
-			return component.types.includes('country');
-		});
+		// const { name, types, address_components, url, geometry, formatted_address } = result.result;
+		// const { lng, lat } = geometry.location;
+		// let countryComponent = address_components.filter((component) => {
+		// 	return component.types.includes('country');
+		// });
 
-		let stateComponent = address_components.filter((component) => {
-			return component.types.includes('administrative_area_level_1');
-		});
+		// let stateComponent = address_components.filter((component) => {
+		// 	return component.types.includes('administrative_area_level_1');
+		// });
 
-		let postcodeComponent = address_components.filter((component) => {
-			return component.types.includes('postal_code');
-		});
+		// let postcodeComponent = address_components.filter((component) => {
+		// 	return component.types.includes('postal_code');
+		// });
 
-		let alpha2 = countryComponent[0].short_name;
-		let country = countryComponent[0].long_name;
-		let state = stateComponent[0].long_name;
-		let postcode = postcodeComponent[0].long_name;
+		// let alpha2 = countryComponent[0].short_name;
+		// let country = countryComponent[0].long_name;
+		// let state = stateComponent[0].long_name;
+		// let postcode = postcodeComponent[0].long_name;
 
-		let fullAddress = formatted_address.replace([ 'Unnamed Road, ' ], '').replace([ 'Unnamed Road ' ], '');
+		// let fullAddress = formatted_address.replace([ 'Unnamed Road, ' ], '').replace([ 'Unnamed Road ' ], '');
 
-		setLocation({
-			...location,
-			alpha2,
-			name,
-			fullAddress,
-			types,
-			url,
-			longitude: lng,
-			latitude: lat,
-			country,
-			state,
-			postcode
-		});
-		onSearchLocationBlur();
+		// setLocation({
+		// 	...location,
+		// 	alpha2,
+		// 	name,
+		// 	fullAddress,
+		// 	types,
+		// 	url,
+		// 	longitude: lng,
+		// 	latitude: lat,
+		// 	country,
+		// 	state,
+		// 	postcode
+		// });
+		// onSearchLocationBlur();
 
-		//Production
-		// GET_PLACE_DETAILS(place_id)
-		// 	.then((result) => {
-		// 		const { name, types, address_components, url, geometry } = result;
-		// 		const { lng, lat } = geometry.location;
-		// 		let countryComponent = address_components.filter((component) => {
-		// 			return component.types.includes('country');
-		// 		});
+		setIsLoading(true);
+		// Production
+		GET_PLACE_DETAILS(place_id)
+			.then((result) => {
+				// console.log(result);
+				const { name, types, address_components, url, geometry, formatted_address } = result;
+				const { lng, lat } = geometry.location;
+				let countryComponent = address_components.filter((component) => {
+					return component.types.includes('country');
+				});
 
-		// 		let stateComponent = address_components.filter((component) => {
-		// 			return component.types.includes('administrative_area_level_1');
-		// 		});
+				let stateComponent = address_components.filter((component) => {
+					if (component.types.includes('administrative_area_level_1')) {
+						return component.types.includes('administrative_area_level_1');
+					} else {
+						return component.types.includes('locality');
+					}
+				});
 
-		// 		let postcodeComponent = address_components.filter((component) => {
-		// 			return component.types.includes('postal_code');
-		// 		});
+				let postcodeComponent = address_components.filter((component) => {
+					return component.types.includes('postal_code');
+				});
 
-		// 		let country = countryComponent[0].long_name;
-		// 		let state = stateComponent[0].long_name;
-		// 		let postcode = postcodeComponent[0].long_name;
-		// 		setLocation({ ...location, name, types, url, longitude: lng, latitude: lat, country, state, postcode });
-		// 		onSearchLocationBlur();
-		// 	})
-		// 	.catch((error) => console.log(error));
+				let fullAddress = formatted_address.replace([ 'Unnamed Road, ' ], '').replace([ 'Unnamed Road ' ], '');
+				let country = countryComponent[0].long_name;
+				let alpha2 = countryComponent[0].short_name;
+				let state = stateComponent[0].long_name;
+				let postcode = postcodeComponent.length === 0 ? '' : postcodeComponent[0].long_name;
+				setLocation({
+					...location,
+					alpha2,
+					name,
+					fullAddress,
+					types,
+					url,
+					longitude: lng,
+					latitude: lat,
+					country,
+					state,
+					postcode
+				});
+
+				setIsLoading(false);
+				onSearchLocationBlur();
+			})
+			.catch((error) => {
+				setIsLoading(false);
+				console.log(error);
+			});
 	};
 
 	const renderLocation = ({ item }) => {
@@ -649,8 +679,8 @@ const AddActivityDetail = (props) => {
 			<View style={styles.flatListContainer}>
 				<FlatList
 					style={styles.flatListStyle}
-					data={data.predictions}
-					// data={locationResults} // production
+					// data={data.predictions}
+					data={locationResults} // production
 					keyExtractor={keyExtractor}
 					renderItem={renderLocation}
 				/>
@@ -712,11 +742,23 @@ const AddActivityDetail = (props) => {
 					</View>
 				</View>
 
+				<View style={[ styles.inputWrapper, Styles.Common.RowCenterBetween ]}>
+					<Text style={styles.titleStyle}>{Languages.Reviews}</Text>
+					<StarRating
+						maxStars={5}
+						rating={rate}
+						starSize={20}
+						containerStyle={styles.ratingContainer}
+						starStyle={styles.ratingStar}
+						fullStarColor={Color.starYellow}
+						selectedStar={(rating) => setRate(rating)}
+					/>
+				</View>
+
 				<View style={styles.inputWrapper}>
 					<Text style={styles.titleStyle}>{Languages.IStory}</Text>
 					<TextInput
 						multiline={true}
-						numberOfLines={4}
 						value={description}
 						selectionColor={Color.textSelectionColor}
 						style={[
@@ -732,19 +774,6 @@ const AddActivityDetail = (props) => {
 							setDescription(text);
 							setIsDirty(true);
 						}}
-					/>
-				</View>
-
-				<View style={[ styles.inputWrapper, Styles.Common.RowCenterBetween ]}>
-					<Text style={styles.titleStyle}>{Languages.Reviews}</Text>
-					<StarRating
-						maxStars={5}
-						rating={rate}
-						starSize={20}
-						containerStyle={styles.ratingContainer}
-						starStyle={styles.ratingStar}
-						fullStarColor={Color.starYellow}
-						selectedStar={(rating) => setRate(rating)}
 					/>
 				</View>
 			</View>
@@ -792,6 +821,7 @@ const AddActivityDetail = (props) => {
 						<View style={Styles.Common.RowCenterBetween}>
 							<Animated.View style={[ styles.inputStyle, { width: locationBoxWidth } ]}>
 								<TextInput
+									ref={(ref) => (this._searchLocationText = ref)}
 									underlineColorAndroid="transparent"
 									selectionColor={Color.textSelectionColor}
 									value={location.name}

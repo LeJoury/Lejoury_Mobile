@@ -22,12 +22,16 @@ const DraftItineraryDay = ({ activity }) => {
 
 			<View style={styles.wrapper}>
 				<View style={styles.draftContentContainer}>
-					<Text style={styles.draftActivityText}>{activity.title}</Text>
+					<Text style={styles.draftActivityText} numberOfLines={1}>
+						{activity.title}
+					</Text>
 
 					{activity.description === '' ? (
 						<Text style={styles.draftDescription}>{Languages.AddDescription}</Text>
 					) : (
-						<Text style={styles.draftDescription}>{activity.description}</Text>
+						<Text style={styles.draftDescription} numberOfLines={2} ellipsizeMode={'tail'}>
+							{activity.description}
+						</Text>
 					)}
 				</View>
 			</View>

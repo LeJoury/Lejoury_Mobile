@@ -140,5 +140,25 @@ export default StyleSheet.create({
 	mapStyle: {
 		flex: 1,
 		width: width - 36
+	},
+	activityNavigatorContainer: {
+		...Styles.Common.RowCenterBetween,
+		paddingHorizontal: 16,
+		paddingVertical: 24
+	},
+	navigatorContainer: {
+		flexDirection: 'row'
+	},
+	nextNavigatorTextStyle: {
+		fontSize: 15,
+		paddingBottom: 2,
+		color: Color.blue1,
+		fontFamily: 'Quicksand-Medium'
+	},
+	previousNavigatorTextStyle: {
+		fontSize: 15,
+		paddingBottom: 2,
+		color: Color.blue1,
+		fontFamily: 'Quicksand-Medium'
 	}
 });

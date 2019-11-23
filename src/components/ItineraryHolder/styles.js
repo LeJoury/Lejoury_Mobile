@@ -65,7 +65,7 @@ export default StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		padding: 8,
+		padding: 8
 	},
 
 	//draft:
@@ -156,6 +156,51 @@ export default StyleSheet.create({
 		borderRadius: 10,
 		overflow: 'hidden'
 	},
+	main_FrontContainer: {
+		flex: 1,
+		justifyContent: 'space-between'
+	},
+	main_TopContainer: {
+		flex: 0.25,
+		paddingHorizontal: 12,
+		paddingVertical: 10
+	},
+	main_UserProfilePicture: {
+		width: 20,
+		height: 20,
+		borderRadius: 10,
+		overflow: 'hidden',
+		marginRight: 8
+	},
+	main_TravellerNameStyle: {
+		fontSize: 16,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold'
+	},
+	main_BottomContainer: {
+		flex: 0.25,
+		justifyContent: 'flex-end',
+		paddingHorizontal: 12,
+		paddingVertical: 10
+	},
+	main_ItineraryTitleStyle: {
+		fontSize: 20,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold'
+	},
+	main_ItineraryQuoteStyle: {
+		fontSize: 14,
+		marginTop: 4,
+		color: Color.white,
+		fontStyle: 'italic'
+	},
+	main_noOfLikesText: {
+		marginLeft: 8,
+		fontSize: 14,
+		color: Color.white,
+		fontFamily: 'Quicksand-Medium'
+	},
+	//country
 	countryRow: {
 		flexDirection: 'row',
 		flex: 1,

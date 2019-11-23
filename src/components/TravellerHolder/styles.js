@@ -5,7 +5,7 @@ import { Color, Constants, Device, Styles } from '@common';
 export default StyleSheet.create({
 	container: {
 		padding: 0,
-		marginVertical: 10,
+		marginTop: 16,
 		marginHorizontal: 10,
 		flex: 1,
 		width: width / 4.5,
@@ -13,11 +13,11 @@ export default StyleSheet.create({
 	},
 	imageWrapper: {
 		overflow: 'hidden',
-		width: 80,
-		height: 80,
-		borderRadius: 40,
+		width: 70,
+		height: 70,
+		borderRadius: 35,
 		borderWidth: 1,
-		borderColor: Color.lightGrey2,
+		borderColor: Color.lightGrey6,
 		...Styles.Common.ColumnCenter,
 		...Styles.Common.ShadowBox
 	},

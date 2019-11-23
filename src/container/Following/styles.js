@@ -4,11 +4,8 @@ import { Color, Styles } from '@common';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
-	container: {
-		flex: 1
-	},
-	scrollViewContentContainerStyle:{
-		flex: 1
+	scrollViewContentContainerStyle: {
+		flexGrow: 1
 	},
 	searchBarContainerStyle: {
 		backgroundColor: Color.transparent,
@@ -66,11 +63,11 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Bold'
 	},
 	followingButtonStyle: {
-		backgroundColor: Color.blue5
+		backgroundColor: Color.white,
+		borderColor: Color.lightGrey3,
+		borderWidth: 1
 	},
 	followButtonStyle: {
-		backgroundColor: Color.white,
-		borderColor: Color.blue5,
-		borderWidth: 1
+		backgroundColor: Color.blue5
 	}
 });

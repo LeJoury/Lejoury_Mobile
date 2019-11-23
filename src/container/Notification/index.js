@@ -16,7 +16,7 @@ class Notification extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>Notification</Text>
+				{/* <Text>Notification</Text> */}
 			</View>
 		);
 	}

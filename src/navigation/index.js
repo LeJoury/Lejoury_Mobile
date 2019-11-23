@@ -95,22 +95,6 @@ const AddActivityTransitionConfig = (sceneProps) => {
 	}
 };
 
-const HomeStack = createStackNavigator({
-	Home: {
-		screen: HomeScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
-		}
-	},
-	ItineraryList: {
-		screen: ItineraryListScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar
-		}
-	}
-});
-
 const NotificationStack = createStackNavigator({
 	Notification: {
 		screen: NotificationScreen,
@@ -186,7 +170,7 @@ const AddItineraryStack = createStackNavigator(
 	{
 		transitionConfig: AddActivityTransitionConfig,
 		defaultNavigationOptions: {
-			gesturesEnabled: false
+			gesturesEnabled: true
 		}
 	}
 );
@@ -230,7 +214,7 @@ const BucketListStack = createStackNavigator({
 			headerStyle: Styles.Common.toolbar,
 			header: null
 		}
-	},
+	}
 });
 
 const FollowerTopTabbar = createMaterialTopTabNavigator(
@@ -285,7 +269,7 @@ const EditItineraryStack = createStackNavigator(
 	{
 		transitionConfig: AddActivityTransitionConfig,
 		defaultNavigationOptions: {
-			gesturesEnabled: false
+			gesturesEnabled: true
 		}
 	}
 );
@@ -301,6 +285,20 @@ const ProfileStack = createStackNavigator({
 	ProfileItineraryDetails: {
 		screen: ItineraryDetailsScreen,
 		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
+			header: null
+		}
+	},
+	ActivityDetail: {
+		screen: ActivityDetailScreen,
+		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
+			header: null
+		}
+	},
+	ViewImages: {
+		screen: ViewImagesScreen,
+		navigationOptions: {
 			headerStyle: Styles.Common.toolbar
 		}
 	},
@@ -311,6 +309,92 @@ const ProfileStack = createStackNavigator({
 		screen: FollowerTopTabbar
 	}
 });
+
+const HomeStack = createStackNavigator({
+	Home: {
+		screen: HomeScreen,
+		navigationOptions: {
+			headerStyle: Styles.Common.toolbar,
+			header: null
+		}
+	},
+	ItineraryList: {
+		screen: ItineraryListScreen,
+		navigationOptions: {
+			headerStyle: Styles.Common.toolbar
+		}
+	}
+});
+
+// const HomeStack = createStackNavigator(
+// 	{
+// 		Home: {
+// 			screen: HomeScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar,
+// 				header: null
+// 			}
+// 		},
+// 		ItineraryList: {
+// 			screen: ItineraryListScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar
+// 			}
+// 		},
+// 		TravellerList: {
+// 			screen: TravellerListScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar
+// 			}
+// 		},
+// 		TravellerProfile: {
+// 			screen: TravellerProfileScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar,
+// 				header: null
+// 			}
+// 		},
+// 		Settings: {
+// 			screen: SettingsScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar
+// 			}
+// 		},
+// 		EditProfile: {
+// 			screen: EditProfileScreen,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar
+// 			}
+// 		},
+// 		AddItineraryStack: {
+// 			screen: AddItineraryStack,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar,
+// 				header: null
+// 			}
+// 		},
+// 		ItineraryDetailStack: {
+// 			screen: ItineraryDetailStack,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar,
+// 				header: null
+// 			}
+// 		},
+// 		EditItineraryStack: {
+// 			screen: EditItineraryStack,
+// 			navigationOptions: {
+// 				headerStyle: Styles.Common.toolbar,
+// 				header: null
+// 			}
+// 		}
+// 	},
+// 	{
+// 		transitionConfig: AddActivityTransitionConfig,
+// 		defaultNavigationOptions: {
+// 			gesturesEnabled: true
+// 		}
+// 	}
+// );
 
 const AppNavigator = createBottomTabNavigator(
 	{

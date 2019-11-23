@@ -3,6 +3,17 @@ import { Color, Styles } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
+function wp(percentage) {
+	const value = percentage * width / 100;
+	return Math.round(value);
+}
+
+const slideWidth = wp(75);
+const itemHorizontalMargin = wp(4);
+
+export const sliderWidth = width;
+export const itemWidth = slideWidth + itemHorizontalMargin;
+
 export default StyleSheet.create({
 	container: {
 		flex: 1
@@ -73,13 +84,13 @@ export default StyleSheet.create({
 	sectionTitle: {
 		color: Color.darkGrey3,
 		fontFamily: 'Quicksand-Bold',
-		fontSize: 22,
+		fontSize: 18,
 		paddingHorizontal: 18
 	},
 	smallSectionTitle: {
 		color: Color.lightGrey3,
 		fontFamily: 'Quicksand-Medium',
-		fontSize: 18,
+		fontSize: 16,
 		paddingHorizontal: 18
 	},
 	seeMoreContainer: {
@@ -96,5 +107,24 @@ export default StyleSheet.create({
 		fontFamily: 'Quicksand-Regular',
 		fontSize: 14,
 		paddingHorizontal: 10
+	},
+	itinerarySeeMoreContainer: {
+		flex: 1,
+		marginRight: 18,
+		...Styles.Common.ColumnCenter
+	},
+	itinerarySeeMoreInnerContainer: {
+		paddingHorizontal: 18,
+		borderRadius: 35,
+		height: 70,
+		...Styles.Common.ColumnCenter,
+		...Styles.Common.ShadowBox,
+		backgroundColor: Color.white
+	},
+	itinerarySeeMoreStyle: {
+		color: Color.primary,
+		paddingVertical: 5,
+		fontFamily: 'Quicksand-Regular',
+		fontSize: 14
 	}
 });
