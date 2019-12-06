@@ -9,9 +9,12 @@ import {
 	TextInput,
 	Alert,
 	Animated,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Platform,
+	TouchableNativeFeedback
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { check, request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import StarRating from 'react-native-star-rating';
@@ -22,10 +25,12 @@ import { connect } from 'react-redux';
 import { deleteActivityPhoto } from '@actions';
 
 import { QUERY_PLACES, GET_PLACE_DETAILS } from '../../services/GooglePlaceService';
-import { Languages, Color, Styles, showOkAlert } from '@common';
+import { Languages, Color, Styles, showOkAlert, showOkCancelAlert } from '@common';
 import { ImageHolder, Button, CurrencyPicker } from '@components';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const numColumns = 3;
 const DEFAULT_RATE = 4;
@@ -90,6 +95,8 @@ const EditActivityDetail = (props) => {
 			let currentPhotos =
 				selectedActivity.photos.length < 6 ? selectedActivity.photos.concat('empty') : selectedActivity.photos;
 
+			console.log(selectedActivity);
+
 			setTitle(selectedActivity.title);
 			setLocation(selectedActivity.location);
 			setPhotos(currentPhotos);
@@ -117,7 +124,9 @@ const EditActivityDetail = (props) => {
 	showDiscardAlert = () => {
 		const { navigation } = props;
 
-		if (isDirty) {
+		if (showCancel) {
+			onSearchLocationBlur();
+		} else if (isDirty) {
 			Alert.alert(Languages.UnsavedTitle, Languages.UnsavedDescription, [
 				{
 					text: Languages.SaveAsDraft,
@@ -136,7 +145,7 @@ const EditActivityDetail = (props) => {
 		}
 	};
 
-	const onPressUploadImages = () => {
+	const onUploadPhotos = () => {
 		let newPhotos = photos;
 
 		if (newPhotos.length < 7) {
@@ -145,7 +154,7 @@ const EditActivityDetail = (props) => {
 				maxFiles: 6
 			}).then((images) => {
 				images.forEach((image) => {
-					ImageResizer.createResizedImage(image.path, 600, 400, 'JPEG', 90)
+					ImageResizer.createResizedImage(image.path, 600, 400, 'JPEG', 100)
 						.then((response) => {
 							let newImage = {
 								uri: response.uri,
@@ -170,6 +179,77 @@ const EditActivityDetail = (props) => {
 			});
 		} else {
 			showMax6ImagesAlert();
+		}
+	};
+
+	const checkPermission = () => {
+		if (Platform.OS === 'ios') {
+			check(PERMISSIONS.IOS.PHOTO_LIBRARY).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						console.log('undenied');
+						request(PERMISSIONS.IOS.PHOTO_LIBRARY).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('undenied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadPhotos();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadPhotos();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+							openSettings().catch(() => console.warn('cannot open settings'))
+						);
+						break;
+				}
+			});
+		} else {
+			check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('denied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadPhotos();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadPhotos();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						// showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+						// 	openSettings().catch(() => console.warn('cannot open settings'))
+						// );
+						break;
+				}
+			});
 		}
 	};
 
@@ -243,9 +323,16 @@ const EditActivityDetail = (props) => {
 		if (item === 'empty') {
 			return (
 				<View style={styles.imageHolder}>
-					<TouchableOpacity onPress={onPressUploadImages} style={styles.emptyThumbnail}>
-						<Icon name="plus" type="feather" size={Styles.IconSize.CenterTab} color={Color.lightGrey3} />
-					</TouchableOpacity>
+					<Touchable onPress={checkPermission} activeOpacity={0.8}>
+						<View style={styles.emptyThumbnail}>
+							<Icon
+								name="plus"
+								type="feather"
+								size={Styles.IconSize.CenterTab}
+								color={Color.lightGrey3}
+							/>
+						</View>
+					</Touchable>
 				</View>
 			);
 		}
@@ -304,6 +391,7 @@ const EditActivityDetail = (props) => {
 				duration: 300
 			}).start(({ finished }) => {
 				if (finished) {
+					this._searchLocationText.blur();
 					setLocationFocus(false);
 					setShowCancel(false);
 				}
@@ -402,7 +490,8 @@ const EditActivityDetail = (props) => {
 					latitude: lat,
 					country,
 					state,
-					postcode
+					postcode,
+					placeId: place_id
 				});
 
 				setIsLoading(false);
@@ -458,6 +547,8 @@ const EditActivityDetail = (props) => {
 					<TextInput
 						underlineColorAndroid="transparent"
 						selectionColor={Color.textSelectionColor}
+						placeholder={Languages.ActivityTitlePlaceHolder}
+						placeholderTextColor={Color.grey1}
 						value={title}
 						onFocus={() => setTitleFocus(true)}
 						onBlur={() => setTitleFocus(false)}
@@ -486,6 +577,8 @@ const EditActivityDetail = (props) => {
 						<TextInput
 							underlineColorAndroid="transparent"
 							selectionColor={Color.textSelectionColor}
+							placeholder={Languages.ActivityBudgetPlaceHolder}
+							placeholderTextColor={Color.grey1}
 							value={budget && String(budget)}
 							keyboardType={'numeric'}
 							onFocus={() => setBudgetFocus(true)}
@@ -504,6 +597,19 @@ const EditActivityDetail = (props) => {
 					</View>
 				</View>
 
+				<View style={[ styles.inputWrapper, Styles.Common.RowCenterBetween ]}>
+					<Text style={styles.titleStyle}>{Languages.Reviews}</Text>
+					<StarRating
+						maxStars={5}
+						rating={rate}
+						starSize={20}
+						containerStyle={styles.ratingContainer}
+						starStyle={styles.ratingStar}
+						fullStarColor={Color.starYellow}
+						selectedStar={(rating) => setRate(rating)}
+					/>
+				</View>
+
 				<View style={styles.inputWrapper}>
 					<Text style={styles.titleStyle}>{Languages.IStory}</Text>
 					<TextInput
@@ -511,6 +617,8 @@ const EditActivityDetail = (props) => {
 						numberOfLines={4}
 						value={description}
 						selectionColor={Color.textSelectionColor}
+						placeholder={Languages.ActivityDescPlaceHolder}
+						placeholderTextColor={Color.grey1}
 						style={[
 							styles.inputStyle,
 							styles.description,
@@ -524,19 +632,6 @@ const EditActivityDetail = (props) => {
 							setDescription(text);
 							setIsDirty(true);
 						}}
-					/>
-				</View>
-
-				<View style={[ styles.inputWrapper, Styles.Common.RowCenterBetween ]}>
-					<Text style={styles.titleStyle}>{Languages.Reviews}</Text>
-					<StarRating
-						maxStars={5}
-						rating={rate}
-						starSize={20}
-						containerStyle={styles.ratingContainer}
-						starStyle={styles.ratingStar}
-						fullStarColor={Color.starYellow}
-						selectedStar={(rating) => setRate(rating)}
 					/>
 				</View>
 			</View>
@@ -582,14 +677,17 @@ const EditActivityDetail = (props) => {
 					<View style={[ styles.inputWrapper, { marginTop: 0 } ]}>
 						<Text style={styles.titleStyle}>{Languages.WhereYouBeen}</Text>
 						<View style={Styles.Common.RowCenterBetween}>
-							<Animated.View style={[ styles.inputStyle, { width: locationBoxWidth } ]}>
+							<Animated.View style={[ styles.locationStyle, { width: locationBoxWidth } ]}>
 								<TextInput
+									ref={(ref) => (this._searchLocationText = ref)}
 									underlineColorAndroid="transparent"
 									selectionColor={Color.textSelectionColor}
+									placeholder={Languages.ActivityPlacePlaceHolder}
+									placeholderTextColor={Color.grey1}
 									value={location.name}
 									onFocus={() => onSearchLocationFocus()}
 									style={[
-										styles.inputTextStyle,
+										styles.locationInputTextStyle,
 										{
 											borderBottomColor: isLocationFocus ? Color.primary : Color.lightGrey1
 										}
@@ -599,9 +697,21 @@ const EditActivityDetail = (props) => {
 							</Animated.View>
 
 							<Animated.View>
-								<TouchableOpacity onPress={() => onSearchLocationBlur()}>
-									{showCancel && <Text style={styles.cancelSearchBarText}>Cancel</Text>}
-								</TouchableOpacity>
+								<Touchable
+									onPress={() => {
+										if (locationResults.length !== 0) {
+											onLocationPress(locationResults[0].place_id);
+										}
+										onSearchLocationBlur();
+									}}
+									activeOpacity={0.8}
+								>
+									<View>
+										{showCancel && (
+											<Text style={styles.cancelSearchBarText}>{Languages.Cancel}</Text>
+										)}
+									</View>
+								</Touchable>
 							</Animated.View>
 						</View>
 					</View>

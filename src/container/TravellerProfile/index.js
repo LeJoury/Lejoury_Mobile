@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Easing, Animated, RefreshControl, Image } from 'react-native';
+import { View, Text, FlatList, Easing, Animated, RefreshControl, Image, BackHandler } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Back } from '../../navigation/IconNav';
@@ -30,43 +30,11 @@ class TravellerProfile extends Component {
 
 	_keyExtractor = (item, index) => item.itineraryId.toString();
 
-	componentDidMount = async () => {
-		const { userId } = this.state.selectedUser;
-		const { token } = this.props.user;
-		try {
-			this.setState({ isLoading: true });
-			let itineraryResponse = await this.props.getUserItineraries(token, userId, false);
-			let profileResponse = await this.props.getTravellerProfile(userId, token);
-
-			Promise.all([ itineraryResponse, profileResponse ]).then((values) => {
-				if (itineraryResponse.OK) {
-					this.setState({
-						isLoading: false,
-						isLastPage: itineraryResponse.isLastPage,
-						itineraries: itineraryResponse.itineraries
-					});
-				} else {
-					this.setState({
-						isLoading: false
-					});
-				}
-
-				if (profileResponse.OK) {
-					this.setState({
-						isLoading: false,
-						selectedUser: profileResponse.user
-					});
-				} else {
-					this.setState({
-						isLoading: false
-					});
-				}
-			});
-		} catch (error) {
-			this.setState({
-				isLoading: false
-			});
-		}
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+	componentDidMount = () => {
+		this.setState({ isLoading: true });
 	};
 
 	willFocusSubscription = this.props.navigation.addListener('willFocus', async (payload) => {
@@ -91,14 +59,27 @@ class TravellerProfile extends Component {
 						itineraries: itineraryResponse.itineraries
 					});
 				}
+
+				this.setState({
+					isLoading: false
+				});
 			});
 		} catch (error) {
+			this.setState({
+				isLoading: false
+			});
 			console.log(error);
 		}
 	});
 
 	componentWillUnmount() {
 		this.willFocusSubscription.remove();
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+	handleBackButtonClick = () => {
+		this.props.navigation.goBack(null);
+		return true;
 	}
 
 	refreshProfile = async () => {

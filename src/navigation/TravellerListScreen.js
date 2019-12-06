@@ -8,7 +8,7 @@ import { Color } from '@common';
 class TravellerListScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
-		headerTitle: Title(navigation.state.routeName, Color.headerTitleColor)
+		headerTitle: Title(navigation.state.routeName, Color.headerTitleColor),
 	});
 
 	render() {

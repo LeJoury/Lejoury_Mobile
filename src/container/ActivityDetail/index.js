@@ -8,7 +8,8 @@ import {
 	TouchableOpacity,
 	Platform,
 	Modal,
-	Linking
+	Linking,
+	TouchableNativeFeedback
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -33,6 +34,7 @@ const IMAGE_HEIGHT = Device.isIphoneX ? 320 : 300;
 const { width, height } = Dimensions.get('window');
 const backTop = Device.isIphoneX ? 35 : 20;
 const { Bucket_Type } = Constants.Bucket_Type;
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const ActivityDetail = (props) => {
 	//all days
@@ -82,6 +84,7 @@ const ActivityDetail = (props) => {
 				currentActivity = allDays[dayIndex].activities[activityIndex];
 			}
 
+			console.log(currentActivity);
 			setTitle(currentActivity.title);
 
 			setLocationName(currentActivity.location.name);
@@ -150,25 +153,13 @@ const ActivityDetail = (props) => {
 	};
 
 	const onMapReady = () => {
-		if (Platform.OS === 'ios') {
-			// Create the object to update this.state.mapRegion through the onRegionChange function
-			const region = {
-				latitude: locationLat,
-				longitude: locationLng,
-				latitudeDelta: 0.00922 * 1.5,
-				longitudeDelta: 0.00421 * 1.5
-			};
-			onRegionChange(region);
-		} else if (this.state.permissionEnabled) {
-			// Create the object to update this.state.mapRegion through the onRegionChange function
-			const region = {
-				latitude: locationLat,
-				longitude: locationLng,
-				latitudeDelta: 0.00922 * 1.5,
-				longitudeDelta: 0.00421 * 1.5
-			};
-			onRegionChange(region);
-		}
+		const region = {
+			latitude: locationLat,
+			longitude: locationLng,
+			latitudeDelta: 0.00922 * 1.5,
+			longitudeDelta: 0.00421 * 1.5
+		};
+		onRegionChange(region);
 	};
 
 	const onActivityBookmarkPress = async () => {
@@ -200,20 +191,22 @@ const ActivityDetail = (props) => {
 
 	const renderImage = ({ item, index }, parallaxProps) => {
 		return (
-			<TouchableOpacity
-				style={styles.item}
+			<Touchable
 				onPress={() => {
-					setPreviewModalVisible(true);
+					// setPreviewModalVisible(true);
 				}}
+				activeOpacity={0.8}
 			>
-				<ParallaxImage
-					source={{ uri: item.link }}
-					containerStyle={styles.imageContainer}
-					style={styles.image}
-					parallaxFactor={0.2}
-					{...parallaxProps}
-				/>
-			</TouchableOpacity>
+				<View style={styles.item}>
+					<ParallaxImage
+						source={{ uri: item.link }}
+						containerStyle={styles.imageContainer}
+						style={styles.image}
+						parallaxFactor={0.2}
+						{...parallaxProps}
+					/>
+				</View>
+			</Touchable>
 		);
 	};
 
@@ -368,24 +361,26 @@ const ActivityDetail = (props) => {
 						{locationName}
 					</Text>
 					<View style={styles.locationMapContainer}>
-						<TouchableOpacity style={styles.mapStyle} onPress={() => openGps()}>
-							<MapView
-								provider={PROVIDER_GOOGLE}
-								onMapReady={onMapReady}
-								style={{ aspectRatio: 1 }}
-								initialRegion={region}
-								showsUserLocation={false}
-								followUserLocation={false}
-								zoomEnabled={false}
-								scrollEnabled={false}
-								onPress={() => openGps()}
-							>
-								<Marker
-									coordinate={{ latitude: locationLat, longitude: locationLng }}
-									title={locationName}
-								/>
-							</MapView>
-						</TouchableOpacity>
+						<View style={styles.mapStyle}>
+							<Touchable onPress={() => openGps()} activeOpacity={0.8}>
+								<MapView
+									provider={PROVIDER_GOOGLE}
+									onMapReady={onMapReady}
+									style={{ aspectRatio: 1 }}
+									initialRegion={region}
+									showsUserLocation={false}
+									followUserLocation={false}
+									zoomEnabled={false}
+									scrollEnabled={false}
+									onPress={() => openGps()}
+								>
+									<Marker
+										coordinate={{ latitude: locationLat, longitude: locationLng }}
+										title={locationName}
+									/>
+								</MapView>
+							</Touchable>
+						</View>
 
 						<View style={styles.locationContainer}>
 							<Text multiline={true} style={styles.locationTextStyle}>
@@ -394,9 +389,9 @@ const ActivityDetail = (props) => {
 							<Text multiline={true} style={styles.locationTextStyle}>
 								{locationCountry}
 							</Text>
-							<TouchableOpacity onPress={() => openGps()}>
+							<Touchable onPress={() => openGps()} activeOpacity={0.8}>
 								<Text style={styles.directionTextStyle}>{Languages.Directions}</Text>
-							</TouchableOpacity>
+							</Touchable>
 						</View>
 					</View>
 				</View>
@@ -407,14 +402,18 @@ const ActivityDetail = (props) => {
 	const renderActivityNavigator = () => {
 		return (
 			<View style={styles.activityNavigatorContainer}>
-				<TouchableOpacity onPress={onPreviousActivityClick} style={styles.navigatorContainer}>
-					<Icon name="chevron-left" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
-					<Text style={styles.previousNavigatorTextStyle}>{Languages.Previous}</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={onNextActivityClick} style={styles.navigatorContainer}>
-					<Text style={styles.nextNavigatorTextStyle}>{Languages.Next}</Text>
-					<Icon name="chevron-right" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
-				</TouchableOpacity>
+				<Touchable onPress={onPreviousActivityClick} activeOpacity={0.8}>
+					<View style={styles.navigatorContainer}>
+						<Icon name="chevron-left" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
+						<Text style={styles.previousNavigatorTextStyle}>{Languages.Previous}</Text>
+					</View>
+				</Touchable>
+				<Touchable onPress={onNextActivityClick} activeOpacity={0.8}>
+					<View style={styles.navigatorContainer}>
+						<Text style={styles.nextNavigatorTextStyle}>{Languages.Next}</Text>
+						<Icon name="chevron-right" type={'feather'} size={Styles.IconSize.Medium} color={Color.blue1} />
+					</View>
+				</Touchable>
 			</View>
 		);
 	};

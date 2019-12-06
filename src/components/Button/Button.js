@@ -1,21 +1,12 @@
 import React from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	TouchableOpacity,
-	View,
-	Image,
-	Platform,
-	TouchableHighlight,
-	Text
-} from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity, Text, Platform, View, TouchableNativeFeedback } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ActionButton from 'react-native-action-button';
 import _ from 'lodash';
 
 import { Color } from '@common';
 const { width, height } = Dimensions.get('window');
-
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const withPreventDoubleClick = (WrappedComponent) => {
 	class PreventDoubleClick extends React.PureComponent {
@@ -59,45 +50,52 @@ const GradientBorderButton = (props) => (
 		end={{ x: 1.0, y: 1.0 }}
 		colors={props.gradientColors}
 	>
-		<TouchableOpacity
-			disabled={props.disabled}
-			onPress={() => props.onPress()}
-			style={[ styles.gradientButtonContainer, props.buttonBGColor ]}
-			activeOpacity={0.9}
-		>
-			<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
-		</TouchableOpacity>
+		<Touchable disabled={props.disabled} onPress={() => props.onPress()} activeOpacity={0.8}>
+			<View style={[ styles.gradientButtonContainer, props.buttonBGColor ]}>
+				<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
+			</View>
+		</Touchable>
 	</LinearGradient>
 );
 
 const GradientButton = (props) => (
-	<TouchableOpacity
-		disabled={props.disabled}
-		onPress={() => props.onPress()}
-		style={props.buttonContainerStyle}
-		activeOpacity={0.6}
-		underlayColor="#ccc"
-	>
-		<LinearGradient
-			style={props.containerStyle}
-			colors={props.gradientColors}
-			start={{ x: -0.15, y: 0.15 }}
-			end={{ x: 0.05, y: 1.0 }}
-		>
-			<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
-		</LinearGradient>
-	</TouchableOpacity>
+	<Touchable disabled={props.disabled} onPress={() => props.onPress()} activeOpacity={0.8} underlayColor="#ccc">
+		<View style={props.buttonContainerStyle}>
+			<LinearGradient
+				style={props.containerStyle}
+				colors={props.gradientColors}
+				start={{ x: -0.15, y: 0.15 }}
+				end={{ x: 0.05, y: 1.0 }}
+			>
+				<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
+			</LinearGradient>
+		</View>
+	</Touchable>
 );
 
-const StandardButton = (props) => (
-	<TouchableOpacity
-		disabled={props.disabled}
-		style={[ styles.container, props.containerStyle ]}
-		onPress={props.onPress}
-	>
-		<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
-	</TouchableOpacity>
-);
+const StandardButton = (props) => {
+	if (Platform.OS === 'ios') {
+		return (
+			<Touchable disabled={props.disabled} onPress={props.onPress} activeOpacity={0.8}>
+				<View style={[ styles.container, props.containerStyle ]}>
+					<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
+				</View>
+			</Touchable>
+		);
+	} else {
+		return (
+			<Touchable
+				disabled={props.disabled}
+				onPress={props.onPress}
+				background={TouchableNativeFeedback.SelectableBackground()}
+			>
+				<View style={[ styles.container, props.containerStyle ]}>
+					<Text style={[ styles.text, props.textStyle ]}>{props.text}</Text>
+				</View>
+			</Touchable>
+		);
+	}
+};
 
 const styles = StyleSheet.create({
 	button: {

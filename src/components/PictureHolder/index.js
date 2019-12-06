@@ -1,14 +1,22 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Image,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { Color, Languages, Styles } from '@common';
 
 import styles from './styles';
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const PictureHolder = ({ picture, user }) => (
 	<View style={styles.container}>
-		<TouchableOpacity>
+		<Touchable activeOpacity={0.8}>
 			<View style={styles.userProfileWrapper}>
 				<Image
 					source={{ uri: user.userProfilePicture }}
@@ -17,7 +25,7 @@ const PictureHolder = ({ picture, user }) => (
 				/>
 				<Text style={styles.userProfileName}>{user.username}</Text>
 			</View>
-		</TouchableOpacity>
+		</Touchable>
 		<View style={styles.imageWrapper}>
 			<Image source={picture.imageUrl} style={styles.image} resizeMode={'cover'} />
 		</View>
@@ -39,11 +47,11 @@ const PictureHolder = ({ picture, user }) => (
 				</Text>
 			</Text>
 		</View>
-		<TouchableOpacity>
+		<Touchable activeOpacity={0.8}>
 			<View style={styles.commentsWrapper}>
 				<Text style={styles.viewComments}>View all comments</Text>
 			</View>
-		</TouchableOpacity>
+		</Touchable>
 	</View>
 );
 export default PictureHolder;

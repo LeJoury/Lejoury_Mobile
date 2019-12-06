@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, Dimensions, Image } from 'react-native';
-import Swiper from 'react-native-swiper';
+import { Card } from 'react-native-elements';
 
 import { Color, Languages } from '@common';
 import styles from './styles';
@@ -13,12 +13,18 @@ const DayHolder = ({ day, activity, dayNo, date, type = 'main', onPress = undefi
 
 const DraftItineraryDay = ({ activity }) => {
 	return (
-		<View style={styles.draftContainer}>
-			<Image
-				source={{ uri: activity.photos[0].link ? activity.photos[0].link : activity.photos[0] }}
-				style={styles.draftImageWrapper}
-				// loadingIndicatorSource={<ActivityIndicator />}
-			/>
+		<Card containerStyle={styles.draftContainer}>
+			{activity.photos.length > 0 ? (
+				<Image
+					source={{ uri: activity.photos[0].link ? activity.photos[0].link : activity.photos[0] }}
+					style={styles.draftImageWrapper}
+					// loadingIndicatorSource={<ActivityIndicator />}
+				/>
+			) : (
+				<View style={styles.draftEmptyImageContainer}>
+					<Text style={styles.draftEmptyImageDesc}>{Languages.ShareYourPhotos}</Text>
+				</View>
+			)}
 
 			<View style={styles.wrapper}>
 				<View style={styles.draftContentContainer}>
@@ -35,7 +41,7 @@ const DraftItineraryDay = ({ activity }) => {
 					)}
 				</View>
 			</View>
-		</View>
+		</Card>
 	);
 };
 

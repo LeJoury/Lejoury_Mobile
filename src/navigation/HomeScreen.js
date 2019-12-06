@@ -1,13 +1,11 @@
 import React, { PureComponent } from 'react';
-import { StatusBar, SafeAreaView } from 'react-native';
+import { StatusBar, SafeAreaView, Platform } from 'react-native';
 
 import { Home } from '@container';
 
-import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
 class HomeScreen extends PureComponent {
-
 	constructor(props) {
 		super(props);
 	}
@@ -21,8 +19,8 @@ class HomeScreen extends PureComponent {
 		return (
 			<SafeAreaView style={Styles.Common.FullFlex}>
 				<StatusBar
-					backgroundColor={Color.white}
-					translucent={false}
+					backgroundColor={Color.transparent1}
+					translucent={true}
 					barStyle="dark-content"
 					showHideTransition="fade"
 				/>

@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, Alert, Platform, TouchableWithoutFeedback } from 'react-native';
+import {
+	View,
+	Text,
+	FlatList,
+	Image,
+	TouchableOpacity,
+	Alert,
+	Platform,
+	TouchableWithoutFeedback,
+	TouchableNativeFeedback
+} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
 import { connect } from 'react-redux';
@@ -8,6 +18,8 @@ import { getFollowing, followTraveller, getProfile } from '@actions';
 import { Color, Languages, Images, Constants } from '@common';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { Follow_Type } = Constants.Follow_Type;
 
@@ -123,14 +135,13 @@ class Following extends Component {
 						</View>
 					</TouchableWithoutFeedback>
 
-					<TouchableOpacity
-						style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}
-						onPress={() => this.onFollowClick(item)}
-					>
-						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
-							{functionText}
-						</Text>
-					</TouchableOpacity>
+					<Touchable activeOpacity={0.8} onPress={() => this.onFollowClick(item)}>
+						<View style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}>
+							<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
+								{functionText}
+							</Text>
+						</View>
+					</Touchable>
 				</View>
 			</View>
 		);

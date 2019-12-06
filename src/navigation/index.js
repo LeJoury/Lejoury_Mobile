@@ -38,6 +38,7 @@ import ProfileFollowerScreen from './ProfileFollowerScreen';
 import ProfileFollowingScreen from './ProfileFollowingScreen';
 
 import SettingsScreen from './SettingsScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
 
 import LandingScreen from './LandingScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
@@ -104,28 +105,35 @@ const NotificationStack = createStackNavigator({
 	}
 });
 
-const ItineraryDetailStack = createStackNavigator({
-	ItineraryDetails: {
-		screen: ItineraryDetailsScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
+const ItineraryDetailStack = createStackNavigator(
+	{
+		ItineraryDetails: {
+			screen: ItineraryDetailsScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		ActivityDetail: {
+			screen: ActivityDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		ViewImages: {
+			screen: ViewImagesScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
 		}
 	},
-	ActivityDetail: {
-		screen: ActivityDetailScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
-		}
-	},
-	ViewImages: {
-		screen: ViewImagesScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar
+	{
+		defaultNavigationOptions: {
+			gesturesEnabled: true
 		}
 	}
-});
+);
 
 const AddItineraryStack = createStackNavigator(
 	{
@@ -274,41 +282,48 @@ const EditItineraryStack = createStackNavigator(
 	}
 );
 
-const ProfileStack = createStackNavigator({
-	Profile: {
-		screen: ProfileScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
+const ProfileStack = createStackNavigator(
+	{
+		Profile: {
+			screen: ProfileScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		ProfileItineraryDetails: {
+			screen: ItineraryDetailsScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		ActivityDetail: {
+			screen: ActivityDetailScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar,
+				header: null
+			}
+		},
+		ViewImages: {
+			screen: ViewImagesScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		ProfileFollower: {
+			screen: FollowerTopTabbar
+		},
+		ProfileFollowing: {
+			screen: FollowerTopTabbar
 		}
 	},
-	ProfileItineraryDetails: {
-		screen: ItineraryDetailsScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
+	{
+		defaultNavigationOptions: {
+			gesturesEnabled: true
 		}
-	},
-	ActivityDetail: {
-		screen: ActivityDetailScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar,
-			header: null
-		}
-	},
-	ViewImages: {
-		screen: ViewImagesScreen,
-		navigationOptions: {
-			headerStyle: Styles.Common.toolbar
-		}
-	},
-	ProfileFollower: {
-		screen: FollowerTopTabbar
-	},
-	ProfileFollowing: {
-		screen: FollowerTopTabbar
 	}
-});
+);
 
 const HomeStack = createStackNavigator({
 	Home: {
@@ -468,7 +483,8 @@ const MainNavigator = createStackNavigator(
 			screen: AppNavigator,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar,
-				header: null
+				header: null,
+				gesturesEnabled: false
 			}
 		},
 		AddItineraryStack: {
@@ -487,6 +503,12 @@ const MainNavigator = createStackNavigator(
 		},
 		Settings: {
 			screen: SettingsScreen,
+			navigationOptions: {
+				headerStyle: Styles.Common.toolbar
+			}
+		},
+		ChangePassword: {
+			screen: ChangePasswordScreen,
 			navigationOptions: {
 				headerStyle: Styles.Common.toolbar
 			}
@@ -522,7 +544,7 @@ const MainNavigator = createStackNavigator(
 		initialRouteName: 'Splash',
 		transitionConfig: AddActivityTransitionConfig,
 		defaultNavigationOptions: {
-			gesturesEnabled: false,
+			gesturesEnabled: true,
 			headerStyle: Styles.Common.toolbar
 		}
 	}

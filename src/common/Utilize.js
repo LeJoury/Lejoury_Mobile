@@ -89,6 +89,18 @@ const showOkAlert = (title, description, buttonText = Languages.OK, onButtonPres
 	]);
 };
 
+const showOkCancelAlert = (title, description, buttonText = Languages.OK, onButtonPress = undefined) => {
+	Alert.alert(title, description, [
+		{
+			text: Languages.Cancel
+		},
+		{
+			text: buttonText,
+			onPress: onButtonPress
+		}
+	]);
+};
+
 const validateEmail = (email) => {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return re.test(String(email).toLowerCase());
@@ -126,6 +138,7 @@ export {
 	formatImages,
 	getMonths,
 	showOkAlert,
+	showOkCancelAlert,
 	validateEmail,
 	validatePassword,
 	createStaggerAnimationStyle

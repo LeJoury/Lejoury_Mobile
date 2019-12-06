@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 
 import { Title, Back } from './IconNav';
 

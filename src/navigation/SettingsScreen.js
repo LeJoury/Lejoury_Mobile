@@ -9,7 +9,7 @@ import { Color, Styles, Languages } from '@common';
 class SettingsScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: Title(Languages.Settings, Color.headerTitleColor),
-		headerLeft: Back(navigation, Color.black2)
+		headerLeft: Back(navigation, Color.black2),
 	});
 
 	render() {

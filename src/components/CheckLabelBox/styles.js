@@ -18,6 +18,6 @@ export default StyleSheet.create({
 		paddingVertical: 5,
 		paddingHorizontal: 10,
 		marginLeft: 5,
-		fontWeight: '500'
+		fontFamily: 'Quicksand-Medium',
 	}
 });

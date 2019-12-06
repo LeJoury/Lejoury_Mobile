@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { Color } from '@common';
 import styles from './styles';
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 export default class UserProfileItem extends PureComponent {
 	static propTypes = {
@@ -20,13 +21,15 @@ export default class UserProfileItem extends PureComponent {
 		const { label, value, onPress } = this.props;
 
 		return (
-			<TouchableOpacity style={styles.row} onPress={onPress}>
-				<Text style={styles.leftText}>{label}</Text>
-				<View style={styles.rightContainer}>
-					<Text style={styles.rightText}>{value}</Text>
-					{!value && <Icon name="chevron-right" type="feather" color={Color.lightGrey1} />}
+			<Touchable onPress={onPress} activeOpacity={0.8}>
+				<View style={styles.row}>
+					<Text style={styles.leftText}>{label}</Text>
+					<View style={styles.rightContainer}>
+						<Text style={styles.rightText}>{value}</Text>
+						{!value && <Icon name="chevron-right" type="feather" color={Color.lightGrey1} />}
+					</View>
 				</View>
-			</TouchableOpacity>
+			</Touchable>
 		);
 	}
 }

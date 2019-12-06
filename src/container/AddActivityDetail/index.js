@@ -9,9 +9,12 @@ import {
 	TextInput,
 	Alert,
 	Animated,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Platform,
+	TouchableNativeFeedback
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { check, request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
 import ImagePicker from 'react-native-image-crop-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import StarRating from 'react-native-star-rating';
@@ -22,7 +25,7 @@ import { connect } from 'react-redux';
 import { deleteActivityPhoto } from '@actions';
 
 import { QUERY_PLACES, GET_PLACE_DETAILS } from '../../services/GooglePlaceService';
-import { Languages, Color, Styles, showOkAlert } from '@common';
+import { Languages, Color, Styles, showOkAlert, showOkCancelAlert } from '@common';
 import { ImageHolder, Button, CurrencyPicker } from '@components';
 
 import styles from './styles';
@@ -31,6 +34,7 @@ const numColumns = 3;
 const DEFAULT_RATE = 4;
 const { width, height } = Dimensions.get('window');
 const TAG = 'AddActivityDetail';
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 // const GOOGLE_API_KEY = config.GOOGLE_PLACE_API_KEY;
 
@@ -325,6 +329,7 @@ const AddActivityDetail = (props) => {
 			let currentPhotos =
 				selectedActivity.photos.length < 6 ? selectedActivity.photos.concat('empty') : selectedActivity.photos;
 
+			// console.log(selectedActivity);
 			setTitle(selectedActivity.title);
 			setLocation(selectedActivity.location);
 			setPhotos(currentPhotos);
@@ -373,7 +378,7 @@ const AddActivityDetail = (props) => {
 		}
 	};
 
-	const onPressUploadImages = () => {
+	const onUploadPhotos = () => {
 		let newPhotos = photos;
 
 		if (newPhotos.length < 7) {
@@ -382,7 +387,7 @@ const AddActivityDetail = (props) => {
 				maxFiles: 6
 			}).then((images) => {
 				images.forEach((image) => {
-					ImageResizer.createResizedImage(image.path, 600, 400, 'JPEG', 90)
+					ImageResizer.createResizedImage(image.path, 600, 400, 'JPEG', 100)
 						.then((response) => {
 							let newImage = {
 								uri: response.uri,
@@ -410,45 +415,114 @@ const AddActivityDetail = (props) => {
 		}
 	};
 
-	const onRemoveImage = async (removedPhoto) => {
-		if (photos.length === 2) {
-			showOkAlert(Languages.NoPhotos, Languages.Min1Image);
-		} else {
-			if (removedPhoto.id) {
-				try {
-					let response = await props.deleteActivityPhoto(
-						removedPhoto.id,
-						activityId,
-						itineraryId,
-						props.user.token
-					);
-
-					if (response.OK) {
-						let currentPhotos = photos.filter((photo) => {
-							return photo.id !== removedPhoto.id;
+	const checkPermission = () => {
+		if (Platform.OS === 'ios') {
+			check(PERMISSIONS.IOS.PHOTO_LIBRARY).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						console.log('undenied');
+						request(PERMISSIONS.IOS.PHOTO_LIBRARY).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('undenied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadPhotos();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
 						});
-
-						currentPhotos =
-							currentPhotos.length < 6
-								? Array.from(new Set(currentPhotos.concat('empty')))
-								: currentPhotos;
-
-						setPhotos(currentPhotos);
-					}
-				} catch (error) {
-					console.log(error);
+						break;
+					case RESULTS.GRANTED:
+						onUploadPhotos();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+							openSettings().catch(() => console.warn('cannot open settings'))
+						);
+						break;
 				}
-			} else {
-				let currentPhotos = photos.filter((photo) => {
-					return photo !== removedPhoto;
-				});
-
-				currentPhotos =
-					currentPhotos.length < 6 ? Array.from(new Set(currentPhotos.concat('empty'))) : currentPhotos;
-
-				setPhotos(currentPhotos);
-			}
+			});
+		} else {
+			check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('denied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadPhotos();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadPhotos();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						// showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+						// 	openSettings().catch(() => console.warn('cannot open settings'))
+						// );
+						break;
+				}
+			});
 		}
+	};
+
+	const onRemoveImage = async (removedPhoto) => {
+		// if (photos.length === 2) {
+		// 	showOkAlert(Languages.NoPhotos, Languages.Min1Image);
+		// } else {
+		if (removedPhoto.id) {
+			try {
+				let response = await props.deleteActivityPhoto(
+					removedPhoto.id,
+					activityId,
+					itineraryId,
+					props.user.token
+				);
+
+				if (response.OK) {
+					let currentPhotos = photos.filter((photo) => {
+						return photo.id !== removedPhoto.id;
+					});
+
+					currentPhotos =
+						currentPhotos.length < 6 ? Array.from(new Set(currentPhotos.concat('empty'))) : currentPhotos;
+
+					setPhotos(currentPhotos);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			let currentPhotos = photos.filter((photo) => {
+				return photo !== removedPhoto;
+			});
+
+			currentPhotos =
+				currentPhotos.length < 6 ? Array.from(new Set(currentPhotos.concat('empty'))) : currentPhotos;
+
+			setPhotos(currentPhotos);
+		}
+		// }
 	};
 
 	const onSaveActivity = () => {
@@ -480,9 +554,16 @@ const AddActivityDetail = (props) => {
 		if (item === 'empty') {
 			return (
 				<View style={styles.imageHolder}>
-					<TouchableOpacity onPress={onPressUploadImages} style={styles.emptyThumbnail}>
-						<Icon name="plus" type="feather" size={Styles.IconSize.CenterTab} color={Color.lightGrey3} />
-					</TouchableOpacity>
+					<Touchable onPress={checkPermission} activeOpacity={0.8}>
+						<View style={styles.emptyThumbnail}>
+							<Icon
+								name="plus"
+								type="feather"
+								size={Styles.IconSize.CenterTab}
+								color={Color.lightGrey3}
+							/>
+						</View>
+					</Touchable>
 				</View>
 			);
 		}
@@ -640,7 +721,8 @@ const AddActivityDetail = (props) => {
 					latitude: lat,
 					country,
 					state,
-					postcode
+					postcode,
+					placeId: place_id
 				});
 
 				setIsLoading(false);
@@ -696,6 +778,8 @@ const AddActivityDetail = (props) => {
 					<TextInput
 						underlineColorAndroid="transparent"
 						selectionColor={Color.textSelectionColor}
+						placeholder={Languages.ActivityTitlePlaceHolder}
+						placeholderTextColor={Color.grey1}
 						value={title}
 						onFocus={() => setTitleFocus(true)}
 						onBlur={() => setTitleFocus(false)}
@@ -724,6 +808,8 @@ const AddActivityDetail = (props) => {
 						<TextInput
 							underlineColorAndroid="transparent"
 							selectionColor={Color.textSelectionColor}
+							placeholder={Languages.ActivityBudgetPlaceHolder}
+							placeholderTextColor={Color.grey1}
 							value={budget && String(budget)}
 							keyboardType={'numeric'}
 							onFocus={() => setBudgetFocus(true)}
@@ -761,6 +847,8 @@ const AddActivityDetail = (props) => {
 						multiline={true}
 						value={description}
 						selectionColor={Color.textSelectionColor}
+						placeholder={Languages.ActivityDescPlaceHolder}
+						placeholderTextColor={Color.grey1}
 						style={[
 							styles.inputStyle,
 							styles.description,
@@ -819,15 +907,17 @@ const AddActivityDetail = (props) => {
 					<View style={[ styles.inputWrapper, { marginTop: 0 } ]}>
 						<Text style={styles.titleStyle}>{Languages.WhereYouBeen}</Text>
 						<View style={Styles.Common.RowCenterBetween}>
-							<Animated.View style={[ styles.inputStyle, { width: locationBoxWidth } ]}>
+							<Animated.View style={[ styles.locationStyle, { width: locationBoxWidth } ]}>
 								<TextInput
 									ref={(ref) => (this._searchLocationText = ref)}
 									underlineColorAndroid="transparent"
 									selectionColor={Color.textSelectionColor}
+									placeholder={Languages.ActivityPlacePlaceHolder}
+									placeholderTextColor={Color.grey1}
 									value={location.name}
 									onFocus={() => onSearchLocationFocus()}
 									style={[
-										styles.inputTextStyle,
+										styles.locationInputTextStyle,
 										{
 											borderBottomColor: isLocationFocus ? Color.primary : Color.lightGrey1
 										}
@@ -837,9 +927,21 @@ const AddActivityDetail = (props) => {
 							</Animated.View>
 
 							<Animated.View>
-								<TouchableOpacity onPress={() => onSearchLocationBlur()}>
-									{showCancel && <Text style={styles.cancelSearchBarText}>Cancel</Text>}
-								</TouchableOpacity>
+								<Touchable
+									onPress={() => {
+										if (locationResults.length !== 0) {
+											onLocationPress(locationResults[0].place_id);
+										}
+										onSearchLocationBlur();
+									}}
+									activeOpacity={0.8}
+								>
+									<View>
+										{showCancel && (
+											<Text style={styles.cancelSearchBarText}>{Languages.Cancel}</Text>
+										)}
+									</View>
+								</Touchable>
 							</Animated.View>
 						</View>
 					</View>

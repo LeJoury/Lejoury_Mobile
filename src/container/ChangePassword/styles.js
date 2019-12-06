@@ -1,26 +1,17 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { Color, Styles } from '@common';
+import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	scrollContainer: {
-		flex: 1,
+		flexGrow: 1,
 		backgroundColor: Color.background,
-		paddingTop: 30,
-		paddingBottom: 50
-	},
-	title: {
-		fontSize: 34,
-		fontWeight: '500',
-		color: Color.darkGrey1,
-		letterSpacing: 0.3,
-		paddingHorizontal: Styles.width * 0.1
+		paddingTop: 16
 	},
 	subContain: {
-		paddingHorizontal: Styles.width * 0.1,
-		paddingBottom: 50,
-		marginTop: 40
+		paddingHorizontal: 24,
+		marginTop: 16
 	},
 	checkButtonContainer: {
 		paddingTop: 20
@@ -40,27 +31,30 @@ export default StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingTop: 0,
 		paddingBottom: 8,
-		flex: 1
+		flex: 1,
+		fontFamily: 'Quicksand-Regular'
 	},
 	buttonWrap: {
-		...Styles.Common.RowCenterRight,
-		marginTop: height / 30,
-		paddingBottom: 50
+		position: 'absolute',
+		bottom: 0
 	},
-	disabledButton: {
-		marginTop: 20,
-		width: width / 3,
-		backgroundColor: Color.lightGrey1,
-		paddingVertical: 16,
-		borderRadius: 5,
-		elevation: 1
+	buttonTextStyle: {
+		color: Color.white,
+		fontSize: 14,
+		paddingBottom: Device.isIphoneX ? 14 : 0,
+		textAlign: 'center',
+		fontFamily: 'Quicksand-Bold'
 	},
 	submitButton: {
-		marginTop: 20,
-		width: width / 3,
-		backgroundColor: Color.primary,
-		paddingVertical: 16,
-		borderRadius: 5,
-		elevation: 1
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
+		backgroundColor: Color.green1,
+		justifyContent: 'center'
+	},
+	disabledButton: {
+		width: width,
+		height: Device.isIphoneX ? 62 : 50,
+		backgroundColor: Color.lightGrey1,
+		justifyContent: 'center'
 	}
 });

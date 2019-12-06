@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles } from '@common';
 
 const { width, height } = Dimensions.get('window');
@@ -16,7 +16,16 @@ export const itemWidth = slideWidth + itemHorizontalMargin;
 
 export default StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		...Platform.select({
+			android: {
+				marginTop: 16
+			}
+		})
+	},
+	contentContainerStyle: {
+		flexGrow: 1,
+		paddingTop: Platform.OS === 'ios' ? 8 : 6
 	},
 	searchViewOverlayContainer: {
 		flex: 1,
@@ -50,7 +59,12 @@ export default StyleSheet.create({
 		paddingVertical: 6,
 		...Styles.Common.ShadowBox,
 		shadowRadius: 3,
-		shadowOffset: { width: 0, height: 1 }
+		shadowOffset: { width: 0, height: 1 },
+		...Platform.select({
+			android: {
+				height: 52
+			}
+		})
 	},
 	searchBarInputStyle: {
 		fontSize: 15,
@@ -110,21 +124,20 @@ export default StyleSheet.create({
 	},
 	itinerarySeeMoreContainer: {
 		flex: 1,
-		marginRight: 18,
+		marginHorizontal: 10,
 		...Styles.Common.ColumnCenter
 	},
 	itinerarySeeMoreInnerContainer: {
-		paddingHorizontal: 18,
-		borderRadius: 35,
-		height: 70,
+		paddingHorizontal: 14,
+		borderRadius: 30,
+		height: 58,
 		...Styles.Common.ColumnCenter,
 		...Styles.Common.ShadowBox,
 		backgroundColor: Color.white
 	},
 	itinerarySeeMoreStyle: {
 		color: Color.primary,
-		paddingVertical: 5,
-		fontFamily: 'Quicksand-Regular',
-		fontSize: 14
+		fontFamily: 'Quicksand-Medium',
+		fontSize: 13
 	}
 });

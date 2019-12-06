@@ -3,8 +3,10 @@
  */
 
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, TouchableNativeFeedback, Platform, Text, StyleSheet, View } from 'react-native';
 import { Styles, Color } from '@common';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 class Button extends React.Component {
 	render() {
@@ -20,13 +22,11 @@ class Button extends React.Component {
 			disabled
 		} = this.props;
 		return (
-			<TouchableOpacity
-				disabled={disabled}
-				style={[ styles.container, button, { backgroundColor: containerColor }, containerStyle ]}
-				onPress={onPress}
-			>
-				<Text style={[ styles.text, { color: textColor }, textStyle ]}>{text}</Text>
-			</TouchableOpacity>
+			<Touchable disabled={disabled} onPress={onPress} activeOpacity={0.8}>
+				<View style={[ styles.container, button, { backgroundColor: containerColor }, containerStyle ]}>
+					<Text style={[ styles.text, { color: textColor }, textStyle ]}>{text}</Text>
+				</View>
+			</Touchable>
 		);
 	}
 }

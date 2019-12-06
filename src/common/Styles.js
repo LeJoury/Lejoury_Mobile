@@ -3,7 +3,6 @@ import Device from './Device';
 import Color from './Color';
 
 const { height, width, heightWindow } = Dimensions.get('window');
-const showStatusBar = false;
 
 let Styles = {
 	width: Dimensions.get('window').width,
@@ -178,72 +177,75 @@ Styles.Common = {
 		borderBottomWidth: 0,
 		...Platform.select({
 			ios: {
-				height: showStatusBar ? (Device.isIphoneX ? 55 : 55) : Device.isIphoneX ? 55 : 55
+				height: Device.isIphoneX ? 55 : 55,
+				shadowColor: Color.lightGrey3,
+				shadowOpacity: 0.2,
+				shadowRadius: 2,
+				shadowOffset: { width: 0, height: 2 }
 			},
 			android: {
-				height: showStatusBar ? 50 : 50,
-				paddingTop: showStatusBar ? 0 : 0,
-				marginTop: showStatusBar ? 0 : 0,
-				elevation: 0
+				height: 58,
+				marginTop: 20,
+				elevation: 2
 			}
-		}),
-		shadowColor: Color.lightGrey3,
-		shadowOpacity: 0.2,
-		elevation: 6,
-		shadowRadius: 2,
-		shadowOffset: { width: 0, height: 2 }
+		})
 	},
-	// toolbarNoBorder: {
-	// 	backgroundColor: Color.navigationBarColor,
-	// 	borderBottomWidth: 0,
-	// 	...Platform.select({
-	// 		ios: {
-	// 			height: showStatusBar ? (Device.isIphoneX ? 55 : 55) : Device.isIphoneX ? 55 : 55
-	// 		},
-	// 		android: {
-	// 			height: showStatusBar ? 50 : 50,
-	// 			paddingTop: showStatusBar ? 0 : 0,
-	// 			marginTop: showStatusBar ? 0 : 0,
-	// 			elevation: 0
-	// 		}
-	// 	})
-	// },
 	toolbarPrimaryColor: {
 		backgroundColor: Color.primary,
 		borderBottomWidth: 0,
 		...Platform.select({
 			ios: {
-				height: showStatusBar ? (Device.isIphoneX ? 55 : 55) : Device.isIphoneX ? 55 : 55
+				height: Device.isIphoneX ? 55 : 55
 			},
 			android: {
-				height: showStatusBar ? 50 : 50,
-				paddingTop: showStatusBar ? 0 : 0,
-				marginTop: showStatusBar ? 0 : 0
+				height: 60,
+				paddingTop: 0,
+				marginTop: 0
 			}
 		})
 	},
 	toolbarTitleStyle: {
-		alignSelf: 'center',
-		textAlign: 'center',
-		flex: 1,
-		fontSize: 18,
-		fontFamily: 'Quicksand-Medium'
+		...Platform.select({
+			ios: {
+				alignSelf: 'center',
+				textAlign: 'center',
+				flex: 1,
+				fontSize: 18,
+				fontFamily: 'Quicksand-Medium'
+			},
+			android: {
+				alignSelf: 'center',
+				textAlign: 'center',
+				flex: 1,
+				fontSize: 18,
+				fontFamily: 'Quicksand-Medium',
+				marginLeft: -46
+			}
+		})
+	},
+	toolbarCenterTitleStyle: {
+		...Platform.select({
+			ios: {
+				alignSelf: 'center',
+				textAlign: 'center',
+				flex: 1,
+				fontSize: 18,
+				fontFamily: 'Quicksand-Medium'
+			},
+			android: {
+				alignSelf: 'center',
+				textAlign: 'center',
+				flex: 1,
+				fontSize: 18,
+				fontFamily: 'Quicksand-Medium'
+			}
+		})
 	},
 	headerStyle: {
 		color: Color.primary,
 		fontSize: 18,
 		textAlign: 'center',
 		alignSelf: 'center'
-	},
-	IconSearchView: {
-		backgroundColor: 'rgba(255, 255, 255, 0.9)',
-		marginBottom: 10,
-		borderRadius: 50,
-		shadowOffset: { width: 0, height: -4 },
-		shadowColor: 'rgba(0,0,0, .3)',
-		shadowOpacity: 0.1,
-		elevation: 10,
-		zIndex: 9999
 	},
 	IconSearch: {
 		width: 20,
@@ -283,7 +285,6 @@ Styles.Common = {
 		justifyContent: 'center',
 		shadowColor: Color.black,
 		shadowOpacity: 0.1,
-		elevation: 2,
 		shadowRadius: 2,
 		shadowOffset: { width: 0, height: 2 }
 	},

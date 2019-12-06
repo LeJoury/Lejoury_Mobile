@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, Platform, StyleSheet, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import {
+	View,
+	Platform,
+	StyleSheet,
+	TouchableWithoutFeedback,
+	Dimensions,
+	TouchableNativeFeedback
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import posed from 'react-native-pose';
 import { NavigationActions } from 'react-navigation';
@@ -33,7 +40,8 @@ const styles = StyleSheet.create({
 				paddingTop: Device.isIphoneX ? 12 : 0
 			},
 			android: {
-				justifyContent: 'center'
+				justifyContent: 'center',
+				borderRadius: 25
 			}
 		})
 	}
@@ -48,7 +56,7 @@ const S = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		height: 42,
-		elevation: 2,
+		// elevation: 2,
 		alignItems: 'center'
 	},
 	tabButton: { flex: 1 },
@@ -65,7 +73,11 @@ const S = StyleSheet.create({
 		backgroundColor: Color.primary,
 		borderRadius: 24
 	},
-	scaler: { flex: 1, alignItems: 'center', justifyContent: 'center' }
+	scaler: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
 });
 
 class TabBar extends PureComponent {
@@ -81,6 +93,7 @@ class TabBar extends PureComponent {
 					this.props.navigation.dispatch({
 						type: 'Navigation/RESET',
 						index: 0,
+						key: null,
 						actions: [ NavigationActions.navigate({ routeName: 'Main' }) ]
 					});
 				} else if (activeRouteIndex === 1) {
@@ -127,24 +140,44 @@ class TabBar extends PureComponent {
 								return <View key={route.key} />;
 							}
 
-							return (
-								<TouchableWithoutFeedback
-									key={route.key}
-									style={styles.tab}
-									onPress={this.onPress.bind(this, route.key, index, activeRouteIndex)}
-								>
-									<Animatable.View ref={'tabItem' + index} style={styles.tab}>
-										<Scaler pose={focused ? 'active' : 'inactive'} style={S.scaler}>
-											{renderIcon({
-												route,
-												index,
-												focused,
-												tintColor
-											})}
-										</Scaler>
-									</Animatable.View>
-								</TouchableWithoutFeedback>
-							);
+							if (Platform.OS === 'ios') {
+								return (
+									<TouchableWithoutFeedback
+										key={route.key}
+										style={styles.tab}
+										onPress={this.onPress.bind(this, route.key, index, activeRouteIndex)}
+									>
+										<Animatable.View ref={'tabItem' + index} style={styles.tab}>
+											<Scaler pose={focused ? 'active' : 'inactive'} style={S.scaler}>
+												{renderIcon({
+													route,
+													index,
+													focused,
+													tintColor
+												})}
+											</Scaler>
+										</Animatable.View>
+									</TouchableWithoutFeedback>
+								);
+							} else {
+								return (
+									<TouchableNativeFeedback
+										key={route.key}
+										onPress={this.onPress.bind(this, route.key, index, activeRouteIndex)}
+									>
+										<Animatable.View ref={'tabItem' + index} style={styles.tab}>
+											<Scaler pose={focused ? 'active' : 'inactive'} style={S.scaler}>
+												{renderIcon({
+													route,
+													index,
+													focused,
+													tintColor
+												})}
+											</Scaler>
+										</Animatable.View>
+									</TouchableNativeFeedback>
+								);
+							}
 						})}
 				</View>
 			</View>

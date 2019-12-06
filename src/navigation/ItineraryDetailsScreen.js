@@ -10,18 +10,22 @@ import { NoInternetNotice } from '@components';
 import { Color, Styles } from '@common';
 
 class ItineraryDetailsScreen extends PureComponent {
-	static navigationOptions = ({ navigation }) => ({
-		// headerLeft: Back(navigation, Color.primary),
-		// title: navigation.state.routeName, // journey name
-		// headerTitleStyle: Styles.Common.headerStyle
-	});
+	// static navigationOptions = ({ navigation }) => ({
+	//
+	// });
 
 	render() {
 		const { navigation } = this.props;
-		const { itinerary } =  this.props.navigation.state.params;
+		const { itinerary } = this.props.navigation.state.params;
 
 		return (
 			<View style={Styles.Common.FullFlex}>
+				<StatusBar
+					backgroundColor={Color.transparent1}
+					translucent={true}
+					barStyle="dark-content"
+					showHideTransition="fade"
+				/>
 				<ItineraryDetails navigation={navigation} itinerary={itinerary} />
 				<NoInternetNotice />
 			</View>

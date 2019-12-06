@@ -5,9 +5,10 @@ const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		paddingHorizontal: 12
 	},
-	scrollViewContentContainerStyle:{
+	scrollViewContentContainerStyle: {
 		flexGrow: 1
 	},
 	separatorWrap: {

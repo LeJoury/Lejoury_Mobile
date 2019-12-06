@@ -144,7 +144,8 @@ export default StyleSheet.create({
 	//main
 	main_Card: {
 		paddingBottom: 5,
-		margin: 12,
+		marginVertical: 12,
+		marginLeft: 12,
 		...Styles.Common.ShadowBox
 	},
 	main_Image: {
@@ -199,6 +200,26 @@ export default StyleSheet.create({
 		fontSize: 14,
 		color: Color.white,
 		fontFamily: 'Quicksand-Medium'
+	},
+	shimmer_MainCard: {
+		paddingBottom: 5,
+		margin: 12,
+		flex: 1
+	},
+	shimmer_ImageContainer: {
+		width: width / 1.5,
+		flex: 1,
+		height: 230,
+		alignSelf: 'stretch',
+		borderRadius: 10,
+		overflow: 'hidden'
+	},
+	shimmer_LongTextContainer: {
+		marginTop: 10
+	},
+	shimmer_ShortTextContainer: {
+		width: 80,
+		marginTop: 10
 	},
 	//country
 	countryRow: {

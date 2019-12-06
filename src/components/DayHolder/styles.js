@@ -5,20 +5,23 @@ const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	draftContainer: {
-		marginHorizontal: 12,
-		paddingBottom: 10,
-		borderColor: Color.lightGrey4
+		padding: 0,
+		marginBottom: 12,
+		// paddingBottom: 10,
+		...Styles.Common.ShadowBox,
+		// shadowOffset: { width: 0, height: 2 }
 	},
 	draftImageWrapper: {
 		width: '100%',
-		height: 200
+		height: 200,
+		backgroundColor: Color.white,
+		shadowOffset: { width: 0, height: 2 }
 	},
 	draftContentContainer: {
 		flex: 3,
 		paddingHorizontal: 12,
 		paddingVertical: 8,
-		backgroundColor: Color.white,
-		...Styles.Common.ShadowBox
+		backgroundColor: Color.white
 	},
 	draftActivityText: {
 		fontSize: 16,
@@ -36,6 +39,19 @@ export default StyleSheet.create({
 		color: Color.lightGrey3,
 		textAlign: 'right',
 		fontFamily: 'Quicksand-Regular'
+	},
+	draftEmptyImageContainer: {
+		width: '100%',
+		height: 200,
+		backgroundColor: Color.lightGrey5,
+		...Styles.Common.ColumnCenter
+	},
+	draftEmptyImageDesc: {
+		fontSize: 16,
+		color: Color.white,
+		fontFamily: 'Quicksand-Bold',
+		paddingHorizontal: 24,
+		paddingVertical: 18
 	},
 
 	//main

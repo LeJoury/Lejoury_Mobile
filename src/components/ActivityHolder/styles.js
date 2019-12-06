@@ -9,7 +9,8 @@ export default StyleSheet.create({
 	container: {
 		flex: 1,
 		borderWidth: 1,
-		borderColor: Color.lightGrey2
+		borderColor: Color.lightGrey2,
+		width: width
 	},
 	gradientContainer: {
 		position: 'absolute',

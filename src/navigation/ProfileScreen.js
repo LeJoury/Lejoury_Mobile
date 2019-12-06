@@ -1,21 +1,18 @@
 import React, { PureComponent } from 'react';
+import { StatusBar, View } from 'react-native';
 
 import { connect } from 'react-redux';
 
 import { Profile } from '@container';
+import { Color, Styles } from '@common';
 
 class ProfileScreen extends PureComponent {
-	// static navigationOptions = ({ navigation }) => ({
-	// 	headerTitle: Title(navigation.getParam(KEY_USERNAME), Color.headerTitleColor),
-	// 	headerRight: Settings(navigation, Color.lightGrey3)
-	// });
-
-	// componentWillMount() {
-	// 	this.props.navigation.setParams({ [KEY_USERNAME]: this.props.user.username });
-	// }
-
 	render() {
-		return <Profile navigation={this.props.navigation} />;
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<Profile navigation={this.props.navigation} />
+			</View>
+		);
 	}
 }
 

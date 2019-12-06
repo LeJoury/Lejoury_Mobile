@@ -95,7 +95,8 @@ Constants.URL = {
 		URL_COUNTRY_LIST: 'country-list',
 		URL_BY_COUNTRY: 'by-country',
 		URL_BOOKMARK: 'bookmarks',
-		URL_HOME: 'home'
+		URL_HOME: 'home',
+		URL_CHANGE_PASSWORD: 'change-password'
 	}
 };
 
@@ -174,12 +175,16 @@ Constants.PARAMS = {
 		TYPES: 'types',
 		LOCATION_URL: 'url',
 		ALPHA2: 'alpha2',
-		FULLADDRESS: 'fullAddress'
+		FULLADDRESS: 'fullAddress',
+		PLACE_ID: 'googlePlaceId'
 	},
 	PARAMS_TRAVELLER: {
 		TRAVELLER_ID: 'travellerId',
 		TYPE: 'type',
-		ITINERARY_ID: 'itineraryId'
+		ITINERARY_ID: 'itineraryId',
+		USER_ID: 'userId',
+		NEW_PASSWORD: 'newPassword',
+		OLD_PASSWORD: 'oldPassword'
 	},
 	PARAMS_BOOKMARK: {
 		ID: 'id',

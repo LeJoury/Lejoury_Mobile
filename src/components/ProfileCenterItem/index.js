@@ -1,12 +1,16 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, Platform, TouchableNativeFeedback, View } from 'react-native';
 
 import styles from './styles';
 
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+
 const ProfileCenterItem = ({ label, onPress }) => (
-	<TouchableOpacity style={styles.centerRow} onPress={onPress}>
-		<Text style={styles.centerText}>{label}</Text>
-	</TouchableOpacity>
+	<Touchable onPress={onPress} activeOpacity={0.8}>
+		<View style={styles.centerRow}>
+			<Text style={styles.centerText}>{label}</Text>
+		</View>
+	</Touchable>
 );
 
 export default ProfileCenterItem;

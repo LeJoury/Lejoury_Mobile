@@ -8,17 +8,23 @@ import {
 	Image,
 	TextInput,
 	Alert,
-	Dimensions
+	Dimensions,
+	Platform,
+	BackHandler,
+	TouchableNativeFeedback
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import { check, request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
 
 import { connect } from 'react-redux';
 import { getProfile, uploadProfilePhoto, editProfile } from '@actions';
 
-import { Styles, Languages, Color, Images, Constants, Device } from '@common';
+import { Styles, Languages, Color, Images, Constants, showOkCancelAlert } from '@common';
 import { Spinner } from '@components';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { width, height } = Dimensions.get('window');
 const { Mode, Sizes } = Constants.Spinner;
@@ -41,12 +47,20 @@ const EditProfile = (props) => {
 
 	useEffect(() => {
 		props.onRef(this);
+		BackHandler.addEventListener('hardwareBackPress', handleBackButtonPressAndroid);
 
 		return () => {
+			BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPressAndroid);
+
 			props.onRef(undefined);
 			ImagePicker.clean();
 		};
 	}, []);
+
+	const handleBackButtonPressAndroid = () => {
+		showDiscardAlert();
+		return true;
+	};
 
 	//parent called
 	onConfirmSave = async () => {
@@ -88,7 +102,7 @@ const EditProfile = (props) => {
 		}
 	};
 
-	const onPressUploadProfilePhoto = () => {
+	const onUploadProfilePhoto = () => {
 		ImagePicker.openPicker({
 			cropping: true,
 			cropperCircleOverlay: true,
@@ -103,6 +117,77 @@ const EditProfile = (props) => {
 				setProfilePhoto(image.path);
 			}
 		});
+	};
+
+	const checkPermission = () => {
+		if (Platform.OS === 'ios') {
+			check(PERMISSIONS.IOS.PHOTO_LIBRARY).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						console.log('undenied');
+						request(PERMISSIONS.IOS.PHOTO_LIBRARY).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('undenied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadProfilePhoto();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadProfilePhoto();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+							openSettings().catch(() => console.warn('cannot open settings'))
+						);
+						break;
+				}
+			});
+		} else {
+			check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('denied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadProfilePhoto();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadProfilePhoto();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						// showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+						// 	openSettings().catch(() => console.warn('cannot open settings'))
+						// );
+						break;
+				}
+			});
+		}
 	};
 
 	const renderLoading = () => {
@@ -125,9 +210,9 @@ const EditProfile = (props) => {
 							source={profilePhoto ? { uri: profilePhoto } : Images.defaultAvatar}
 							style={styles.profileImage}
 						/>
-						<TouchableOpacity style={Styles.Common.FullFlex} onPress={onPressUploadProfilePhoto}>
+						<Touchable activeOpacity={0.8} style={Styles.Common.FullFlex} onPress={checkPermission}>
 							<Text style={styles.profileImageText}>{Languages.ChangeProfilePicture}</Text>
-						</TouchableOpacity>
+						</Touchable>
 					</View>
 					<View style={styles.inputContainer}>
 						<View style={[ styles.inputWrapper, { marginTop: 0 } ]}>

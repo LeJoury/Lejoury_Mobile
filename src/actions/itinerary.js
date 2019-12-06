@@ -344,6 +344,8 @@ const updateActivity = (activityId, activity, token, itineraryId, date, identifi
 	return new Promise((resolve, reject) => {
 		UPDATE_ACTIVITY(activityId, activity, token, itineraryId, date, identifier)
 			.then((result) => {
+				console.log(result);
+
 				if (result.statusCode === STATUS.SUCCESS) {
 					let filteredArray = activity.photos.filter((photo) => {
 						return !photo.hasOwnProperty('id');
@@ -418,7 +420,6 @@ const deleteActivityPhoto = (photoId, activityId, itineraryId, token) => async (
 
 // ----------------------------------- get draft itineraries ----------------------------------- //
 const getDraftItineraries = (token, userId, page = 1) => async (dispatch) => {
-	console.log(page);
 	return new Promise((resolve, reject) => {
 		GET_DRAFT_ITINERARIES(token, userId, page)
 			.then((result) => {
@@ -426,6 +427,7 @@ const getDraftItineraries = (token, userId, page = 1) => async (dispatch) => {
 					const { content, last } = result.data;
 					let response = { OK: true };
 
+					console.log(content);
 					if (page === 1) {
 						dispatch({
 							type: Types.ADD_ITINERARIES,

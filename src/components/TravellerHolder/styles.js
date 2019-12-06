@@ -7,7 +7,6 @@ export default StyleSheet.create({
 		padding: 0,
 		marginTop: 16,
 		marginHorizontal: 10,
-		flex: 1,
 		width: width / 4.5,
 		...Styles.Common.ColumnCenter
 	},
@@ -18,21 +17,25 @@ export default StyleSheet.create({
 		borderRadius: 35,
 		borderWidth: 1,
 		borderColor: Color.lightGrey6,
-		...Styles.Common.ColumnCenter,
-		...Styles.Common.ShadowBox
+		backgroundColor: Color.white,
+		...Styles.Common.ColumnCenter
 	},
 	travellerImage: {
-		width: 80,
-		height: 80,
-		borderRadius: 40,
-		borderWidth: 1,
-		borderColor: Color.lightGrey2
+		overflow: 'hidden',
+		width: 70,
+		height: 70,
+		borderRadius: 35
 	},
 	travellerNameStyle: {
-		marginTop: 2,
+		marginTop: 6,
 		fontSize: 12,
 		textAlign: 'center',
 		fontFamily: 'Quicksand-Bold',
 		color: Color.grey1
+	},
+	shimmeringNameStyle: {
+		marginTop: 4,
+		width: 65,
+		height: 12
 	}
 });

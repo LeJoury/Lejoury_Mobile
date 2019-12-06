@@ -16,7 +16,7 @@ class LandingScreen extends PureComponent {
 		return (
 			<View style={Styles.Common.FullFlex}>
 				<StatusBar
-					backgroundColor={Color.transparent1}
+					backgroundColor={Color.white}
 					translucent={true}
 					barStyle="dark-content"
 					showHideTransition="fade"

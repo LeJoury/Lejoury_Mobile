@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 
 import { Back, Title } from './IconNav';
 
@@ -17,7 +17,7 @@ class ViewImagesScreen extends PureComponent {
 	render() {
 		const { navigation } = this.props;
 		const images = navigation.state.params.images;
-		
+
 		return (
 			<View style={Styles.Common.FullFlex}>
 				<ViewImages navigation={navigation} images={images} />

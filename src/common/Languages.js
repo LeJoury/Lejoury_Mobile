@@ -19,7 +19,7 @@ export default {
 	Success: 'Success',
 	Save: 'Save',
 	Send: 'Send',
-	Delete:'Delete',
+	Delete: 'Delete',
 	SomethingWentWrong: 'Something went wrong.',
 
 	HelloThere: 'Hello There!',
@@ -37,7 +37,7 @@ export default {
 	Discard: 'Discard',
 	SaveAsDraft: 'Save draft',
 	SetStatusToDraft: 'Set to Draft ?',
-	SetToDraft:'Set To Draft',
+	SetToDraft: 'Set To Draft',
 	Remove: 'Remove',
 	RemoveConfirmationActivityTitle: 'Remove Activity',
 	RemoveConfirmationActivity: 'Are you sure to remove this activity ?',
@@ -172,6 +172,8 @@ export default {
 	Countries: 'Countries',
 	Experiences: 'Experiences',
 	About: 'About',
+	ChangePasswordSuccessTitle: 'Successfully',
+	ChangePasswordSuccessMessage: 'Successfully changed your password.',
 
 	//Crop Image
 	MoveScale: 'Move and Scale',
@@ -279,10 +281,12 @@ export default {
 	DateIncorrectMessage: 'End date cannot before than start date',
 	Journeys: 'Journeys',
 	AddItinerary: 'There is no journey yet. Add a new one ?',
+	ShareCoverPhoto: 'Share Your Cover Photo',
 	CoverPhotoNeededTitle: 'Cover Photo',
 	CoverPhotoNeededMessage: 'Please upload a cover photo for your beloved itinerary thumbnail ',
 	SuccessfullyPublishedTitle: 'Congratulation !',
 	SuccessfullyPublishedMessage: 'You have successfully published your itinerary !',
+	OpenSettings: 'Please enable your permission for uploading image.',
 
 	// Add Itinerary
 	TotalDays: 'Total Days',
@@ -305,17 +309,17 @@ export default {
 	Memories: 'Memories',
 	Arrival: 'Arrival',
 	Departure: 'Departure',
-	FirstDayFirstActivityTitle:'Itinerary reach the starting point',
-	FirstDayFirstActivity:'This is the first day of the itinerary',
-	LastDayLastActivityTitle:'Itinerary reach the end point',
-	LastDayLastActivity:'This is the last day of the itinerary',
+	FirstDayFirstActivityTitle: 'Itinerary reach the starting point',
+	FirstDayFirstActivity: 'This is the first day of the itinerary',
+	LastDayLastActivityTitle: 'Itinerary reach the end point',
+	LastDayLastActivity: 'This is the last day of the itinerary',
 
 	//Quote
 	ShareYourQuote: 'Share your quote of the trip...',
 	Quote: 'Quote',
-	
+
 	// Activity Holder
-	ShareYourPhotos: 'Share Your Photos',
+	ShareYourPhotos: 'Share Your Moments',
 	AddDescription: 'Add Description',
 	AddBudget: 'Add Budget',
 	SorryMax6Images: 'Only 6 images are allowed. ',
@@ -330,6 +334,14 @@ export default {
 	Bookmark: 'Bookmark',
 	IStory: "I's Story",
 	Directions: 'Directions',
+	ActivityPlacePlaceHolder: 'eg. Hanoi, Vietnam',
+	ActivityTitlePlaceHolder: 'eg. Unforgettable memories !',
+	ActivityBudgetPlaceHolder: 'eg. 30',
+	ActivityDescPlaceHolder:
+		'Eg : \n\n' +
+		'- Share you departure time and place.\n\n' +
+		'- Review the place or activity.\n' +
+		'- Remember to share your memories and fun moments.',
 
 	//Itinerary Detail
 	ViewImage: 'View',

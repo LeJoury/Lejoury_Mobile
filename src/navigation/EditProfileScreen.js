@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 
 import { Title, Back, Save } from './IconNav';
 
@@ -7,6 +7,10 @@ import { EditProfile } from '@container';
 
 import { NoInternetNotice } from '@components';
 import { Color, Languages, Styles } from '@common';
+// defaultNavigationOptions: {
+// 	gesturesEnabled: false,
+// 	headerStyle: Styles.Common.toolbar
+// }
 
 class EditProfileScreen extends PureComponent {
 	static navigationOptions = ({ navigation }) => {
@@ -15,7 +19,8 @@ class EditProfileScreen extends PureComponent {
 		return {
 			headerTitle: Title(Languages.EditProfile, Color.headerTitleColor),
 			headerLeft: Back(navigation, Color.primary, params.handleOnBack),
-			headerRight: Save(navigation, Color.blue1, params.handleOnSave)
+			headerRight: Save(navigation, Color.blue1, params.handleOnSave),
+			gesturesEnabled: true
 		};
 	};
 
@@ -29,7 +34,7 @@ class EditProfileScreen extends PureComponent {
 
 	_onConfirmSave = () => {
 		this.child.onConfirmSave();
-	}
+	};
 
 	render() {
 		const { navigation } = this.props;

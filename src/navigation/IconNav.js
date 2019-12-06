@@ -1,28 +1,12 @@
 import React from 'react';
-import { View, Platform, Image, TouchableOpacity, Text } from 'react-native';
+import { View, Platform, Image, TouchableOpacity, TouchableNativeFeedback, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Styles, Color, Device, Images, Languages } from '@common';
 
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+
 const hitSlop = { top: 0, right: 15, bottom: 0, left: 15 };
 // Icons for HeaderBar
-const Logo = () => <Image source={Images.splashScreenLogo} style={Styles.Common.logo} />;
-
-const BlackBackView = (navigation, iconBack) => (
-	<TouchableOpacity
-		hitSlop={hitSlop}
-		onPress={() => {
-			navigation.goBack(null);
-		}}
-	>
-		<Image
-			source={iconBack ? iconBack : Images.icons.back}
-			style={[ Styles.Common.toolbarIcon, iconBack && Styles.Common.iconBack ]}
-		/>
-	</TouchableOpacity>
-);
-
-const EmptyView = () => <View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]} />;
-
 const Title = (title, color) => (
 	<Text ellipsizeMode={'tail'} numberOfLines={1} style={[ Styles.Common.toolbarTitleStyle, { color: color } ]}>
 		{title}
@@ -30,30 +14,16 @@ const Title = (title, color) => (
 );
 
 const Settings = (navigation, color = Color.black) => (
-	<View style={[ Styles.Common.Row, Platform.OS !== 'ios' && { right: -12 } ]}>
-		<TouchableOpacity style={{ padding: 15 }} hitSlop={hitSlop} onPress={() => navigation.navigate('Settings')}>
+	<Touchable activeOpacity={0.8} hitSlop={hitSlop} onPress={() => navigation.navigate('Settings')}>
+		<View style={[ Styles.Common.Row, { right: 12, padding: 15 } ]}>
 			<Icon name="settings" type="feather" color={color} size={Styles.IconSize.ToolBar} />
-		</TouchableOpacity>
-	</View>
-);
-
-const TransparentHeader = (navigation, title, color = Color.black) => (
-	<View style={[ Styles.Common.RowCenterBetween, Platform.OS !== 'ios' && { right: -12 } ]}>
-		<View style={{ flex: 1, padding: 15 }} />
-		<Text style={[ Styles.Common.toolbarTitleStyle, { color: color, flex: 1 } ]}>{title}</Text>
-		<TouchableOpacity
-			style={{ padding: 15, flex: 1, alignItems: 'flex-end' }}
-			hitSlop={hitSlop}
-			onPress={() => navigation.navigate('Settings')}
-		>
-			<Icon name="settings" type="feather" color={Color.lightGrey3} />
-		</TouchableOpacity>
-	</View>
+		</View>
+	</Touchable>
 );
 
 const Back = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={{ paddingHorizontal: 15, paddingVertical: 10 }}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -65,13 +35,15 @@ const Back = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="chevron-left" type="feather" color={color} />
-	</TouchableOpacity>
+		<View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
+			<Icon name="chevron-left" type="feather" color={color} />
+		</View>
+	</Touchable>
 );
 
 const Add = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={{ paddingHorizontal: 15, paddingVertical: 10 }}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -83,13 +55,15 @@ const Add = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="plus" type="feather" color={color} />
-	</TouchableOpacity>
+		<View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
+			<Icon name="plus" type="feather" color={color} />
+		</View>
+	</Touchable>
 );
 
 const AddBookmark = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -101,13 +75,15 @@ const AddBookmark = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="bookmark-o" type={'font-awesome'} color={color} size={18} />
-	</TouchableOpacity>
+		<View style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}>
+			<Icon name="bookmark-o" type={'font-awesome'} color={color} size={18} />
+		</View>
+	</Touchable>
 );
 
 const RemoveBookmark = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -119,31 +95,15 @@ const RemoveBookmark = (navigation, color = Color.white, onPress = undefined) =>
 			)
 		}
 	>
-		<Icon name="bookmark" type={'font-awesome'} color={color} size={18} />
-	</TouchableOpacity>
-);
-
-const ViewImages = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
-		hitSlop={hitSlop}
-		onPress={
-			onPress === undefined ? (
-				() => {
-					navigation.goBack(null);
-				}
-			) : (
-				onPress
-			)
-		}
-	>
-		<Icon name="image" type="feather" color={color} size={18} />
-	</TouchableOpacity>
+		<View style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}>
+			<Icon name="bookmark" type={'font-awesome'} color={color} size={18} />
+		</View>
+	</Touchable>
 );
 
 const CircleBack = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -155,13 +115,15 @@ const CircleBack = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="chevron-left" type="feather" color={color} />
-	</TouchableOpacity>
+		<View style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}>
+			<Icon name="chevron-left" type="feather" color={color} />
+		</View>
+	</Touchable>
 );
 
 const MoreOptions = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -173,25 +135,15 @@ const MoreOptions = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Icon name="more-vertical" type="feather" color={color} />
-	</TouchableOpacity>
-);
-
-const Cancel = (navigation, color = Color.white) => (
-	<TouchableOpacity
-		style={{ padding: 15 }}
-		hitSlop={hitSlop}
-		onPress={() => {
-			navigation.goBack(null);
-		}}
-	>
-		<Icon name="x" type="feather" color={color} />
-	</TouchableOpacity>
+		<View style={[ Styles.Common.FloatCircle, { marginTop: 12 } ]}>
+			<Icon name="more-vertical" type="feather" color={color} />
+		</View>
+	</Touchable>
 );
 
 const Save = (navigation, color = Color.white, onPress = undefined) => (
-	<TouchableOpacity
-		style={{ padding: 15 }}
+	<Touchable
+		activeOpacity={0.8}
 		hitSlop={hitSlop}
 		onPress={
 			onPress === undefined ? (
@@ -203,32 +155,22 @@ const Save = (navigation, color = Color.white, onPress = undefined) => (
 			)
 		}
 	>
-		<Text
-			style={{
-				color,
-				fontSize: 16,
-				fontFamily: 'Quicksand-Medium'
-			}}
-		>
-			{Languages.Done}
-		</Text>
-	</TouchableOpacity>
+		<View style={{ padding: 15 }}>
+			{Platform.OS === 'ios' ? (
+				<Text
+					style={{
+						color,
+						fontSize: 16,
+						fontFamily: 'Quicksand-Medium'
+					}}
+				>
+					{Languages.Done}
+				</Text>
+			) : (
+				<Icon name="check" type="feather" color={Color.black} />
+			)}
+		</View>
+	</Touchable>
 );
 
-export {
-	Logo,
-	BlackBackView,
-	EmptyView,
-	Title,
-	Back,
-	CircleBack,
-	Cancel,
-	Settings,
-	TransparentHeader,
-	Add,
-	AddBookmark,
-	RemoveBookmark,
-	MoreOptions,
-	ViewImages,
-	Save
-};
+export { Title, Back, CircleBack, Settings, Add, AddBookmark, RemoveBookmark, MoreOptions, Save };

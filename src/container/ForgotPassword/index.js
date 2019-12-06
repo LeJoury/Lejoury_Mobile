@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Animated, KeyboardAvoidingView } from 'react-native';
+import { View, Animated, KeyboardAvoidingView, BackHandler } from 'react-native';
 
 import { Button, Spinner, AnimatedTextInput } from '@components';
 import { Color, Languages, showOkAlert, validateEmail, createStaggerAnimationStyle } from '@common';
@@ -32,7 +32,18 @@ const ForgotPassword = (props) => {
 		]).start(() => {
 			this._emailAddress.getNode().focus();
 		});
+
+		BackHandler.addEventListener('hardwareBackPress', handleBackButtonPressAndroid);
+
+		return () => {
+			BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPressAndroid);
+		};
 	}, []);
+
+	const handleBackButtonPressAndroid = () => {
+		props.navigation.goBack(null);
+		return true;
+	};
 
 	const onChangeEmailAddress = (value) => {
 		setEmailAddressDirty(true);

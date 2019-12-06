@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles } from '@common';
 
 const { width, height } = Dimensions.get('window');
@@ -7,7 +7,7 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	scrollViewContentContainerStyle:{
+	scrollViewContentContainerStyle: {
 		flexGrow: 1
 	},
 	searchBarContainerStyle: {
@@ -16,7 +16,12 @@ export default StyleSheet.create({
 		paddingHorizontal: 18
 	},
 	searchBarInputContainerStyle: {
-		backgroundColor: Color.lightGrey6
+		backgroundColor: Color.lightGrey6,
+		...Platform.select({
+			android: {
+				borderRadius: 6
+			}
+		})
 	},
 	searchBarInputStyle: {
 		fontSize: 15,

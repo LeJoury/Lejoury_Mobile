@@ -1,20 +1,28 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, Platform, TouchableNativeFeedback } from 'react-native';
 
 import styles from './styles';
+import Languages from '../../common/Languages';
 
-const UploadImageBox = ({ background, onPress= undefined, hide = false }) => (
-	<TouchableOpacity onPress={() => onPress()} activeOpacity={0.9}>
-		<ImageBackground source={hide === true ? { uri: background } : background} style={styles.bgImageContainer}>
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+
+const UploadImageBox = ({ background, onPress = undefined, hide = false }) => (
+	<Touchable onPress={() => onPress()} activeOpacity={0.8}>
+		<ImageBackground
+			source={hide === true ? { uri: background } : background}
+			style={styles.bgImageContainer}
+			resizeMode={'cover'}
+		>
 			{hide === false && (
-				<TouchableOpacity style={styles.container} activeOpacity={0.9} onPress={() => onPress()}>
-					<View style={styles.uploadContainer}>
-						<Text style={styles.uploadTextStyle}>Share Your Cover Photo</Text>
-						<Text style={styles.uploadDescriptionTextStyle}>400 x 400 preferrable</Text>
-					</View>
-				</TouchableOpacity>
+				<View style={styles.container}>
+					<Touchable activeOpacity={0.9} onPress={() => onPress()}>
+						<View style={styles.uploadContainer}>
+							<Text style={styles.uploadTextStyle}>{Languages.ShareCoverPhoto}</Text>
+						</View>
+					</Touchable>
+				</View>
 			)}
 		</ImageBackground>
-	</TouchableOpacity>
+	</Touchable>
 );
 export default UploadImageBox;

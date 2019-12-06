@@ -27,8 +27,8 @@ export default StyleSheet.create({
 		position: 'absolute',
 		top: 0,
 		left: 0,
-		right: 0,
-		zIndex: 99999
+		right: 0
+		// zIndex: 99999
 	},
 	paginationWrapper: {
 		position: 'absolute',
@@ -52,9 +52,12 @@ export default StyleSheet.create({
 		minHeight: height / 1.2,
 		paddingBottom: 30,
 		marginTop: -15,
-		...Styles.Common.ShadowBox,
-		shadowOffset: { width: 0, height: -10 },
-		shadowColor: Color.black20T
+		...Platform.select({
+			ios: {
+				shadowOffset: { width: 0, height: -10 },
+				shadowColor: Color.black20T
+			}
+		})
 	},
 	contentWrapper: {
 		marginTop: 18,
@@ -147,7 +150,8 @@ export default StyleSheet.create({
 		paddingVertical: 24
 	},
 	navigatorContainer: {
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	nextNavigatorTextStyle: {
 		fontSize: 15,

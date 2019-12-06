@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { View, Alert, Animated, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
+import {
+	View,
+	Alert,
+	Animated,
+	Text,
+	Dimensions,
+	Image,
+	TouchableOpacity,
+	BackHandler,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import ActionSheet from 'react-native-actionsheet';
 import { Icon } from 'react-native-elements';
@@ -23,6 +34,8 @@ import { Styles, Languages, Color, Device, Constants, showOkAlert } from '@commo
 import { TravellerInfoHolder, Timeline, Spinner, Button } from '@components';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { width, height } = Dimensions.get('window');
 
@@ -53,8 +66,40 @@ class ItineraryDetails extends Component {
 		};
 	}
 
-	componentDidMount = async () => {
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	componentDidMount = () => {
 		this.setState({ isLoading: true });
+		// try {
+		// 	const { itinerary } = this.state;
+
+		// 	let response = await this.props.getItineraryById(this.props.user.token, itinerary.itineraryId);
+
+		// 	if (response.OK) {
+		// 		this.setState({
+		// 			isLoading: false,
+		// 			itinerary: response.itinerary
+		// 		});
+		// 	}
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+	};
+
+	componentDidUpdate() {}
+
+	handleBackButtonPressAndroid = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
+
+	willFocusSubscription = this.props.navigation.addListener('willFocus', async (payload) => {
 		try {
 			const { itinerary } = this.state;
 
@@ -69,29 +114,7 @@ class ItineraryDetails extends Component {
 		} catch (error) {
 			console.log(error);
 		}
-	};
-
-	//TODO: pull to refresh
-
-	componentDidUpdate() {}
-
-	willFocusSubscription = this.props.navigation.addListener('willFocus', async (payload) => {
-		try {
-			const { itinerary } = this.state;
-
-			let response = await this.props.getItineraryById(this.props.user.token, itinerary.itineraryId);
-
-			if (response.OK) {
-				this.setState({
-					itinerary: response.itinerary
-				});
-			}
-		} catch (error) {
-			console.log(error);
-		}
 	});
-
-	componentWillUnmount() {}
 
 	updateActivityBookmark = (result, id) => {
 		var tmpItinerary = this.state.itinerary;
@@ -403,6 +426,28 @@ class ItineraryDetails extends Component {
 		);
 	};
 
+	renderBookmark = () => {
+		const { navigation, user } = this.props;
+		const { itinerary } = this.state;
+		const { traveller } = itinerary;
+
+		const isMe = traveller.userId === user.userId;
+
+		if (isMe) {
+			return;
+		}
+
+		return (
+			<View style={[ styles.bookmarkButton, { top: backTop } ]}>
+				{itinerary.bookmarked ? (
+					RemoveBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
+				) : (
+					AddBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
+				)}
+			</View>
+		);
+	};
+
 	renderForeground = () => {
 		const { navigation, user } = this.props;
 		const { itinerary } = this.state;
@@ -415,13 +460,7 @@ class ItineraryDetails extends Component {
 				<View style={styles.navButtonWrapper}>
 					<View style={[ styles.backButton, { top: backTop } ]}>{CircleBack(navigation, Color.white)}</View>
 					<View style={Styles.Common.Row}>
-						<View style={[ styles.bookmarkButton, { top: backTop } ]}>
-							{itinerary.bookmarked ? (
-								RemoveBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
-							) : (
-								AddBookmark(navigation, Color.white, this.onItineraryBookmarkPress)
-							)}
-						</View>
+						{this.renderBookmark()}
 						{isMe && (
 							<View style={[ styles.moreButton, { top: backTop } ]}>
 								{MoreOptions(navigation, Color.white, this.onMoreOptionPress)}
@@ -429,15 +468,17 @@ class ItineraryDetails extends Component {
 						)}
 					</View>
 				</View>
-				<TouchableOpacity style={styles.viewImageWrapper} onPress={this.onGoToViewImages}>
-					<Icon name="image" type="feather" color={Color.lightGrey6} size={16} />
-					<Button
-						text={Languages.ViewImage}
-						textStyle={styles.viewImageTextStyle}
-						containerStyle={styles.viewImageButton}
-						onPress={this.onGoToViewImages}
-					/>
-				</TouchableOpacity>
+				<Touchable activeOpacity={0.8} onPress={this.onGoToViewImages}>
+					<View style={styles.viewImageWrapper}>
+						<Icon name="image" type="feather" color={Color.lightGrey6} size={16} />
+						<Button
+							text={Languages.ViewImage}
+							textStyle={styles.viewImageTextStyle}
+							containerStyle={styles.viewImageButton}
+							onPress={this.onGoToViewImages}
+						/>
+					</View>
+				</Touchable>
 
 				{itinerary.quote !== '' &&
 				itinerary.quote && (

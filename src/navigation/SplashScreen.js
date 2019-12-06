@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { NoInternetNotice } from '@components';
 
 import { connect } from 'react-redux';
 import { refreshToken } from '@actions';
 
 import { Splash } from '@components';
-import { Styles } from '@common';
+import { Color, Styles } from '@common';
 
 class SplashScreen extends PureComponent {
 	performTimeConsumingTask = async () => {
@@ -60,6 +60,12 @@ class SplashScreen extends PureComponent {
 	render() {
 		return (
 			<View style={Styles.Common.FullFlex}>
+				<StatusBar
+					backgroundColor={Color.transparent1}
+					translucent={true}
+					barStyle="dark-content"
+					showHideTransition="fade"
+				/>
 				<Splash />
 				<NoInternetNotice />
 			</View>

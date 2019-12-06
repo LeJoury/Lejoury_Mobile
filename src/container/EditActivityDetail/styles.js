@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
@@ -72,18 +72,13 @@ export default StyleSheet.create({
 		width: width - 36,
 		fontSize: 14,
 		marginHorizontal: 18,
-		marginTop: 10,
+		marginTop: Platform.OS === 'ios' ? 10 : 0,
 		paddingBottom: 8,
 		color: Color.black1,
 		backgroundColor: Color.white,
 		fontFamily: 'Quicksand-Regular',
 		borderBottomWidth: 1,
 		borderColor: Color.lightGrey1
-	},
-	inputTextStyle: {
-		fontSize: 14,
-		color: Color.black1,
-		fontFamily: 'Quicksand-Regular'
 	},
 	cancelSearchBarText: {
 		alignItems: 'center',
@@ -125,6 +120,21 @@ export default StyleSheet.create({
 		borderColor: Color.lightGrey3,
 		backgroundColor: Color.white
 	},
+	locationStyle: {
+		alignItems: 'stretch',
+		marginHorizontal: 18,
+		backgroundColor: Color.white
+	},
+	locationInputTextStyle: {
+		fontSize: 14,
+		color: Color.black1,
+		backgroundColor: Color.white,
+		fontFamily: 'Quicksand-Regular',
+		marginTop: Platform.OS === 'ios' ? 10 : 0,
+		paddingBottom: 8,
+		borderBottomWidth: 1,
+		borderColor: Color.lightGrey1
+	},
 	budgetStyle: {
 		flex: 1,
 		fontSize: 14,
@@ -138,11 +148,14 @@ export default StyleSheet.create({
 	},
 	description: {
 		alignItems: 'flex-start',
-		height: 100,
+		height: 150,
 		borderWidth: 1,
 		borderRadius: 3,
-		padding: 8,
-		borderColor: Color.lightGrey1
+		paddingHorizontal: 8,
+		marginTop: Platform.OS === 'ios' ? 8 : 12,
+		paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+		borderColor: Color.lightGrey1,
+		textAlignVertical: 'top'
 	},
 	rowWrapper: {
 		...Styles.Common.RowCenterBetween,

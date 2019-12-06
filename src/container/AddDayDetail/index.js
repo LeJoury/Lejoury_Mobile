@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated, BackHandler, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	ScrollView,
+	Animated,
+	BackHandler,
+	Alert,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { connect } from 'react-redux';
@@ -15,6 +25,8 @@ import { Languages, Color, Styles, create_UUID, Constants, showOkAlert } from '@
 import { Spinner, Button, ActivityHolder } from '@components';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { Action } = Constants.Action;
 const { Mode } = Constants.Spinner;
@@ -54,11 +66,11 @@ class AddDayDetail extends Component {
 				publishedDate: publishedDate
 			});
 		} else {
-			const { selectedDay, days, itineraryId } = navigation.state.params;
+			const { selectedDay, days, itineraryId, publishedDate } = navigation.state.params;
 			this.setState({
 				day: selectedDay.day,
 				days,
-				publishedDate: selectedDay.publishedDate,
+				publishedDate: publishedDate,
 				itineraryId,
 				activities: selectedDay.activities
 			});
@@ -122,7 +134,7 @@ class AddDayDetail extends Component {
 		}
 	};
 
-	onAddActivity = async (title, location, photos, description, currency, budget, rate, type, index) => {
+	onAddActivity = async (title, location, photos, description, currency, budget, rating, type, index) => {
 		this.setState({ isLoading: true });
 
 		const { activities } = this.state;
@@ -133,7 +145,7 @@ class AddDayDetail extends Component {
 			description,
 			currency,
 			budget,
-			rate
+			rating
 		};
 
 		const { publishedDate, day, itineraryId } = this.state;
@@ -164,7 +176,7 @@ class AddDayDetail extends Component {
 		}
 	};
 
-	onEditActivity = async (title, location, photos, description, currency, budget, rate, type, index) => {
+	onEditActivity = async (title, location, photos, description, currency, budget, rating, type, index) => {
 		this.setState({ isLoading: true });
 
 		const { activities } = this.state;
@@ -175,7 +187,7 @@ class AddDayDetail extends Component {
 			description,
 			currency,
 			budget,
-			rate
+			rating
 		};
 
 		const { publishedDate, day, itineraryId } = this.state;
@@ -337,7 +349,7 @@ class AddDayDetail extends Component {
 					description={item.description}
 					budget={item.budget}
 					currency={item.currency}
-					rate={item.rate}
+					rate={item.rating}
 					onPress={() => this.onNavigateToEditActivityDetail(index)}
 					onRemove={this.onActivityRemove}
 				/>
@@ -363,7 +375,7 @@ class AddDayDetail extends Component {
 									description={activity.description}
 									budget={activity.budget}
 									currency={activity.currency}
-									rate={activity.rate}
+									rate={activity.rating}
 									onPress={this.onNavigateToEditActivityDetail}
 									onRemove={this.onActivityRemove}
 								/>
@@ -388,14 +400,14 @@ class AddDayDetail extends Component {
 		} else {
 			return (
 				<View style={[ { flex: 1 }, Styles.Common.ColumnCenter ]}>
-					<TouchableOpacity onPress={this.onNavigateToActivityDetail}>
+					<Touchable onPress={this.onNavigateToActivityDetail} activeOpacity={0.8}>
 						<Icon
 							name="plus"
 							size={Styles.IconSize.CenterView}
 							type="feather"
 							color={Color.primaryLight3}
 						/>
-					</TouchableOpacity>
+					</Touchable>
 					<Text style={styles.smallSectionTitle}>{Languages.AddActivityDesc}</Text>
 				</View>
 			);
@@ -441,12 +453,14 @@ class AddDayDetail extends Component {
 					contentContainerStyle={styles.scrollViewContainer}
 				>
 					<View style={styles.container}>
-						<TouchableOpacity style={[ styles.dateWrapper, { marginTop: 0 } ]}>
-							<Text style={styles.titleStyle}>{Languages.Date}</Text>
-							<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>
-								{this.state.publishedDate}
-							</Text>
-						</TouchableOpacity>
+						<Touchable activeOpacity={0.8}>
+							<View style={[ styles.dateWrapper, { marginTop: 0 } ]}>
+								<Text style={styles.titleStyle}>{Languages.Date}</Text>
+								<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>
+									{this.state.publishedDate}
+								</Text>
+							</View>
+						</Touchable>
 						{this.renderHolderAndAddButton()}
 					</View>
 

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { Title } from './IconNav';
 
 import { Notification } from '@container';
@@ -13,7 +13,11 @@ class NotifcationScreen extends PureComponent {
 	});
 
 	render() {
-		return <Notification />;
+		return (
+			<View style={Styles.Common.FullFlex}>
+				<Notification />
+			</View>
+		);
 	}
 }
 export default NotifcationScreen;

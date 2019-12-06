@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Dimensions, Platform } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import { Languages } from '@common';
@@ -30,34 +30,39 @@ const Section = ({
 	flatListStyle,
 	holderWidth = itemWidth,
 	type = 'flatlist',
-	children
-}) => (
-	<View style={containerStyle}>
-		{children}
-		{type === 'flatlist' ? (
-			<FlatList
-				contentContainerStyle={flatListStyle}
-				horizontal={isHorizontalList}
-				showsHorizontalScrollIndicator={showHorizontalIndicator}
-				data={data}
-				keyExtractor={keyExtractor}
-				renderItem={renderHolder}
-			/>
-		) : (
-			<Carousel
-				data={data}
-				layout={'default'}
-				keyExtractor={keyExtractor}
-				renderItem={renderHolder}
-				sliderWidth={sliderWidth}
-				itemWidth={holderWidth}
-				enableMomentum={true}
-				activeSlideAlignment={'start'}
-				inactiveSlideScale={0.9}
-				inactiveSlideOpacity={0.5}
-				ListFooterComponent={renderFooter}
-			/>
-		)}
-	</View>
-);
+	children,
+	numColumns = undefined
+}) => {
+	return (
+		<View style={containerStyle}>
+			{children}
+			{type === 'flatlist' ? (
+				<FlatList
+					contentContainerStyle={flatListStyle}
+					horizontal={isHorizontalList}
+					showsHorizontalScrollIndicator={showHorizontalIndicator}
+					data={data}
+					keyExtractor={keyExtractor}
+					renderItem={renderHolder}
+					numColumns={numColumns}
+				/>
+			) : (
+				<Carousel
+					data={data}
+					layout={'default'}
+					keyExtractor={keyExtractor}
+					renderItem={renderHolder}
+					sliderWidth={sliderWidth}
+					itemWidth={holderWidth}
+					enableMomentum={true}
+					activeSlideAlignment={'start'}
+					inactiveSlideScale={Platform.OS === 'ios' ? 0.9 : 1}
+					inactiveSlideOpacity={Platform.OS === 'ios' ? 0.5 : 0.4}
+					ListFooterComponent={renderFooter}
+					contentContainerCustomStyle={renderFooter && { paddingRight: 100 }}
+				/>
+			)}
+		</View>
+	);
+};
 export default Section;

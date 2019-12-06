@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon } from 'react-native-elements';
 
@@ -15,15 +15,19 @@ const CurrencyPicker = (props) => (
 		style={{
 			...pickerSelectStyles,
 			iconContainer: {
-				top: 8,
+				top: Platform.OS === 'ios' ? 8 : 16,
 				right: 8
 			},
 			inputIOSContainer: {
 				marginLeft: -12,
 				paddingHorizontal: 0
+			},
+			inputAndroidContainer: {
+				width: 80,
+				marginLeft: -12
 			}
 		}}
-		useNativeAndroidPickerStyle={true}
+		useNativeAndroidPickerStyle={false}
 		Icon={() => {
 			return <Icon name="chevron-down" type="feather" color={Color.black} size={15} />;
 		}}
@@ -36,14 +40,15 @@ const pickerSelectStyles = StyleSheet.create({
 		fontSize: 14,
 		paddingVertical: 6,
 		color: Color.black,
+		fontFamily: 'Quicksand-Medium',
 		paddingLeft: 6,
 		paddingRight: 32 /// to ensure the text is never behind the icon
 	},
 	inputAndroid: {
 		fontSize: 14,
-		paddingVertical: 12,
-		paddingHorizontal: 10,
+		paddingVertical: 8,
 		color: Color.black,
+		fontFamily: 'Quicksand-Medium',
 		paddingRight: 30 // to ensure the text is never behind the icon
 	}
 });

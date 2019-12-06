@@ -52,15 +52,13 @@ export default StyleSheet.create({
 		width: width / 3,
 		backgroundColor: Color.lightGrey1,
 		paddingVertical: 16,
-		borderRadius: 5,
-		elevation: 1
+		borderRadius: 5
 	},
 	submitButton: {
 		marginTop: 20,
 		width: width / 3,
 		backgroundColor: Color.primary,
 		paddingVertical: 16,
-		borderRadius: 5,
-		elevation: 1
+		borderRadius: 5
 	}
 });

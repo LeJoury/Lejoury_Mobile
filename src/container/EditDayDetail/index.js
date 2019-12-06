@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated, BackHandler, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	ScrollView,
+	Animated,
+	BackHandler,
+	Alert,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { connect } from 'react-redux';
@@ -9,6 +19,8 @@ import { Languages, Color, Styles, create_UUID, Constants, showOkAlert } from '@
 import { Spinner, Button, ActivityHolder } from '@components';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { Action } = Constants.Action;
 const { Mode } = Constants.Spinner;
@@ -48,11 +60,11 @@ class EditDayDetail extends Component {
 				publishedDate: publishedDate
 			});
 		} else {
-			const { selectedDay, days, itineraryId } = navigation.state.params;
+			const { selectedDay, days, itineraryId, publishedDate } = navigation.state.params;
 			this.setState({
 				day: selectedDay.day,
 				days,
-				publishedDate: selectedDay.publishedDate,
+				publishedDate: publishedDate,
 				itineraryId,
 				activities: selectedDay.activities
 			});
@@ -109,7 +121,7 @@ class EditDayDetail extends Component {
 		this.props.navigation.state.params.refreshItinerary();
 	};
 
-	onAddActivity = async (title, location, photos, description, currency, budget, rate, type, index) => {
+	onAddActivity = async (title, location, photos, description, currency, budget, rating, type, index) => {
 		this.setState({ isLoading: true });
 
 		const { activities } = this.state;
@@ -120,7 +132,7 @@ class EditDayDetail extends Component {
 			description,
 			currency,
 			budget,
-			rate
+			rating
 		};
 
 		const { publishedDate, day, itineraryId } = this.state;
@@ -149,7 +161,7 @@ class EditDayDetail extends Component {
 		}
 	};
 
-	onEditActivity = async (title, location, photos, description, currency, budget, rate, type, index) => {
+	onEditActivity = async (title, location, photos, description, currency, budget, rating, type, index) => {
 		this.setState({ isLoading: true });
 
 		const { activities } = this.state;
@@ -160,7 +172,7 @@ class EditDayDetail extends Component {
 			description,
 			currency,
 			budget,
-			rate
+			rating
 		};
 
 		const { publishedDate, day, itineraryId } = this.state;
@@ -168,6 +180,7 @@ class EditDayDetail extends Component {
 
 		let activityId = activities[index].id;
 
+		// console.log(newActivity);
 		try {
 			let response = await this.props.updateActivity(
 				activityId,
@@ -321,7 +334,7 @@ class EditDayDetail extends Component {
 					description={item.description}
 					budget={item.budget}
 					currency={item.currency}
-					rate={item.rate}
+					rate={item.rating}
 					onPress={() => this.onNavigateToEditActivityDetail(index)}
 					onRemove={this.onActivityRemove}
 				/>
@@ -347,7 +360,7 @@ class EditDayDetail extends Component {
 									description={activity.description}
 									budget={activity.budget}
 									currency={activity.currency}
-									rate={activity.rate}
+									rate={activity.rating}
 									onPress={this.onNavigateToEditActivityDetail}
 									onRemove={this.onActivityRemove}
 								/>
@@ -372,14 +385,16 @@ class EditDayDetail extends Component {
 		} else {
 			return (
 				<View style={[ { flex: 1 }, Styles.Common.ColumnCenter ]}>
-					<TouchableOpacity onPress={this.onNavigateToActivityDetail}>
-						<Icon
-							name="plus"
-							size={Styles.IconSize.CenterView}
-							type="feather"
-							color={Color.primaryLight3}
-						/>
-					</TouchableOpacity>
+					<Touchable onPress={this.onNavigateToActivityDetail} activeOpacity={0.8}>
+						<View>
+							<Icon
+								name="plus"
+								size={Styles.IconSize.CenterView}
+								type="feather"
+								color={Color.primaryLight3}
+							/>
+						</View>
+					</Touchable>
 					<Text style={styles.smallSectionTitle}>{Languages.AddActivityDesc}</Text>
 				</View>
 			);
@@ -425,12 +440,14 @@ class EditDayDetail extends Component {
 					contentContainerStyle={styles.scrollViewContainer}
 				>
 					<View style={styles.container}>
-						<TouchableOpacity style={[ styles.dateWrapper, { marginTop: 0 } ]}>
-							<Text style={styles.titleStyle}>{Languages.Date}</Text>
-							<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>
-								{this.state.publishedDate}
-							</Text>
-						</TouchableOpacity>
+						<Touchable activeOpacity={0.8}>
+							<View style={[ styles.dateWrapper, { marginTop: 0 } ]}>
+								<Text style={styles.titleStyle}>{Languages.Date}</Text>
+								<Text style={[ styles.titleStyle, { color: Color.grey1 } ]}>
+									{this.state.publishedDate}
+								</Text>
+							</View>
+						</Touchable>
 						{this.renderHolderAndAddButton()}
 					</View>
 

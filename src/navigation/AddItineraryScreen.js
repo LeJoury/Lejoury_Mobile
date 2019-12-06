@@ -16,7 +16,8 @@ class AddItineraryScreen extends PureComponent {
 		return {
 			headerLeft: Back(navigation, Color.primary),
 			headerTitle: Title(Languages.Journeys, Color.headerTitleColor),
-			headerRight: Add(navigation, Color.primary, params.handleAddItinerary)
+			headerRight: Add(navigation, Color.primary, params.handleAddItinerary),
+			gesturesEnabled: true
 		};
 	};
 

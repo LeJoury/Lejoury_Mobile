@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, Animated, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
+import {
+	View,
+	Text,
+	Animated,
+	TouchableOpacity,
+	Image,
+	Dimensions,
+	Platform,
+	BackHandler,
+	TouchableNativeFeedback
+} from 'react-native';
 import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import { SocialIcon, Icon } from 'react-native-elements';
@@ -10,9 +20,11 @@ import { login, register, loginBySocial } from '@actions';
 
 import { Login, Register } from '@container';
 
-import { Images, Color, Languages, Styles, Constants, showOkAlert } from '@common';
+import { Images, Color, Languages, Styles, Constants, showOkAlert, showOkCancelAlert } from '@common';
 import { Button, Spinner } from '@components';
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { width, height } = Dimensions.get('window');
 const { Mode, Sizes } = Constants.Spinner;
@@ -35,11 +47,24 @@ class Landing extends Component {
 		};
 	}
 
-	componentDidMount() {}
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
 
-	componentDidUpdate() {}
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
 
-	componentWillUnmount() {}
+	handleBackButtonPressAndroid = () => {
+		if (!this.state.optionVisible) {
+			// The screen is not focused, so don't do anything
+			this.onBackToOptions();
+			return true;
+		} else {
+			showOkCancelAlert(Languages.Exit, Languages.ExitConfirm, Languages.Confirm, () => BackHandler.exitApp());
+			return true;
+		}
+	};
 
 	onNavigateToMain = () => {
 		const { navigation } = this.props;
@@ -115,7 +140,6 @@ class Landing extends Component {
 	// };
 	responseInfoCallback = async (error, result) => {
 		if (error) {
-			//TODO: show something went wrong message
 			console.log('Error fetching data: ' + error.toString());
 			showOkAlert(Languages.LoginFail, Languages.SystemError);
 		} else {
@@ -152,12 +176,12 @@ class Landing extends Component {
 				}
 			},
 			(error) => {
-				//TODO: SHOW SYSTEM ERROR MESSAGE
+				showOkAlert(Languages.LoginFail, Languages.SystemError);
 				console.log('Login fail with error: ' + error);
 			}
 		);
 	};
-	
+
 	// GOOGLE LOGIN
 	onGoogleLogin = async () => {
 		try {
@@ -177,11 +201,11 @@ class Landing extends Component {
 					showOkAlert(Languages.LoginFail, response.message);
 				}
 			} catch (e) {
-				console.log(e);
+				// console.log(e);
 				showOkAlert(Languages.LoginFail, Languages.SystemError);
 			}
 
-			console.log(userInfo);
+			// console.log(userInfo);
 		} catch (error) {
 			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
 				// user cancelled the login flow
@@ -382,14 +406,16 @@ class Landing extends Component {
 								</Text>
 
 								<Animated.View style={[ backButtonStyles, styles.backButtonWrapper ]}>
-									<TouchableOpacity onPress={() => this.onBackToOptions()}>
-										<Icon
-											name="chevron-left"
-											type="feather"
-											size={Styles.IconSize.xLarge}
-											color={Color.primary}
-										/>
-									</TouchableOpacity>
+									<Touchable activeOpacity={0.8} onPress={() => this.onBackToOptions()}>
+										<View>
+											<Icon
+												name="chevron-left"
+												type="feather"
+												size={Styles.IconSize.xLarge}
+												color={Color.primary}
+											/>
+										</View>
+									</Touchable>
 								</Animated.View>
 							</View>
 

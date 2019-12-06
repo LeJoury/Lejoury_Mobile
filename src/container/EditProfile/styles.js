@@ -1,16 +1,16 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles, Device } from '@common';
 
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	container: {
-		flex: 1,
-		paddingTop:24
+		flex: 1
 	},
 	scrollViewContainer: {
 		flexGrow: 1,
-		paddingBottom: 80
+		paddingBottom: 80,
+		paddingTop: 12
 	},
 	subContain: {
 		paddingBottom: 30,
@@ -47,24 +47,26 @@ export default StyleSheet.create({
 		color: Color.black1,
 		fontSize: 14,
 		flex: 1,
-		fontFamily: 'Quicksand-Regular'
+		fontFamily: 'Quicksand-Regular',
+		marginTop: Platform.OS === 'ios' ? 0 : 10
 	},
 	inputStyle: {
 		alignItems: 'stretch',
 		flex: 3,
 		fontSize: 14,
-		paddingBottom: 8,
+		paddingBottom: Platform.OS === 'ios' ? 8 : 0,
 		color: Color.black1,
 		backgroundColor: Color.white,
 		fontFamily: 'Quicksand-Regular',
 		borderBottomWidth: 1,
-		borderColor: Color.lightGrey1
+		borderColor: Color.lightGrey1,
+		textAlignVertical: 'top'
 	},
 	bio: {
 		alignItems: 'flex-start',
 		height: 120,
 		borderRadius: 3,
-		padding: 8,
+		paddingHorizontal: 8,
 		borderBottomWidth: 1,
 		borderColor: Color.lightGrey1
 	}

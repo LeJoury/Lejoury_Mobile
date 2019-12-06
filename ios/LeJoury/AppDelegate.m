@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "RNSplashScreen.h"
 
 @import Firebase;
 @implementation AppDelegate
@@ -36,6 +37,7 @@
   
   [FIRApp configure];
   [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+  [RNSplashScreen hide];
   return YES;
 }
 

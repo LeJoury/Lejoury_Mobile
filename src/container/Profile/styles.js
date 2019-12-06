@@ -13,7 +13,18 @@ export default StyleSheet.create({
 		width,
 		top: 0
 	},
-	settingsButton: {  right: 0, position: 'absolute', zIndex: 99999 },
+	settingsButton: {
+		...Platform.select({
+			android: {
+				right: -12
+			},
+			ios: {
+				right: -12
+			}
+		}),
+		position: 'absolute',
+		zIndex: 99999
+	},
 
 	headerContainer: {},
 	separator: {

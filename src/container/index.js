@@ -90,3 +90,6 @@ export const AddQuote = _AddQuote;
 
 import _TravellerProfile from './TravellerProfile';
 export const TravellerProfile = _TravellerProfile;
+
+import _ChangePassword from './ChangePassword';
+export const ChangePassword = _ChangePassword;

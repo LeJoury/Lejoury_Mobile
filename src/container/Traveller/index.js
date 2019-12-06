@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+	BackHandler,
 	View,
 	Text,
 	FlatList,
@@ -7,7 +8,9 @@ import {
 	RefreshControl,
 	TouchableOpacity,
 	Alert,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Platform,
+	TouchableNativeFeedback
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -16,6 +19,8 @@ import { getTravellers, followTraveller, getProfile } from '@actions';
 import { Images, Color, Languages, Constants, create_UUID } from '@common';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { Follow_Type } = Constants.Follow_Type;
 
@@ -30,6 +35,19 @@ class Traveller extends Component {
 	}
 
 	_keyExtractor = (item) => item.userId.toString();
+
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	handleBackButtonPressAndroid = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
 
 	navigateToSelectedTraveller = (selectedUser) => {
 		this.props.navigation.navigate('TravellerProfile', {
@@ -141,14 +159,13 @@ class Traveller extends Component {
 						</View>
 					</TouchableWithoutFeedback>
 
-					<TouchableOpacity
-						style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}
-						onPress={() => this.onFollowClick(item)}
-					>
-						<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
-							{functionText}
-						</Text>
-					</TouchableOpacity>
+					<Touchable activeOpacity={0.8} onPress={() => this.onFollowClick(item)}>
+						<View style={[ styles.travellerFunctionButton, functionButtonBGStyle ]}>
+							<Text style={[ styles.travellerFunctionTextStyle, { color: functionTextColor } ]}>
+								{functionText}
+							</Text>
+						</View>
+					</Touchable>
 				</View>
 			</View>
 		);

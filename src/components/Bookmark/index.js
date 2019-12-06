@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import { Icon } from 'react-native-elements';
 
 import { Color, Styles } from '@common';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const Bookmark = (props) => {
 	const handleViewRef = (ref) => (this.view = ref);
@@ -15,7 +17,7 @@ const Bookmark = (props) => {
 	};
 
 	return (
-		<TouchableOpacity onPress={onPress}>
+		<Touchable onPress={onPress} activeOpacity={0.8}>
 			<View style={props.wrapperStyle}>
 				<Animatable.View ref={handleViewRef}>
 					<Icon
@@ -27,7 +29,7 @@ const Bookmark = (props) => {
 				</Animatable.View>
 				{props.children}
 			</View>
-		</TouchableOpacity>
+		</Touchable>
 	);
 };
 export default Bookmark;

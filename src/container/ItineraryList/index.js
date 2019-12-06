@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, RefreshControl, Dimensions, FlatList } from 'react-native';
+import { BackHandler, RefreshControl, Dimensions, FlatList } from 'react-native';
 
 import { connect } from 'react-redux';
 import { getItineraries, getItineraryByCountryId } from '@actions';
@@ -52,7 +52,18 @@ class ItineraryList extends Component {
 
 	componentDidUpdate() {}
 
-	componentWillUnmount() {}
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	handleBackButtonPressAndroid = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
 
 	refreshItineraries = async () => {
 		const { code, type } = this.state;
@@ -132,22 +143,12 @@ class ItineraryList extends Component {
 		}
 	};
 
-	renderEndofList() {
-		return (
-			<View style={styles.separatorWrap}>
-				<View style={styles.separator} />
-				<Text style={styles.separatorText}>End</Text>
-				<View style={styles.separator} />
-			</View>
-		);
-	}
-
 	renderItinerary = ({ item }) => (
 		<ItineraryHolder
 			itinerary={item}
 			key={item.itineraryId}
 			onPress={() => this.onPressItinerary(item)}
-			type="main"
+			type="country"
 		/>
 	);
 

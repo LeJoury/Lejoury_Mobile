@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated, View, Text, TextInput, Dimensions, ScrollView } from 'react-native';
+import { Animated, View, Text, TextInput, BackHandler, ScrollView } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -33,6 +33,19 @@ class AddItinerary extends Component {
 
 		this.onDateChange = this.onDateChange.bind(this);
 	}
+
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
+	handleBackButtonPressAndroid = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
 
 	onNextPressHandle = () => {
 		const { selectedStartDate, selectedEndDate, title } = this.state;

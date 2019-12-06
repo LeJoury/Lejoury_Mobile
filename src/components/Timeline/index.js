@@ -1,5 +1,13 @@
 import React, { PureComponent } from 'react';
-import { FlatList, View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import {
+	FlatList,
+	View,
+	Text,
+	TouchableOpacity,
+	Platform,
+	TouchableNativeFeedback,
+	ActivityIndicator
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,6 +27,8 @@ const defaultLineWidth = 1;
 const defaultLineColor = Color.primaryLight;
 const defaultDotColor = Color.white;
 const defaultInnerCircle = 'none';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 export default class Timeline extends PureComponent {
 	state = {
@@ -84,29 +94,30 @@ export default class Timeline extends PureComponent {
 					}
 				}}
 			>
-				<TouchableOpacity
+				<Touchable
 					disabled={this.props.onEventPress == null}
-					style={{ paddingBottom: 8, paddingRight: 16 }}
 					onPress={() => (this.props.onEventPress ? this.props.onEventPress(index) : null)}
+					activeOpacity={0.8}
 				>
-					<View style={styles.detail}>{this.renderDetail(item)}</View>
-					<View style={Styles.Common.RowCenterBetween}>
-						<TouchableOpacity onPress={() => this.props.onBookmarkPress(item)}>
-							<Bookmark
-								isBookmark={item.bookmarked}
-								onBookmarkPress={() => this.props.onBookmarkPress(item)}
-								wrapperStyle={styles.readMoreWrapper}
-							>
-								<Text style={styles.addToBookmark}>{Languages.Bookmark}</Text>
-							</Bookmark>
-						</TouchableOpacity>
-						<View style={styles.readMoreWrapper}>
-							<Text style={styles.readMore}>{Languages.ReadMore}</Text>
-							<Icon color={Color.lightGrey3} size={12} type="feather" name="chevron-right" />
+					<View style={{ paddingBottom: 8, paddingRight: 16 }}>
+						<View style={styles.detail}>{this.renderDetail(item)}</View>
+						<View style={Styles.Common.RowCenterBetween}>
+							<Touchable onPress={() => this.props.onBookmarkPress(item)} activeOpacity={0.8}>
+								<Bookmark
+									isBookmark={item.bookmarked}
+									onBookmarkPress={() => this.props.onBookmarkPress(item)}
+									wrapperStyle={styles.readMoreWrapper}
+								>
+									<Text style={styles.addToBookmark}>{Languages.Bookmark}</Text>
+								</Bookmark>
+							</Touchable>
+							<View style={styles.readMoreWrapper}>
+								<Text style={styles.readMore}>{Languages.ReadMore}</Text>
+								<Icon color={Color.lightGrey3} size={12} type="feather" name="chevron-right" />
+							</View>
 						</View>
 					</View>
-				</TouchableOpacity>
-
+				</Touchable>
 				{this.renderSeparator()}
 			</View>
 		);

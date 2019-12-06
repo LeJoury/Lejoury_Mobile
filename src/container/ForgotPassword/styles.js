@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { Color, Styles } from '@common';
 
 const { width, height } = Dimensions.get('window');
@@ -6,7 +6,8 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Color.white
+		backgroundColor: Color.white,
+		paddingTop: Platform.OS === 'ios' ? 10 : 0
 	},
 	form: {
 		flex: 1,
@@ -23,7 +24,7 @@ export default StyleSheet.create({
 		alignItems: 'stretch',
 		width: '100%',
 		height: 40,
-		marginTop: 16,
+		marginTop: Platform.OS === 'ios' ? 20 : 40,
 		paddingHorizontal: 6,
 		color: Color.primary,
 		fontFamily: 'Quicksand-Medium',
@@ -31,7 +32,7 @@ export default StyleSheet.create({
 		borderBottomWidth: 1
 	},
 	forgotPasswordButton: {
-		marginTop: 20,
+		marginTop: Platform.OS === 'ios' ? 20 : 40,
 		backgroundColor: Color.splashScreenBg5,
 		...Styles.Button.Radius5,
 		...Styles.Common.ShadowBox

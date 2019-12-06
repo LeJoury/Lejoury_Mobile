@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, Alert, Easing, Animated, Dimensions } from 'react-native';
+import {
+	View,
+	Text,
+	TextInput,
+	ScrollView,
+	Alert,
+	Easing,
+	Animated,
+	Dimensions,
+	BackHandler,
+	TouchableOpacity,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
+import { check, request, PERMISSIONS, RESULTS, openSettings } from 'react-native-permissions';
+
 import DatePicker from 'react-native-datepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel from 'react-native-snap-carousel';
@@ -15,11 +30,23 @@ import { CircleBack } from '../../navigation/IconNav';
 import { connect } from 'react-redux';
 import { addItineraryToRedux, uploadCoverPhoto, updateItineraryByID, getDraftItineraryDetails } from '@actions';
 
-import { Languages, Color, calculateDays, Images, Styles, create_UUID, Constants, showOkAlert } from '@common';
+import {
+	Languages,
+	Color,
+	calculateDays,
+	Device,
+	Images,
+	Styles,
+	create_UUID,
+	Constants,
+	showOkAlert,
+	showOkCancelAlert
+} from '@common';
 import { UploadImageBox, Button, DayHolder } from '@components';
 
 import styles from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { width, height } = Dimensions.get('window');
 const { Action } = Constants.Action;
@@ -32,6 +59,7 @@ function wp(percentage) {
 
 const slideWidth = wp(75);
 const itemHorizontalMargin = wp(16);
+const backTop = Device.isIphoneX ? 35 : 20;
 
 export const sliderWidth = width;
 export const itemWidth = slideWidth + itemHorizontalMargin;
@@ -41,7 +69,7 @@ const AddItineraryDetail = (props) => {
 	const { token, userId } = props.user;
 	const { draftItinerary, itineraryId } = navigation.state.params;
 
-	const [ top ] = useState(new Animated.Value(20));
+	const [ top ] = useState(new Animated.Value(backTop));
 	const [ isTitleFocus, setIsTitleFocus ] = useState(false);
 
 	const [ startDate, setStartDate ] = useState(moment(new Date(draftItinerary.startDate)).format('DD-MMM-YYYY'));
@@ -59,18 +87,25 @@ const AddItineraryDetail = (props) => {
 	useEffect(
 		() => {
 			setSelectedItinerary(props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId));
+			BackHandler.addEventListener('hardwareBackPress', handleBackButtonPressAndroid);
 
 			return () => {
 				ImagePicker.clean();
+				BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPressAndroid);
 			};
 		},
 		[ props.draft.itineraries.find((itinerary) => itinerary.itineraryId === itineraryId) ]
 	);
 
+	const handleBackButtonPressAndroid = () => {
+		onBackHandle();
+		return true;
+	};
+
 	const setBackButtonHide = (hide) => {
 		Animated.timing(top, {
 			duration: 50,
-			toValue: hide ? -100 : 20,
+			toValue: hide ? -100 : backTop,
 			easing: Easing.linear
 		}).start();
 	};
@@ -102,7 +137,8 @@ const AddItineraryDetail = (props) => {
 			selectedDay: selectedItinerary.days.find((tmpDay) => tmpDay.day === selectedDay),
 			itineraryId: itineraryId,
 			days: tmpDays,
-			type: Action.EDIT
+			type: Action.EDIT,
+			publishedDate: moment(new Date(startDate), 'DD-MMM-YYYY').add(selectedDay - 1, 'd').format('DD-MMM-YYYY')
 		});
 	};
 
@@ -138,7 +174,7 @@ const AddItineraryDetail = (props) => {
 		ImagePicker.openPicker({
 			includeBase64: true
 		}).then((image) => {
-			ImageResizer.createResizedImage(image.path, 400, 400, 'JPEG', 90)
+			ImageResizer.createResizedImage(image.path, 800, 800, 'JPEG', 100)
 				.then((response) => {
 					let resizedImage = {
 						uri: response.uri,
@@ -165,6 +201,77 @@ const AddItineraryDetail = (props) => {
 					Bugsnag.notify(new Error(error));
 				});
 		});
+	};
+
+	const checkPermission = () => {
+		if (Platform.OS === 'ios') {
+			check(PERMISSIONS.IOS.PHOTO_LIBRARY).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						console.log('undenied');
+						request(PERMISSIONS.IOS.PHOTO_LIBRARY).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('undenied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadCoverPhoto();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadCoverPhoto();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+							openSettings().catch(() => console.warn('cannot open settings'))
+						);
+						break;
+				}
+			});
+		} else {
+			check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
+				switch (result) {
+					case RESULTS.UNAVAILABLE:
+						break;
+					case RESULTS.DENIED:
+						request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((requestResult) => {
+							switch (requestResult) {
+								case RESULTS.UNAVAILABLE:
+									break;
+								case RESULTS.DENIED:
+									console.log('denied');
+									break;
+								case RESULTS.GRANTED:
+									onUploadCoverPhoto();
+									break;
+								case RESULTS.BLOCKED:
+									console.log('blocked');
+									break;
+							}
+						});
+						break;
+					case RESULTS.GRANTED:
+						onUploadCoverPhoto();
+						break;
+					case RESULTS.BLOCKED:
+						console.log('blocked');
+						// showOkCancelAlert(Languages.Settings, Languages.OpenSettings, Languages.Settings, () =>
+						// 	openSettings().catch(() => console.warn('cannot open settings'))
+						// );
+						break;
+				}
+			});
+		}
 	};
 
 	const onGoBack = () => {
@@ -275,12 +382,14 @@ const AddItineraryDetail = (props) => {
 									</Text>
 								</View>
 
-								<TouchableOpacity
-									style={styles.editDayContainer}
+								<Touchable
+									activeOpacity={0.8}
 									onPress={() => onNavigateToEditDayDetail(sortedDays[index].day)}
 								>
-									<Text style={styles.editDayText}>{Languages.Edit}</Text>
-								</TouchableOpacity>
+									<View style={styles.editDayContainer}>
+										<Text style={styles.editDayText}>{Languages.Edit}</Text>
+									</View>
+								</Touchable>
 							</View>
 						);
 
@@ -315,22 +424,20 @@ const AddItineraryDetail = (props) => {
 				);
 
 				renderDays.push(
-					<TouchableOpacity
-						key={create_UUID()}
-						style={[ Styles.Common.ColumnCenter, { marginVertical: 12 } ]}
-						onPress={() => onAddDayHandle(i + 1)}
-					>
-						<View
-							style={[
-								styles.addDayView,
-								{
-									width: itemWidth - 24
-								}
-							]}
-						>
-							<Text style={styles.addDayText}>{label}</Text>
-						</View>
-					</TouchableOpacity>
+					<View style={[ Styles.Common.ColumnCenter, { marginVertical: 12 } ]}>
+						<Touchable activeOpacity={0.8} key={create_UUID()} onPress={() => onAddDayHandle(i + 1)}>
+							<View
+								style={[
+									styles.addDayView,
+									{
+										width: itemWidth - 24
+									}
+								]}
+							>
+								<Text style={styles.addDayText}>{label}</Text>
+							</View>
+						</Touchable>
+					</View>
 				);
 			}
 		}
@@ -349,14 +456,13 @@ const AddItineraryDetail = (props) => {
 				contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
 			>
 				{coverPhoto === '' || coverPhoto === null || coverPhoto === undefined ? (
-					<UploadImageBox background={Images.worldMapBackground} onPress={() => onUploadCoverPhoto()} />
+					<UploadImageBox background={Images.worldMapBackground} onPress={() => checkPermission()} />
 				) : (
-					<UploadImageBox background={coverPhoto} onPress={() => onUploadCoverPhoto()} hide={true} />
+					<UploadImageBox background={coverPhoto} onPress={() => checkPermission()} hide={true} />
 				)}
 				<View style={styles.subContain}>
 					<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.titleWrapper ]}>
 						<Text style={styles.label}>{Languages.Title}</Text>
-						{/* <View style={[ Styles.Common.ColumnCenterRight, { flex: 1 } ]}> */}
 						<TextInput
 							placeholder={Languages.JourneyName}
 							underlineColorAndroid="transparent"
@@ -375,7 +481,6 @@ const AddItineraryDetail = (props) => {
 								setIsDirty(true);
 							}}
 						/>
-						{/* </View> */}
 					</View>
 					<View style={styles.rowWrapper}>
 						<View style={[ Styles.Common.ColumnCenterLeft, Styles.Common.ShadowBox, styles.dateWrapper ]}>

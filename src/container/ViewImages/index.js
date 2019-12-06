@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, FlatList, ActivityIndicator, Image, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import {
+	View,
+	FlatList,
+	ActivityIndicator,
+	Image,
+	TouchableOpacity,
+	Modal,
+	Dimensions,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { ScaledImage, Spinner } from '@components';
@@ -8,6 +18,8 @@ import { Constants, Color, formatImages } from '@common';
 const { Sizes } = Constants.Spinner;
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,16 +30,18 @@ const ViewImages = ({ images }) => {
 
 	const renderImage = ({ item, index }) => {
 		return (
-			<TouchableOpacity
-				style={styles.images}
+			<Touchable
+				activeOpacity={0.8}
 				key={index}
 				onPress={() => {
 					setPreviewModalVisible(true);
 					setSelectedIndex(index);
 				}}
 			>
-				<ScaledImage uri={item.link} key={index} width={width - 16} />
-			</TouchableOpacity>
+				<View style={styles.images}>
+					<ScaledImage uri={item.link} key={index} width={width - 16} />
+				</View>
+			</Touchable>
 		);
 	};
 

@@ -38,8 +38,6 @@ const CREATE_ITINERARY = async (itinerary, token, userId) => {
 	const { USER_ID, TITLE, START_DATE, END_DATE } = PARAMS_ITINERARY;
 	const { title, startDate, endDate } = itinerary;
 
-	// DESTINATION, QUOTE, TOTAL_DAYS,
-
 	let version = '';
 	try {
 		version = await DeviceInfo.getVersion();
@@ -289,11 +287,12 @@ const CREATE_ACTIVITY = async (newActivity, token, itineraryId, date, day) => {
 		TYPES,
 		LOCATION_URL,
 		ALPHA2,
-		FULLADDRESS
+		FULLADDRESS,
+		PLACE_ID
 	} = PARAMS_LOCATION;
 
-	const { location, budget, currency, description, rate, title } = newActivity;
-	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress } = location;
+	const { location, budget, currency, description, rating, title } = newActivity;
+	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress, placeId } = location;
 
 	let version = '';
 	try {
@@ -309,6 +308,7 @@ const CREATE_ACTIVITY = async (newActivity, token, itineraryId, date, day) => {
 		[POSTCODE]: postcode,
 		[LATITUDE]: latitude,
 		[LONGITUDE]: longitude,
+		[PLACE_ID]: placeId,
 		[NAME]: name,
 		[TYPES]: types.toString(),
 		[LOCATION_URL]: url,
@@ -324,7 +324,7 @@ const CREATE_ACTIVITY = async (newActivity, token, itineraryId, date, day) => {
 		[DESCRIPTION]: description,
 		[BUDGET]: budget,
 		[CURRENCY]: currency,
-		[RATE]: rate,
+		[RATE]: rating,
 		[LOCATION]: activityLocation,
 		[PLATFORM]: Platform.OS.toUpperCase(),
 		[APP_VERSION]: version
@@ -364,11 +364,12 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 		TYPES,
 		LOCATION_URL,
 		ALPHA2,
-		FULLADDRESS
+		FULLADDRESS,
+		PLACE_ID
 	} = PARAMS_LOCATION;
 
-	const { location, budget, currency, description, rate, title } = newActivity;
-	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress } = location;
+	const { location, budget, currency, description, rating, title } = newActivity;
+	const { country, latitude, longitude, name, postcode, state, types, url, alpha2, fullAddress, placeId } = location;
 
 	let version = '';
 	let activityLocation;
@@ -387,6 +388,7 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 			[POSTCODE]: postcode,
 			[LATITUDE]: latitude,
 			[LONGITUDE]: longitude,
+			[PLACE_ID]: placeId,
 			[NAME]: name,
 			[TYPES]: types.toString(),
 			[LOCATION_URL]: url,
@@ -403,7 +405,7 @@ const UPDATE_ACTIVITY = async (activityId, newActivity, token, itineraryId, date
 		[DESCRIPTION]: description,
 		[BUDGET]: budget,
 		[CURRENCY]: currency,
-		[RATE]: rate,
+		[RATE]: rating,
 		[LOCATION]: activityLocation,
 		[PLATFORM]: Platform.OS.toUpperCase(),
 		[APP_VERSION]: version
@@ -467,6 +469,7 @@ const GET_DRAFT_ITINERARIES = async (token, userId, page) => {
 	const { USER_ID, PUBLISH_STATUS } = PARAMS_ITINERARY;
 
 	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_DRAFT}&${PAGE}=${page}`;
+	// console.log('GET_DRAFT_ITINERARIES');
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -489,7 +492,7 @@ const GET_DRAFT_ITINERARIES = async (token, userId, page) => {
 
 const GET_ITINERARIES = async (token, page) => {
 	let params = `&${PAGE}=${page}`;
-
+	// console.log('GET_ITINERARIES');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}?${params}`, {
@@ -511,6 +514,7 @@ const GET_ITINERARIES = async (token, page) => {
 
 const SEARCH_ITINERARIES = async (token, query, page) => {
 	let params = `&${PAGE}=${page}&search=${query}`;
+	console.log('SEARCH_ITINERARIES');
 
 	return await new Promise((resolve, reject) => {
 		base
@@ -532,6 +536,8 @@ const SEARCH_ITINERARIES = async (token, query, page) => {
 };
 
 const GET_DRAFT_ITINERARY_DETAILS = async (token, itineraryId) => {
+	// console.log('GET_DRAFT_ITINERARY_DETAILS');
+
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${itineraryId}`, {
@@ -555,6 +561,7 @@ const GET_DRAFT_ACTIVITY_DETAILS = async (token, itineraryId, day) => {
 	const { ITINERARY_ID } = PARAMS_ITINERARY;
 	const { DAY } = PARAMS_DAY;
 
+	// console.log('GET_DRAFT_ACTIVITY_DETAILS');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ACTIVITY_API_VERSION}/${URL_ACTIVITY}?${ITINERARY_ID}=${itineraryId}&${DAY}=${day}`, {
@@ -579,6 +586,7 @@ const GET_PUBLISHED_ITINERARIES = async (token, userId, page) => {
 
 	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_PUBLISHED}&${PAGE}=${page}`;
 
+	// console.log('GET_PUBLISHED_ITINERARIES');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_PUBLISHER}?${params}`, {
@@ -599,6 +607,7 @@ const GET_PUBLISHED_ITINERARIES = async (token, userId, page) => {
 };
 
 const GET_PUBLISHED_ITINERARY_DETAILS = async (token, itineraryId) => {
+	// console.log('GET_PUBLISHED_ITINERARY_DETAILS');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${itineraryId}`, {
@@ -620,6 +629,7 @@ const GET_PUBLISHED_ITINERARY_DETAILS = async (token, itineraryId) => {
 };
 
 const GET_COUNTRIES = async (token) => {
+	// console.log('GET_COUNTRIES');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_COUNTRY_LIST}`, {
@@ -644,6 +654,7 @@ const GET_ITINERARY_BY_COUNTRY = async (token, code, page) => {
 
 	let params = `${COUNTRY}=${code}&${PAGE}=${page}`;
 
+	// console.log('GET_ITINERARY_BY_COUNTRY');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_COUNTRY}?${params}`, {
@@ -694,6 +705,7 @@ const BOOKMARK = async (token, id, type, action) => {
 const GET_BOOKMARKS = async (token, type) => {
 	const { TYPE } = PARAMS_BOOKMARK;
 
+	// console.log('GET_BOOKMARKS');
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${BOOKMARK_API_VERSION}/${URL_BOOKMARK}?${TYPE}=${type}`, {

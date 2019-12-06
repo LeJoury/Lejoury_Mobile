@@ -5,11 +5,12 @@ import {
 	GET_TRAVELLER_PROFILE,
 	GET_TRAVELLER_FOLLOWERS,
 	GET_TRAVELLER_FOLLOWING,
+	GET_HOME_ITINERARIES,
 	FOLLOW_NEW_TRAVELLER,
 	LIKE_NEW_ITINERARY,
 	UPLOAD_PROFILE_PHOTO,
 	EDIT_PROFILE,
-	GET_HOME_ITINERARIES
+	CHANGE_PASSWORD
 } from '@services';
 
 const { STATUS } = Constants.STATUS;
@@ -40,6 +41,29 @@ const getProfile = (travellerId, token) => async (dispatch) => {
 							totalItineraries: data.totalItineraries
 						}
 					});
+					resolve(response);
+				} else if (result.statusCode === 401) {
+					let response = { OK: false, message: result.message };
+					resolve(response);
+				} else {
+					resolve(result);
+				}
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+// -----------------------------  change password ----------------------------------- //
+const changePassword = (userId, current_password, new_password, token) => async (dispatch) => {
+	return new Promise((resolve, reject) => {
+		CHANGE_PASSWORD(userId, current_password, new_password, token)
+			.then((result) => {
+				console.log(result);
+				if (result.statusCode === STATUS.SUCCESS) {
+					let response = { OK: true, message: result.data.message };
+
 					resolve(response);
 				} else if (result.statusCode === 401) {
 					let response = { OK: false, message: result.message };
@@ -344,5 +368,6 @@ export {
 	likeItinerary,
 	uploadProfilePhoto,
 	editProfile,
-	getHome
+	getHome,
+	changePassword
 };

@@ -11,7 +11,7 @@ import { Color, Languages, Styles } from '@common';
 class AddNewItineraryScreen extends Component {
 	static navigationOptions = ({ navigation }) => ({
 		headerLeft: Back(navigation, Color.primary),
-		headerTitle: Title(Languages.Itinerary, Color.headerTitleColor)
+		headerTitle: Title(Languages.Itinerary, Color.headerTitleColor),
 	});
 
 	render() {

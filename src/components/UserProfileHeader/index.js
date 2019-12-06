@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+	View,
+	Text,
+	Alert,
+	Image,
+	TouchableOpacity,
+	ActivityIndicator,
+	Platform,
+	TouchableNativeFeedback
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ReadMore from 'react-native-read-more-text';
 import { Icon } from 'react-native-elements';
@@ -8,6 +17,8 @@ import { ProfileNumber, Button } from '@components';
 import { Images, Languages, Color, Constants, Styles } from '@common';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const { Follow_Type } = Constants.Follow_Type;
 
@@ -118,15 +129,17 @@ const UserProfileHeader = ({
 
 					{isMe && (
 						<View style={styles.editButtonWrapper}>
-							<TouchableOpacity onPress={onEditProfilePress}>
-								<Icon
-									style={{ padding: 12 }}
-									name="edit"
-									type="feather"
-									size={Styles.IconSize.Medium}
-									color={Color.grey1}
-								/>
-							</TouchableOpacity>
+							<Touchable onPress={onEditProfilePress} activeOpacity={0.8}>
+								<View>
+									<Icon
+										style={{ padding: 12 }}
+										name="edit"
+										type="feather"
+										size={Styles.IconSize.Medium}
+										color={Color.grey1}
+									/>
+								</View>
+							</Touchable>
 						</View>
 					)}
 					<View style={styles.userInfoWrapper}>
@@ -157,21 +170,22 @@ const UserProfileHeader = ({
 				</View>
 			</LinearGradient>
 			<View style={styles.bioContainer}>
+				<Text style={styles.bioAbout}>{Languages.About}</Text>
 				{isMe ? (
-					<TouchableOpacity disabled={user.bio !== ''} onPress={onEditProfilePress}>
-						<Text style={styles.bioAbout}>{Languages.About}</Text>
-						<ReadMore
-							numberOfLines={5}
-							renderTruncatedFooter={renderTruncatedFooter}
-							renderRevealedFooter={renderRevealedFooter}
-						>
-							<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
-						</ReadMore>
-					</TouchableOpacity>
+					<Touchable disabled={user.bio !== ''} onPress={onEditProfilePress} activeOpacity={0.8}>
+						<View>
+							<ReadMore
+								numberOfLines={5}
+								renderTruncatedFooter={renderTruncatedFooter}
+								renderRevealedFooter={renderRevealedFooter}
+							>
+								<Text style={styles.bio}>{user.bio ? user.bio : Languages.AddBio}</Text>
+							</ReadMore>
+						</View>
+					</Touchable>
 				) : (
 					user.bio && (
 						<View>
-							<Text style={styles.bioAbout}>{Languages.About}</Text>
 							<Text style={styles.bio}>{user ? user.bio : ''}</Text>
 						</View>
 					)

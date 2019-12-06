@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native';
 import { Card } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -7,8 +7,10 @@ import { Images, Color, Languages, Styles } from '@common';
 
 import styles from './styles';
 
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+
 const MemoryHolder = ({ memory }) => (
-	<TouchableOpacity>
+	<Touchable activeOpacity={0.8}>
 		<Card containerStyle={{ padding: 0, borderRadius: 10 }}>
 			<ImageBackground source={Images.testThumbnail} style={styles.imageBackground} resizeMode="stretch">
 				<LinearGradient
@@ -24,6 +26,6 @@ const MemoryHolder = ({ memory }) => (
 				</LinearGradient>
 			</ImageBackground>
 		</Card>
-	</TouchableOpacity>
+	</Touchable>
 );
 export default MemoryHolder;

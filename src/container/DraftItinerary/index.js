@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, RefreshControl, Alert } from 'react-native';
+import { View, FlatList, Text, RefreshControl, Alert, BackHandler } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { deleteItineraryByID, getDraftItineraries } from '@actions';
@@ -38,6 +38,10 @@ class DraftItinerary extends Component {
 		} catch (error) {}
 	});
 
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
+
 	componentDidMount() {
 		this.props.onRef(this);
 	}
@@ -45,8 +49,14 @@ class DraftItinerary extends Component {
 	componentDidUpdate() {}
 
 	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
 		this.props.onRef(null);
 	}
+
+	handleBackButtonPressAndroid = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
 
 	refreshDraftItineraries = async () => {
 		const { userId, token } = this.props.user;
@@ -117,7 +127,6 @@ class DraftItinerary extends Component {
 		const { token, userId } = this.props.user;
 		const { isLastPage } = this.props.draft;
 
-
 		if (!this.state.endReachedCalledDuringMomentum) {
 			if (!isLastPage) {
 				try {
@@ -162,34 +171,23 @@ class DraftItinerary extends Component {
 	render() {
 		const { itineraries } = this.props.draft;
 		return (
-			<View style={Styles.Common.FullFlex}>
-				<FlatList
-					style={{ paddingTop: 6 }}
-					data={itineraries}
-					extraData={this.props.draft}
-					refreshControl={
-						<RefreshControl
-							refreshing={this.state.pullToRefresh}
-							onRefresh={this.refreshDraftItineraries}
-						/>
-					}
-					keyExtractor={this._keyExtractor}
-					renderItem={this.renderItem}
-					ListEmptyComponent={this.renderEmpty}
-					onEndReachedThreshold={0.4}
-					onEndReached={() => this.handleLoadMore()}
-					onMomentumScrollBegin={() =>
-						this.setState({
-							endReachedCalledDuringMomentum: false
-						})}
-				/>
-				{/* <Button
-					type="floating"
-					onPress={() => this._onPressAddNewItinerary()}
-					buttonColor={Color.primary}
-					icon={<Icon name="plus" type="feather" size={Styles.IconSize.Medium} color={Color.white} />}
-				/> */}
-			</View>
+			<FlatList
+				contentContainerStyle={styles.scrollViewContentContainerStyle}
+				data={itineraries}
+				extraData={this.props.draft}
+				refreshControl={
+					<RefreshControl refreshing={this.state.pullToRefresh} onRefresh={this.refreshDraftItineraries} />
+				}
+				keyExtractor={this._keyExtractor}
+				renderItem={this.renderItem}
+				ListEmptyComponent={this.renderEmpty}
+				onEndReachedThreshold={0.4}
+				onEndReached={() => this.handleLoadMore()}
+				onMomentumScrollBegin={() =>
+					this.setState({
+						endReachedCalledDuringMomentum: false
+					})}
+			/>
 		);
 	}
 }

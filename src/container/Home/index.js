@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Animated, Text, Dimensions, ScrollView, View, TouchableOpacity, Platform } from 'react-native';
+import {
+	Animated,
+	Text,
+	Dimensions,
+	ScrollView,
+	View,
+	TouchableOpacity,
+	Platform,
+	BackHandler,
+	TouchableNativeFeedback
+} from 'react-native';
 
 import { SearchBar } from 'react-native-elements';
 
@@ -18,14 +28,39 @@ import {
 
 import { ItineraryHolder, CountryHolder, TravellerHolder, Section, Spinner } from '@components';
 import { Search } from '@container';
-import { Languages, Color, Styles, Constants } from '@common';
+import { Languages, Color, Styles, Constants, showOkCancelAlert } from '@common';
 import { Bugsnag } from '@services';
 
 import styles from './styles';
 
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+
 const { width, height } = Dimensions.get('window');
 const { Mode, Sizes } = Constants.Spinner;
 const { Type } = Constants.Itinerary_Type;
+
+const itineraryLoadingPlaceHolders = [
+	{ loading: true, itineraryId: 0 },
+	{ loading: true, itineraryId: 1 },
+	{ loading: true, itineraryId: 2 },
+	{ loading: true, itineraryId: 3 },
+	{ loading: true, itineraryId: 4 }
+];
+
+const travellerLoadingPlaceHolders = [
+	{ loading: true, userId: 0 },
+	{ loading: true, userId: 1 },
+	{ loading: true, userId: 2 },
+	{ loading: true, userId: 3 },
+	{ loading: true, userId: 4 }
+];
+
+const countryLoadingPlaceHolders = [
+	{ loading: true, name: 0 },
+	{ loading: true, name: 1 },
+	{ loading: true, name: 2 },
+	{ loading: true, name: 3 }
+];
 
 class Home extends Component {
 	constructor(props) {
@@ -45,6 +80,10 @@ class Home extends Component {
 	_keyExtractor_Country = (item) => item.name.toString();
 
 	_keyExtractor_Traveller = (item) => item.userId.toString();
+
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
+	}
 
 	componentDidMount = async () => {
 		const { token, userId } = this.props.user;
@@ -86,11 +125,22 @@ class Home extends Component {
 	});
 
 	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonPressAndroid);
 		this.willFocusSubscription.remove();
 	}
 
 	componentDidUpdate() {}
 
+	handleBackButtonPressAndroid = () => {
+		if (this.props.navigation.state.routeName === 'Home') {
+			showOkCancelAlert(Languages.Exit, Languages.ExitConfirm, Languages.Confirm, () => BackHandler.exitApp());
+
+			return true;
+		} else {
+			this.props.navigation.goBack(null);
+			return true;
+		}
+	};
 	updateSearch = (search) => {
 		const { token, userId } = this.props.user;
 
@@ -196,13 +246,15 @@ class Home extends Component {
 
 	renderFamousPlacesFooter = () => (
 		<View style={styles.itinerarySeeMoreContainer}>
-			<TouchableOpacity style={styles.itinerarySeeMoreInnerContainer} onPress={this.onPressMoreItinerary}>
-				<Text style={styles.itinerarySeeMoreStyle}>{Languages.more}</Text>
-			</TouchableOpacity>
+			<Touchable activeOpacity={0.8} onPress={this.onPressMoreItinerary}>
+				<View style={styles.itinerarySeeMoreInnerContainer}>
+					<Text style={styles.itinerarySeeMoreStyle}>{Languages.more}</Text>
+				</View>
+			</Touchable>
 		</View>
 	);
 
-	renderPopular = ({ item }) => (
+	renderPopular = ({ item, index }) => (
 		<CountryHolder country={item} onPress={() => this.onPressCountry(item)} type="main" />
 	);
 
@@ -232,22 +284,31 @@ class Home extends Component {
 					/>
 				</Animated.View>
 				<Animated.View style={styles.cancelSearchBarContainer}>
-					<TouchableOpacity onPress={this.onSearchBlur}>
-						{this.state.showCancel && <Text style={styles.cancelSearchBarText}>{Languages.Cancel}</Text>}
-					</TouchableOpacity>
+					{this.state.showCancel && (
+						<Touchable activeOpacity={0.8} onPress={this.onSearchBlur}>
+							<Text style={styles.cancelSearchBarText}>{Languages.Cancel}</Text>
+						</Touchable>
+					)}
 				</Animated.View>
 			</View>
 		);
 	};
 
 	renderMainFeed() {
+		const { itineraries, countries } = this.props.itinerary;
+		const { travellers } = this.props.traveller;
+
+		let itinerariesData = itineraries.length === 0 ? itineraryLoadingPlaceHolders : itineraries.slice(0, 8);
+		let travellerData = travellers.length === 0 ? travellerLoadingPlaceHolders : travellers;
+		let countriesData = countries.length === 0 ? countryLoadingPlaceHolders : countries;
+
 		return (
-			<ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 12 }}>
+			<ScrollView contentContainerStyle={styles.contentContainerStyle}>
 				<Section
 					isHorizontalList={true}
 					showHorizontalIndicator={false}
-					data={this.props.itinerary.itineraries.slice(0, 6)} //render first 8 itineraries
-					type="carousel"
+					data={itinerariesData} //render first 8 itineraries
+					type={itineraries.length > 0 ? 'carousel' : 'flatlist'}
 					keyExtractor={this._keyExtractor_Itinerary}
 					renderHolder={this.renderFamousPlaces}
 					renderFooter={this.renderFamousPlacesFooter}
@@ -266,7 +327,7 @@ class Home extends Component {
 					containerStyle={styles.sectionContainer}
 					isHorizontalList={true}
 					showHorizontalIndicator={false}
-					data={this.props.traveller.travellers}
+					data={travellerData}
 					keyExtractor={this._keyExtractor_Traveller}
 					renderHolder={this.renderTraveller}
 					flatListStyle={{ paddingLeft: 10 }}
@@ -275,18 +336,21 @@ class Home extends Component {
 						<View style={{ flex: 2 }}>
 							<Text style={styles.sectionTitle}>{Languages.TopTraveller}</Text>
 						</View>
-						<TouchableOpacity style={styles.seeMoreContainer} onPress={this.navigateToTravellerList}>
-							<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
-						</TouchableOpacity>
+						<Touchable activeOpacity={0.8} onPress={this.navigateToTravellerList}>
+							<View style={styles.seeMoreContainer}>
+								<Text style={styles.seeMoreStyle}>{Languages.seeMore}</Text>
+							</View>
+						</Touchable>
 					</View>
 				</Section>
 				<Section
 					containerStyle={[ styles.sectionContainer, { paddingBottom: 50 } ]}
-					isHorizontalList={true}
+					isHorizontalList={false}
 					showHorizontalIndicator={false}
-					data={this.props.itinerary.countries}
+					data={countriesData}
 					keyExtractor={this._keyExtractor_Country}
 					renderHolder={this.renderPopular}
+					numColumns={2}
 				>
 					<Text style={styles.sectionTitle}>{Languages.TrendingCountries}</Text>
 				</Section>
@@ -335,7 +399,7 @@ class Home extends Component {
 						/>
 					</Animated.View>
 				)}
-				{this.renderLoading()}
+				{/* {this.renderLoading()} */}
 			</View>
 		);
 	}

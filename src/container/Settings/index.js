@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, ScrollView, Text } from 'react-native';
+import { View, BackHandler, ScrollView, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NavigationActions } from 'react-navigation';
 
@@ -24,8 +24,19 @@ class Settings extends Component {
 
 	componentDidUpdate() {}
 
-	componentWillUnmount() {}
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
 
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+	handleBackButtonClick = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	}
+	
 	_getListItem = () => {
 		const listItem = [
 			{
@@ -69,6 +80,7 @@ class Settings extends Component {
 		const { navigation } = this.props;
 		const { routeName, isActionSheet } = item;
 
+		console.log(routeName);
 		if (routeName && !isActionSheet) {
 			navigation.navigate(routeName);
 		}

@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-
+import { View, StatusBar } from 'react-native';
 import { Back, Title, Add } from './IconNav';
 
 import { AddDayDetail } from '@container';
-import { Color, Languages } from '@common';
+import { Styles, Color, Languages } from '@common';
 
 class AddDayDetailScreen extends PureComponent {
 	//constructor(props) {
@@ -35,12 +35,20 @@ class AddDayDetailScreen extends PureComponent {
 		const { navigation } = this.props;
 
 		return (
-			<AddDayDetail
-				navigation={navigation}
-				onRef={(child) => {
-					this.child = child;
-				}}
-			/>
+			<View style={Styles.Common.FullFlex}>
+				{/* <StatusBar
+					backgroundColor={Color.black}
+					translucent={false}
+					barStyle="dark-content"
+					showHideTransition="fade"
+				/> */}
+				<AddDayDetail
+					navigation={navigation}
+					onRef={(child) => {
+						this.child = child;
+					}}
+				/>
+			</View>
 		);
 	}
 }

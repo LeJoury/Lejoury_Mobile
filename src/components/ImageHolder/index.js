@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Animated, TouchableOpacity, Image } from 'react-native';
+import { Animated, TouchableOpacity, Image, Platform, TouchableNativeFeedback, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import { Color, Styles } from '@common';
 
 import styles from './styles';
+
+const Touchable = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 const ImageHolder = (props) => {
 	const [ removeViewOpacity ] = useState(new Animated.Value(0));
@@ -46,9 +48,14 @@ const ImageHolder = (props) => {
 					}
 				]}
 			>
-				<TouchableOpacity onPress={() => (canRemove ? onRemovePress(imageUri) : showRemoveImageView)}>
-					<Icon name="x" size={Styles.IconSize.CenterTab} type="feather" color={Color.red1} />
-				</TouchableOpacity>
+				<Touchable
+					onPress={() => (canRemove ? onRemovePress(imageUri) : showRemoveImageView)}
+					activeOpacity={0.8}
+				>
+					<View>
+						<Icon name="x" size={Styles.IconSize.CenterTab} type="feather" color={Color.red1} />
+					</View>
+				</Touchable>
 			</Animated.View>
 		);
 	};
@@ -56,10 +63,14 @@ const ImageHolder = (props) => {
 	const { containerStyle, imageStyle, imageUri } = props;
 
 	return (
-		<TouchableOpacity style={containerStyle} onPress={showRemoveImageView}>
-			<Image style={imageStyle} source={{ uri: imageUri }} />
-			{removeRemoveView()}
-		</TouchableOpacity>
+		<View style={containerStyle}>
+			<Touchable onPress={showRemoveImageView} activeOpacity={0.8}>
+				<View>
+					<Image style={imageStyle} source={{ uri: imageUri }} />
+					{removeRemoveView()}
+				</View>
+			</Touchable>
+		</View>
 	);
 };
 export default ImageHolder;
