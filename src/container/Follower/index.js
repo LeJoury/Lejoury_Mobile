@@ -8,7 +8,8 @@ import {
 	Alert,
 	Platform,
 	TouchableWithoutFeedback,
-	TouchableNativeFeedback
+	TouchableNativeFeedback,
+	BackHandler
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
@@ -34,6 +35,19 @@ class Follower extends Component {
 	}
 
 	_keyExtractor = (item) => item.userId.toString();
+
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+	}
+
+	handleBackButtonClick = () => {
+		this.props.navigation.goBack(null);
+		return true;
+	};
 
 	updateSearch = (value) => {
 		this.setState({ search: value });

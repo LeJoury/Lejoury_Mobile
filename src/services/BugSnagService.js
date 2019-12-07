@@ -1,4 +1,4 @@
 import { Client } from 'bugsnag-react-native';
-const bugsnag = new Client('8001c771c2af8927debd3286377d9d0e');
+const bugsnag = new Client('6cdfedc08e20c3728b1db14a7d257363');
 
 export default bugsnag;

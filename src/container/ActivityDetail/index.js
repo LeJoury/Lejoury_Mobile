@@ -9,7 +9,8 @@ import {
 	Platform,
 	Modal,
 	Linking,
-	TouchableNativeFeedback
+	TouchableNativeFeedback,
+	BackHandler
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -103,11 +104,21 @@ const ActivityDetail = (props) => {
 			setDescription(currentActivity.description);
 			setRate(currentActivity.rating);
 			setBookmark(currentActivity.bookmarked);
+			BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
 
-			return () => {};
+			return () => {
+				BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+			};
 		},
 		[ activityIndex, dayIndex, allDays ]
 	);
+
+	const handleBackButtonClick = () => {
+		
+		const { navigation } = props;
+		navigation.goBack(null);
+		return true;
+	};
 
 	onBackHandle = () => {
 		const { navigation } = props;

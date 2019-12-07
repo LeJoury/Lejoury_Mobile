@@ -471,6 +471,8 @@ const GET_DRAFT_ITINERARIES = async (token, userId, page) => {
 	let params = `${USER_ID}=${userId}&${PUBLISH_STATUS}=${PUBLISH_STATUS_DRAFT}&${PAGE}=${page}`;
 	// console.log('GET_DRAFT_ITINERARIES');
 
+	Bugsnag.notify(new Error('Test error'));
+
 	return await new Promise((resolve, reject) => {
 		base
 			.get(`${ITINERARY_API_VERSION}/${URL_ITINERARIES}/${URL_BY_PUBLISHER}?${params}`, {

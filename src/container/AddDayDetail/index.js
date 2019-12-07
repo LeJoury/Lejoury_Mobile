@@ -90,7 +90,7 @@ class AddDayDetail extends Component {
 		BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
 	}
 
-	handleBackButtonClick() {
+	handleBackButtonClick = () => {
 		this.props.navigation.goBack(null);
 		return true;
 	}
