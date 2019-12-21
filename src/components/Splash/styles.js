@@ -5,7 +5,8 @@ const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		backgroundColor: Color.white
 	},
 	logoWrapper: {
 		flex: 1,
@@ -13,8 +14,8 @@ export default StyleSheet.create({
 		alignItems: 'center'
 	},
 	logo: {
-		width: width / 1.3,
-		height: width / 1.3
+		width: 250,
+		height: 250
 	},
 	appNameText: {
 		marginTop: 12,

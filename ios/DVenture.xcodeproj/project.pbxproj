@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* LeJouryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LeJouryTests.m */; };
+		00E356F31AD99517003FC87E /* DVentureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DVentureTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -20,10 +20,10 @@
 		2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
-		2DCD954D1E0B4F2C00145EB5 /* LeJouryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LeJouryTests.m */; };
+		2DCD954D1E0B4F2C00145EB5 /* DVentureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DVentureTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		3872266FF47F41C88D975843 /* Quicksand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 561528C963F94B5381FFE510 /* Quicksand-Regular.ttf */; };
-		439214B3D67A7486261676D7 /* libPods-LeJoury.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AABB37D69BC095F3EBBCADA /* libPods-LeJoury.a */; };
+		439214B3D67A7486261676D7 /* libPods-DVenture.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AABB37D69BC095F3EBBCADA /* libPods-DVenture.a */; };
 		6B9C3D77EEE64C9E9950CCAC /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 516D8E6B6504412EB8D41854 /* libc++.tbd */; };
 		732E308ECD804C2D9958D829 /* Quicksand-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BDE64CAAD7F467D9F08C674 /* Quicksand-Medium.ttf */; };
 		AA1A66DF92A34B3EAE22B6D2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A238A7B33AE4AF7B65AD17C /* libz.tbd */; };
@@ -34,7 +34,7 @@
 		BEF33E252331247D00B96E06 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		BEF33E262331249100B96E06 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		BEF33E272331249800B96E06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* Info.plist */; };
-		C812D5FF6C519D4D308FF094 /* libPods-LeJouryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F369C93984B99DC9527CA08 /* libPods-LeJouryTests.a */; };
+		C812D5FF6C519D4D308FF094 /* libPods-DVentureTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F369C93984B99DC9527CA08 /* libPods-DVentureTests.a */; };
 		E1CF79236268457A8EA1911B /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A23A8270AD8242DE87F7FD5B /* Quicksand-Bold.ttf */; };
 		E21BDA5525C742679A1AAF5F /* Quicksand-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FE780185037548B19C14DA4C /* Quicksand-Light.ttf */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
@@ -83,7 +83,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = LeJoury;
+			remoteInfo = DVenture;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -111,7 +111,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "LeJoury-tvOS";
+			remoteInfo = "DVenture-tvOS";
 		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -331,40 +331,40 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* LeJouryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeJouryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* DVentureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DVentureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* LeJouryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeJouryTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* DVentureTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DVentureTests.m; sourceTree = "<group>"; };
 		02A37A94EEC24EBF8F7054A9 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		02FFA6CD048B439CBBB424AD /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		0F59CB720202688C51719130 /* Pods-LeJouryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJouryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LeJouryTests/Pods-LeJouryTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0F59CB720202688C51719130 /* Pods-DVentureTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DVentureTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DVentureTests/Pods-DVentureTests.debug.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* LeJoury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeJoury.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = LeJoury/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = LeJoury/AppDelegate.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* DVenture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DVenture.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = DVenture/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = DVenture/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LeJoury/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LeJoury/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = LeJoury/main.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = DVenture/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = DVenture/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DVenture/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1540C0065CBD44E793FD8813 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		1BA9A72120CE46EE8B2280A4 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		1BDE64CAAD7F467D9F08C674 /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Medium.ttf"; path = "../assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
 		1C1F0FC08779447396E662F8 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		223B2FBB1D6740E98AB5BA1D /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* LeJoury-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LeJoury-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* LeJoury-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LeJoury-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* DVenture-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DVenture-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* DVenture-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "DVenture-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E17E19D67374E0AACD97827 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		3E198DD8246248AC988425EB /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		48DB10CEA2EB4BBA9D337BD5 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		516D8E6B6504412EB8D41854 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		561528C963F94B5381FFE510 /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Regular.ttf"; path = "../assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
-		57CEFCAA21945577BF0C64AC /* Pods-LeJouryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJouryTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LeJouryTests/Pods-LeJouryTests.release.xcconfig"; sourceTree = "<group>"; };
+		57CEFCAA21945577BF0C64AC /* Pods-DVentureTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DVentureTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DVentureTests/Pods-DVentureTests.release.xcconfig"; sourceTree = "<group>"; };
 		5901939361B44A9ABF8C0958 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		5AABB37D69BC095F3EBBCADA /* libPods-LeJoury.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LeJoury.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AABB37D69BC095F3EBBCADA /* libPods-DVenture.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DVenture.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
-		5F369C93984B99DC9527CA08 /* libPods-LeJouryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LeJouryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F369C93984B99DC9527CA08 /* libPods-DVentureTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DVentureTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A238A7B33AE4AF7B65AD17C /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		77E9CA2604AE4E67A0D05DBE /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -375,8 +375,8 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B28298EFC31849688EA5A230 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		B9C37280C9064386BCBF2035 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJoury.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury.debug.xcconfig"; sourceTree = "<group>"; };
-		BE94D64B235AFC550019B74D /* LeJoury-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LeJoury-Bridging-Header.h"; sourceTree = "<group>"; };
+		BE169935D6B9A0674169911A /* Pods-DVenture.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DVenture.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DVenture/Pods-DVenture.debug.xcconfig"; sourceTree = "<group>"; };
+		BE94D64B235AFC550019B74D /* DVenture-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DVenture-Bridging-Header.h"; sourceTree = "<group>"; };
 		BE94D64C235AFC560019B74D /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		BE96796922F337F500DC3D1D /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE96796D22F337FC00DC3D1D /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -386,7 +386,7 @@
 		D64DDBA2685148138A8F14D2 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		FAE890E58B0EDE38F0ACB6AC /* Pods-LeJoury.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LeJoury.release.xcconfig"; path = "Pods/Target Support Files/Pods-LeJoury/Pods-LeJoury.release.xcconfig"; sourceTree = "<group>"; };
+		FAE890E58B0EDE38F0ACB6AC /* Pods-DVenture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DVenture.release.xcconfig"; path = "Pods/Target Support Files/Pods-DVenture/Pods-DVenture.release.xcconfig"; sourceTree = "<group>"; };
 		FE780185037548B19C14DA4C /* Quicksand-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Light.ttf"; path = "../assets/fonts/Quicksand-Light.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -396,7 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-				C812D5FF6C519D4D308FF094 /* libPods-LeJouryTests.a in Frameworks */,
+				C812D5FF6C519D4D308FF094 /* libPods-DVentureTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,7 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
-				439214B3D67A7486261676D7 /* libPods-LeJoury.a in Frameworks */,
+				439214B3D67A7486261676D7 /* libPods-DVenture.a in Frameworks */,
 				F498267277AF487C9C15C41C /* libRealmReact.a in Frameworks */,
 				6B9C3D77EEE64C9E9950CCAC /* libc++.tbd in Frameworks */,
 				AA1A66DF92A34B3EAE22B6D2 /* libz.tbd in Frameworks */,
@@ -481,13 +481,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		00E356EF1AD99517003FC87E /* LeJouryTests */ = {
+		00E356EF1AD99517003FC87E /* DVentureTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* LeJouryTests.m */,
+				00E356F21AD99517003FC87E /* DVentureTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = LeJouryTests;
+			path = DVentureTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -516,7 +516,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* LeJoury */ = {
+		13B07FAE1A68108700A75B9A /* DVenture */ = {
 			isa = PBXGroup;
 			children = (
 				BED567E2234F7CD700D2081E /* GoogleService-Info.plist */,
@@ -528,7 +528,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = LeJoury;
+			name = DVenture;
 			sourceTree = "<group>";
 		};
 		146834001AC3E56700842450 /* Products */ = {
@@ -560,8 +560,8 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				5AABB37D69BC095F3EBBCADA /* libPods-LeJoury.a */,
-				5F369C93984B99DC9527CA08 /* libPods-LeJouryTests.a */,
+				5AABB37D69BC095F3EBBCADA /* libPods-DVenture.a */,
+				5F369C93984B99DC9527CA08 /* libPods-DVentureTests.a */,
 				516D8E6B6504412EB8D41854 /* libc++.tbd */,
 				6A238A7B33AE4AF7B65AD17C /* libz.tbd */,
 			);
@@ -621,15 +621,15 @@
 				BE94D64C235AFC560019B74D /* dummy.swift */,
 				BE96796D22F337FC00DC3D1D /* QBImagePicker.framework */,
 				BE96796922F337F500DC3D1D /* RSKImageCropper.framework */,
-				13B07FAE1A68108700A75B9A /* LeJoury */,
+				13B07FAE1A68108700A75B9A /* DVenture */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* LeJouryTests */,
+				00E356EF1AD99517003FC87E /* DVentureTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				83F2C0AC1FD34AA69CE7DD0E /* Resources */,
 				BE96790D22F3376500DC3D1D /* Recovered References */,
 				F6000D4D14717375B80AC8F5 /* Pods */,
-				BE94D64B235AFC550019B74D /* LeJoury-Bridging-Header.h */,
+				BE94D64B235AFC550019B74D /* DVenture-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -639,10 +639,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* LeJoury.app */,
-				00E356EE1AD99517003FC87E /* LeJouryTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* LeJoury-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* LeJoury-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* DVenture.app */,
+				00E356EE1AD99517003FC87E /* DVentureTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* DVenture-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* DVenture-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -702,10 +702,10 @@
 		F6000D4D14717375B80AC8F5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */,
-				FAE890E58B0EDE38F0ACB6AC /* Pods-LeJoury.release.xcconfig */,
-				0F59CB720202688C51719130 /* Pods-LeJouryTests.debug.xcconfig */,
-				57CEFCAA21945577BF0C64AC /* Pods-LeJouryTests.release.xcconfig */,
+				BE169935D6B9A0674169911A /* Pods-DVenture.debug.xcconfig */,
+				FAE890E58B0EDE38F0ACB6AC /* Pods-DVenture.release.xcconfig */,
+				0F59CB720202688C51719130 /* Pods-DVentureTests.debug.xcconfig */,
+				57CEFCAA21945577BF0C64AC /* Pods-DVentureTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -713,9 +713,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* LeJouryTests */ = {
+		00E356ED1AD99517003FC87E /* DVentureTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "LeJouryTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "DVentureTests" */;
 			buildPhases = (
 				2D3E0445A78C8F6B50F2F078 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -727,14 +727,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = LeJouryTests;
-			productName = LeJouryTests;
-			productReference = 00E356EE1AD99517003FC87E /* LeJouryTests.xctest */;
+			name = DVentureTests;
+			productName = DVentureTests;
+			productReference = 00E356EE1AD99517003FC87E /* DVentureTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* LeJoury */ = {
+		13B07F861A680F5B00A75B9A /* DVenture */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LeJoury" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "DVenture" */;
 			buildPhases = (
 				41DD1B20B20F94D04AC1D68B /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -748,14 +748,14 @@
 			);
 			dependencies = (
 			);
-			name = LeJoury;
+			name = DVenture;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* LeJoury.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* DVenture.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* LeJoury-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* DVenture-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LeJoury-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "DVenture-tvOS" */;
 			buildPhases = (
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -766,14 +766,14 @@
 			);
 			dependencies = (
 			);
-			name = "LeJoury-tvOS";
-			productName = "LeJoury-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* LeJoury-tvOS.app */;
+			name = "DVenture-tvOS";
+			productName = "DVenture-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* DVenture-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* LeJoury-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* DVenture-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LeJoury-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "DVenture-tvOSTests" */;
 			buildPhases = (
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
@@ -784,9 +784,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "LeJoury-tvOSTests";
-			productName = "LeJoury-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* LeJoury-tvOSTests.xctest */;
+			name = "DVenture-tvOSTests";
+			productName = "DVenture-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* DVenture-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -817,7 +817,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "LeJoury" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "DVenture" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -885,10 +885,10 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* LeJoury */,
-				00E356ED1AD99517003FC87E /* LeJouryTests */,
-				2D02E47A1E0B4A5D006451C7 /* LeJoury-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* LeJoury-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* DVenture */,
+				00E356ED1AD99517003FC87E /* DVentureTests */,
+				2D02E47A1E0B4A5D006451C7 /* DVenture-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* DVenture-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1228,7 +1228,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-LeJouryTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-DVentureTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1246,7 +1246,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-LeJoury-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-DVenture-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1259,7 +1259,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-DVenture/Pods-DVenture-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
@@ -1308,7 +1308,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LeJoury/Pods-LeJoury-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DVenture/Pods-DVenture-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1318,7 +1318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* LeJouryTests.m in Sources */,
+				00E356F31AD99517003FC87E /* DVentureTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1345,7 +1345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* LeJouryTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* DVentureTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1354,12 +1354,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* LeJoury */;
+			target = 13B07F861A680F5B00A75B9A /* DVenture */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* LeJoury-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* DVenture-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1371,7 +1371,7 @@
 				13B07FB21A68108700A75B9A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = LeJoury;
+			path = DVenture;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1379,7 +1379,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0F59CB720202688C51719130 /* Pods-LeJouryTests.debug.xcconfig */;
+			baseConfigurationReference = 0F59CB720202688C51719130 /* Pods-DVentureTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1391,7 +1391,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = LeJouryTests/Info.plist;
+				INFOPLIST_FILE = DVentureTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1404,13 +1404,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeJoury.app/LeJoury";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DVenture.app/DVenture";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57CEFCAA21945577BF0C64AC /* Pods-LeJouryTests.release.xcconfig */;
+			baseConfigurationReference = 57CEFCAA21945577BF0C64AC /* Pods-DVentureTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1419,7 +1419,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = LeJouryTests/Info.plist;
+				INFOPLIST_FILE = DVentureTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1432,13 +1432,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeJoury.app/LeJoury";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DVenture.app/DVenture";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BE169935D6B9A0674169911A /* Pods-LeJoury.debug.xcconfig */;
+			baseConfigurationReference = BE169935D6B9A0674169911A /* Pods-DVenture.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1449,7 +1449,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = LeJoury/Info.plist;
+				INFOPLIST_FILE = DVenture/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1458,8 +1458,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = LeJoury;
-				SWIFT_OBJC_BRIDGING_HEADER = "LeJoury-Bridging-Header.h";
+				PRODUCT_NAME = DVenture;
+				SWIFT_OBJC_BRIDGING_HEADER = "DVenture-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1468,7 +1468,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FAE890E58B0EDE38F0ACB6AC /* Pods-LeJoury.release.xcconfig */;
+			baseConfigurationReference = FAE890E58B0EDE38F0ACB6AC /* Pods-DVenture.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1478,7 +1478,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = LeJoury/Info.plist;
+				INFOPLIST_FILE = DVenture/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1487,8 +1487,8 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = LeJoury;
-				SWIFT_OBJC_BRIDGING_HEADER = "LeJoury-Bridging-Header.h";
+				PRODUCT_NAME = DVenture;
+				SWIFT_OBJC_BRIDGING_HEADER = "DVenture-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1510,7 +1510,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = "LeJoury-tvOS/Info.plist";
+				INFOPLIST_FILE = "DVenture-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1520,7 +1520,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.LeJoury-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.DVenture-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1544,7 +1544,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = "LeJoury-tvOS/Info.plist";
+				INFOPLIST_FILE = "DVenture-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1554,7 +1554,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.LeJoury-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.DVenture-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1577,7 +1577,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = "LeJoury-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "DVenture-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1587,10 +1587,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.LeJoury-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.DVenture-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeJoury-tvOS.app/LeJoury-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DVenture-tvOS.app/DVenture-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -1610,7 +1610,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
-				INFOPLIST_FILE = "LeJoury-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "DVenture-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1620,10 +1620,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.LeJoury-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.DVenture-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeJoury-tvOS.app/LeJoury-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DVenture-tvOS.app/DVenture-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1731,7 +1731,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "LeJouryTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "DVentureTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1740,7 +1740,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LeJoury" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "DVenture" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1749,7 +1749,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LeJoury-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "DVenture-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1758,7 +1758,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LeJoury-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "DVenture-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1767,7 +1767,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "LeJoury" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "DVenture" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

@@ -2,7 +2,7 @@
 # platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'LeJoury' do
+target 'DVenture' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
   rn_maps_path = '../node_modules/react-native-maps'
@@ -11,7 +11,7 @@ target 'LeJoury' do
   pod 'RSKImageCropper'
   pod 'QBImagePickerController'
   
-  # Pods for LeJoury
+  # Pods for DVenture
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'
@@ -37,14 +37,18 @@ target 'LeJoury' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'Firebase/Analytics'
+  pod 'FBSDKCoreKit', :modular_headers => true
+
 
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse.podspec"
 
-  target 'LeJouryTests' do
+  target 'DVentureTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -64,13 +68,13 @@ end
 #   end
 # end
 
-# target 'LeJoury-tvOS' do
+# target 'DVenture-tvOS' do
 #   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
 #   # use_frameworks!
 
-#   # Pods for LeJoury-tvOS
+#   # Pods for DVenture-tvOS
 
-#   target 'LeJoury-tvOSTests' do
+#   target 'DVenture-tvOSTests' do
 #     inherit! :search_paths
 #     # Pods for testing
 #   end

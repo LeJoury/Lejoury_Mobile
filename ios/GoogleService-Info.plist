@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>938716698921-2goragra1v3pc64mlq53646452untm7v.apps.googleusercontent.com</string>
+	<string>265129386029-8ruvcr8tv4aucsr6ckiff9tlovup4a6j.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.938716698921-2goragra1v3pc64mlq53646452untm7v</string>
+	<string>com.googleusercontent.apps.265129386029-8ruvcr8tv4aucsr6ckiff9tlovup4a6j</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCmchwro-pp7__PMW3BV1lmtb3vbi8PHxA</string>
+	<string>AIzaSyBZti6SaG487GQSQ_BHL5L4R0jPaBaF-KA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>938716698921</string>
+	<string>265129386029</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.LeJoury</string>
+	<string>com.dventure</string>
 	<key>PROJECT_ID</key>
-	<string>lejoury</string>
+	<string>dventure-f3ddc</string>
 	<key>STORAGE_BUCKET</key>
-	<string>lejoury.appspot.com</string>
+	<string>dventure-f3ddc.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:938716698921:ios:9a528b861eea0214ebbf38</string>
+	<string>1:265129386029:ios:38393ecf772bbb2d81d8a4</string>
 	<key>DATABASE_URL</key>
-	<string>https://lejoury.firebaseio.com</string>
+	<string>https://dventure-f3ddc.firebaseio.com</string>
 </dict>
 </plist>

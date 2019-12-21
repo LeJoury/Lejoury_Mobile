@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>LeJoury</string>
+	<string>DVenture</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -44,7 +44,7 @@
 	<key>FacebookAppID</key>
 	<string>2415357295238756</string>
 	<key>FacebookDisplayName</key>
-	<string>LeJoury</string>
+	<string>DVenture</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -72,7 +72,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>For saving a photo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>For uploading photos to LeJoury.</string>
+	<string>For uploading photos to DVenture.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

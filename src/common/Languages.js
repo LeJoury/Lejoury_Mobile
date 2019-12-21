@@ -1,5 +1,5 @@
 export default {
-	AppName: 'LeJoury',
+	AppName: 'DVenture',
 	Exit: 'Exit',
 	ExitConfirm: 'Are you sure you want to exit this app',
 	YES: 'YES',
@@ -23,9 +23,9 @@ export default {
 	SomethingWentWrong: 'Something went wrong.',
 
 	HelloThere: 'Hello There!',
-	Welcome: 'Welcome to LeJoury.',
+	Welcome: 'Welcome to DVenture.',
 	WelcomeDescription: 'Keep your stories with the loved one forever with ',
-	WelcomeBack: 'Welcome Back to LeJoury.',
+	WelcomeBack: 'Welcome Back to DVenture.',
 	Day: 'Day',
 	UnsavedTitle: 'Unsaved changes',
 	UnsavedDescription: 'You have unsaved changes. Do you want to save as draft ?',
@@ -209,7 +209,7 @@ export default {
 	Register: 'Register',
 	RegisterFail: 'Registration Failed',
 	RegisterSuccess: 'Successfully Register !',
-	RegisterSuccessDescription: 'Thank you for register for LeJoury. Start to keep your stories with the loved one ! ',
+	RegisterSuccessDescription: 'Thank you for register for DVenture. Start to keep your stories with the loved one ! ',
 	PersonalInfo: 'Personal Information',
 	AccountInfo: 'Account Information',
 	ContinueWithFacebook: 'Continue with Facebook',
